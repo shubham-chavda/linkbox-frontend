@@ -1,0 +1,79 @@
+@import '~antd/lib/style/themes/default.less';
+@import '~antd/dist/antd.less';
+@import './theme.less';
+@import './utilities.less';
+@import './fonts.less';
+@import './ant.less';
+
+html {
+	font-size: 16px;
+	overflow: hidden;
+}
+
+body,
+#root {
+	width: 100%;
+	height: 100%;
+	background: @site-background-color;
+}
+
+* {
+	outline: 0;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+	box-sizing: border-box;
+	.Poppins;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 9px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: #7e7e7e3a;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: @thumbColor;
+	border-radius: 25px;
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: fade(@thumbColor, 80%);
+}
+
+::selection {
+	background: #2f84e6;
+}
+
+/* For Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
+}
+/* Webkit browsers like Safari and Chrome */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+select{
+	// appearance: none;
+    // outline: 0;
+	// cursor: pointer;
+	// border-radius: 3px;
+	// border:none;
+	outline: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	&::-ms-expand { display: none };
+	-ms-appearance: none;
+	background: white;
+	background-image: none;
+}
