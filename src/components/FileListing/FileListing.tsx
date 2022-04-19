@@ -30,6 +30,7 @@ const FileListing = () => {
 					<HeaderHome span={1}>
 						<img src={HomeIcon} alt="home" className="icon22" />
 					</HeaderHome>
+
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
