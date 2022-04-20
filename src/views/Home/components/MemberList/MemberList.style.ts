@@ -18,7 +18,7 @@ export const MemberCount = styled.div`
 export const MemberListContainer = styled(Row)`
 
     width:100%;
-    height: 58vh;
+    height: 60vh;
     padding:0 20px;
     overflow:auto;
 
@@ -45,7 +45,6 @@ export const Name = styled(Col)`
 `;
 
 export const PopOverContent = styled(Col)`
-      font-size:12px;
       color:#fff;
       display: flex;
       flex-direction: column;

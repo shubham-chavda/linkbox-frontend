@@ -29,7 +29,6 @@ const ToolBar = () => {
 	const [zoomLevel, setZoomLevel] = useState('100');
 
 	const IncDecContainerProps = {
-		fontSize: '14px',
 		padding: '7px'
 	};
 
@@ -58,7 +57,7 @@ const ToolBar = () => {
 
 			{/* Members Avatar */}
 
-			<Col style={{ paddingLeft: '20px' }}>
+			<Col className="pl2	">
 				<Avatar.Group
 					maxCount={1}
 					maxPopoverTrigger="focus"
@@ -86,14 +85,13 @@ const ToolBar = () => {
 					/>
 					<>
 						<input
+							className="border-none "
 							value={pageCount}
 							onChange={(e) => setPageCount(parseInt(e.target.value))}
-							style={{ width: '25px', fontSize: '14px', border: 'none' }}
+							style={{ width: '25px' }}
 						/>
-						<span style={{ fontSize: '14px' }}>of</span>
-						<span style={{ fontSize: '14px', paddingLeft: '7px' }}>
-							{maxCount}
-						</span>
+						<span>of</span>
+						<span style={{ paddingLeft: '7px' }}>{maxCount}</span>
 					</>
 					<RightOutlined
 						onClick={() => incrementPageCount()}

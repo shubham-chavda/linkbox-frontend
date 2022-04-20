@@ -19,11 +19,15 @@ import VideoIcon from './icons/videoIcon.svg';
 import DeleteIcon from './icons/DeleteIcon.svg';
 import ShareLinkIcon from './icons/ShareLinkIcon.svg';
 import FilterIcon from './icons/FilterIcon.svg';
+import EditIcon from './icons/EditIcon.svg';
+import PrintIcon from './icons/PrintIcon.svg';
+import DownloadButton from './icons/DownloadButton.svg';
 
 // ------------------- images ----------------------------
 
 import SignInSVG from './images/signInSVG.svg';
-import DefaultPDF from './images/DefaultPDF.svg';
+import DefaultPdf from './images/DefaultPdf.svg';
+import DefaultPdfGreen from './images/DefaultPdfGreen.svg';
 import DefaultMap from './images/DefaultMap.png';
 
 export {
@@ -49,8 +53,12 @@ export {
 	DeleteIcon,
 	ShareLinkIcon,
 	FilterIcon,
+	EditIcon,
+	PrintIcon,
+	DownloadButton,
 	// ------------------- images ----------------------------
 	SignInSVG,
-	DefaultPDF,
+	DefaultPdf,
+	DefaultPdfGreen,
 	DefaultMap
 };

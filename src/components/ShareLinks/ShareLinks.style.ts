@@ -1,10 +1,6 @@
 import { Col, Select } from "antd";
 import styled from "styled-components";
 
-export const Content = styled.p`
-    font-size: 12px;
-`;
-
 
 export const GenreSelector = styled(Select)`
     width: 110px;

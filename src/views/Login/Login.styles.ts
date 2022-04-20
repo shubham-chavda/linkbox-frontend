@@ -42,7 +42,6 @@ export const LeftCol = styled(Col)`
 `;
 export const LogoContainer = styled(Row)`
 	width:60%;
-	padding-top:10px;
 	font-weight:bolder;
 	font-size:1.6rem;
 `;

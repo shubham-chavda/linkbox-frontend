@@ -40,7 +40,7 @@ const MemberList: React.FC = () => {
 							</Name>
 							<Col>
 								<Popover
-									className="popover-container"
+									className="font-12"
 									autoAdjustOverflow
 									placement="leftTop"
 									content={content}

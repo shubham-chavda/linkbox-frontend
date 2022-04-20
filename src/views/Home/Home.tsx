@@ -1,17 +1,6 @@
 import React from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import {
-	MainContainer,
-	HeaderContainer,
-	HeaderHome,
-	HeaderFileTab,
-	RightIconGroup,
-	OwnerInfoContainer,
-	RightHeaderContainer,
-	CenterColumn,
-	ContentSection,
-	ExpandIconContainer
-} from './Home.style';
+import { ContentSection } from './Home.style';
 
 import {
 	BookmarkIcon,
@@ -28,7 +17,19 @@ import FileTabBar from './components/FileTabBar/FileTabBar';
 import ToolBar from './components/ToolBar/ToolBar';
 
 import { initPanel } from '../../types/Home.interface';
-import { Link } from 'react-router-dom';
+import {
+	CenterColumn,
+	HeaderContainer,
+	HeaderFileTab,
+	HeaderHome,
+	LeftIconGroup,
+	LeftSliderContainer,
+	MainContainer,
+	OwnerInfoContainer,
+	RightHeaderContainer,
+	RightIconGroup
+} from '../../styles/Layout.style';
+
 const Home = () => {
 	const [activeKey, setActiveKey] = React.useState('1');
 
@@ -70,9 +71,9 @@ const Home = () => {
 
 					<Col span={5}>
 						<RightHeaderContainer>
-							<ExpandIconContainer span={7}>
+							<LeftIconGroup span={7}>
 								<img src={ExpandIcon} alt="expand" className="icon22" />
-							</ExpandIconContainer>
+							</LeftIconGroup>
 							<RightIconGroup span={16}>
 								<img src={ChatIcon2} alt="chat" className="icon22" />
 								<img src={BookmarkIcon} alt="bookmark" className="icon22" />
@@ -88,9 +89,9 @@ const Home = () => {
 
 				<Row>
 					{/* Left sider start */}
-					<Col style={{ paddingTop: '20px' }}>
+					<LeftSliderContainer>
 						<LeftSlider />
-					</Col>
+					</LeftSliderContainer>
 					{/* Left sider over */}
 
 					{/* Content part start */}
@@ -108,13 +109,13 @@ const Home = () => {
 
 					{/* right sider Start */}
 
-					<Col style={{ paddingTop: '20px' }} span={5}>
+					<Col className="pt1" span={5}>
 						<Row>
 							<OwnerInfoContainer>
-								<OwnerInfo />
+								<OwnerInfo fileListing={false} />
 							</OwnerInfoContainer>
 						</Row>
-						<Row style={{ justifyContent: 'start' }}>
+						<Row className="justify-start">
 							<MemberList />
 						</Row>
 					</Col>

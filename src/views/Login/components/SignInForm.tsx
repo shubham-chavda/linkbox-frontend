@@ -68,7 +68,7 @@ const SignInForm = () => {
 
 				<Row style={{ width: '80%' }} justify="space-between">
 					<Col span={6}> Password</Col>
-					<Col span={16} style={{ textAlign: 'right' }}>
+					<Col span={16} className="right-align">
 						<a>Forgot Your Password?</a>
 					</Col>
 				</Row>
@@ -95,7 +95,7 @@ const SignInForm = () => {
 					<SignInButton type="submit"> Sign In </SignInButton>
 				</Form.Item>
 			</Form>
-			<Divider style={{ fontSize: '12px', color: '#C5C9CE', height: '10px' }}>
+			<Divider className="font-12" style={{ color: '#C5C9CE', height: '10px' }}>
 				OR
 			</Divider>
 			<Row>

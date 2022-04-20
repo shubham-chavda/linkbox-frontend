@@ -1,17 +1,11 @@
-import { Avatar, Checkbox, Col, Row, Select } from 'antd';
+import { Button, Checkbox, Col, Row, Select } from 'antd';
 import React from 'react';
 import { InfoIcon, ShareLinkIcon } from '../../assets';
-import {
-	Content,
-	GenreSelector,
-	CopyButton,
-	ShareCol
-} from './ShareLinks.style';
+import { GenreSelector, CopyButton, ShareCol } from './ShareLinks.style';
 
 const ShareLinks = () => {
 	return (
 		<>
-			{/* style={{ display: 'flex ',justifyContent: 'space-between',alignItems: 'center'}} */}
 			<Row>
 				<Col span={24} className="flex items-center justify-between">
 					<GenreSelector
@@ -38,25 +32,35 @@ const ShareLinks = () => {
 				</Col>
 			</Row>
 
-			<Row style={{ marginTop: '14px' }}>
+			<Row className="mt2">
 				<ShareCol span={24} className="flex justify-between ">
 					<Col className="p1">
 						<img src={ShareLinkIcon} alt="share" className="icon22" />
-						<span className="p1"> Get Sharable link</span>
+						<span className="p1 font-13">Get Sharable link</span>
 					</Col>
 
 					<CopyButton>copy</CopyButton>
 				</ShareCol>
 			</Row>
-			<ShareCol
-				span={24}
-				className="flex justify-center my1 p1"
-				style={{ color: '#686087', borderColor: '#686087' }}
-			>
-				Share with friends
-			</ShareCol>
+
+			<Col span={24} className="flex justify-center flex-column  my1 ">
+				<Checkbox
+					className="p1 font-12 color-sl"
+					// onChange={onChange}
+				>
+					Deactivate Shareable link
+				</Checkbox>
+				<Button
+					className="color-sl"
+					shape="round"
+					style={{ width: '100%', borderColor: '#686087' }}
+					type="ghost"
+				>
+					Share with friends
+				</Button>
+			</Col>
 			<Checkbox
-				style={{ color: '#686087' }}
+				className="pt1 pl1 font-12 color-sl"
 				// onChange={onChange}
 			>
 				Notification

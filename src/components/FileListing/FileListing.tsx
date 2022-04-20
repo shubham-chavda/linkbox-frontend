@@ -1,29 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import {
-	MainContainer,
-	HeaderContainer,
-	HeaderHome,
-	RightIconGroup,
-	OwnerInfoContainer,
-	RightHeaderContainer,
-	CenterColumn,
-	MemberCount,
-	HeaderSubContainer
-} from './FileListing.style';
+import { MemberCount } from './FileListing.style';
 import { SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
-	DefaultPDF,
+	DefaultPdf,
 	DeleteIcon,
+	DownloadButton,
 	FilterIcon,
-	HomeIcon
+	HomeIcon,
+	PrintIcon
 } from '../../assets';
-import { Button, Checkbox, Col, Divider, Input, Row, Tooltip } from 'antd';
+import { Button, Checkbox, Col, Input, Row, Tooltip } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../ShareLinks/ShareLinks';
+import {
+	CenterColumn,
+	HeaderContainer,
+	HeaderFileTab,
+	HeaderHome,
+	LeftIconGroup,
+	LeftSliderContainer,
+	MainContainer,
+	OwnerInfoContainer,
+	RightHeaderContainer,
+	RightIconGroup
+} from '../../styles/Layout.style';
 
 const FileListing = () => {
+	const [docClicked, setDocClicked] = useState(false);
 	return (
 		<>
 			<MainContainer>
@@ -35,8 +40,8 @@ const FileListing = () => {
 
 					{/* File Tab bar start */}
 
-					<HeaderSubContainer span={18}>
-						<HeaderSubContainer span={6} className="flex items-center">
+					<HeaderFileTab span={18}>
+						<HeaderFileTab span={6} className="flex items-center">
 							<Input
 								bordered={false}
 								style={{ width: 250 }}
@@ -44,18 +49,26 @@ const FileListing = () => {
 								prefix={<SearchOutlined />}
 							/>
 							<img src={FilterIcon} alt="filter" className="icon16" />
-						</HeaderSubContainer>
-					</HeaderSubContainer>
+						</HeaderFileTab>
+					</HeaderFileTab>
 
 					{/* File Tab bar over */}
 
 					{/* Header top right Icon tab start */}
 
 					<Col span={5}>
-						<RightHeaderContainer>
-							<RightIconGroup span={10}>
+						<RightHeaderContainer className="flex-start">
+							<LeftIconGroup span={6}>
+								<img
+									src={DownloadButton}
+									alt="download"
+									className="mr1 icon22"
+								/>
+								<img src={PrintIcon} alt="Print" className="icon22" />
+							</LeftIconGroup>
+							<RightIconGroup span={15} className="pr2 justify-end">
 								<img src={DeleteIcon} alt="delete" className="icon22" />
-								<Button shape="round" style={{ color: '#686087' }}>
+								<Button className="ml1 color-sl" shape="round">
 									Open
 								</Button>
 							</RightIconGroup>
@@ -68,28 +81,30 @@ const FileListing = () => {
 
 				<Row>
 					{/* Left sider start */}
-					<Col style={{ paddingTop: '20px' }}>
+					<LeftSliderContainer>
 						<LeftSlider />
-					</Col>
+					</LeftSliderContainer>
 					{/* Left sider over */}
 
 					{/* Content part start */}
-					<CenterColumn>
-						<Row>{/* <ToolBar /> */}</Row>
-						<p style={{ color: '#C5C9CE', marginLeft: '10px' }}>
+					<CenterColumn
+						className="overflow-auto"
+						style={{ height: 'calc(100vh - 40px)' }}
+					>
+						<p className="ml1" style={{ color: '#C5C9CE' }}>
 							Personal Documents
 						</p>
 						<Row>
-							{[...Array(11)].map((_, index) => (
+							{[...Array(31)].map((_, index) => (
 								<div
 									key={index}
 									style={{
 										width: '160px'
 									}}
 								>
-									<img src={DefaultPDF} width="138px" height="158px" />
+									<img src={DefaultPdf} width="138px" height="158px" />
 									<Tooltip placement="top" title={`${index}.pdf`}>
-										<p style={{ fontSize: '12px' }} className=" truncate px1 ">
+										<p className=" truncate px1 font-12">
 											{index} Gmat official Guide 2019.pdf
 										</p>
 									</Tooltip>
@@ -99,41 +114,22 @@ const FileListing = () => {
 							{/*---------------------- more Button ----------------*/}
 						</Row>
 						{true && (
-							<div className="flex justify-center">
-								<Button shape="round" style={{ color: '#686087' }}>
+							<div className="flex justify-center mb2">
+								<Button className="color-sl" shape="round">
 									More
 								</Button>
 							</div>
 						)}
-						<Divider
-							orientation="left"
-							orientationMargin="0px"
-							style={{ fontSize: '13px', color: '#C5C9CE' }}
-						>
-							Documents from Others
-						</Divider>
-						<Row>
-							{[...Array(2)].map((_, index) => (
-								<div key={index} style={{ width: '160px' }}>
-									<img src={DefaultPDF} width="138px" height="158px" />
-									<Tooltip placement="top" title={`${index}.pdf`}>
-										<p style={{ fontSize: '12px' }} className=" truncate px1 ">
-											{index} Gmat official Guide 2019.pdf
-										</p>
-									</Tooltip>
-								</div>
-							))}
-						</Row>
 					</CenterColumn>
 
 					{/* Content part over */}
 
 					{/* right sider Start */}
 
-					<Col style={{ paddingTop: '20px' }} span={5}>
+					<Col className="pt1" span={5}>
 						<Row>
 							<OwnerInfoContainer>
-								<OwnerInfo />
+								<OwnerInfo fileListing={true} />
 							</OwnerInfoContainer>
 						</Row>
 
@@ -141,20 +137,17 @@ const FileListing = () => {
 							<ShareLinks />
 						</OwnerInfoContainer>
 
-						<Row
-							className="flex justify-center  py1 "
-							style={{ height: '44%' }}
-						>
-							<MemberCount>28 members</MemberCount>
+						<Row className="flex justify-center align-center py1">
+							<MemberCount className="pt1 font-12">28 members</MemberCount>
 							<Checkbox
-								className="py1"
-								style={{ width: '90%', color: '#686087' }}
+								className="py1 font-12 color-sl"
+								style={{ width: '90%' }}
 								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
-							<Col span={23}>
-								<img src={DefaultMap} width="100%" height="230px" />
+							<Col span={23} className="flex justify-center">
+								<img src={DefaultMap} width="80%" />
 							</Col>
 						</Row>
 					</Col>
