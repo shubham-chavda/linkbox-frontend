@@ -4,22 +4,24 @@ import {
 	MainContainer,
 	HeaderContainer,
 	HeaderHome,
-	HeaderFileTab,
 	RightIconGroup,
 	OwnerInfoContainer,
 	RightHeaderContainer,
 	CenterColumn,
-	ContentSection,
-	ExpandIconContainer
+	MemberCount,
+	HeaderSubContainer
 } from './FileListing.style';
-
-import { DefaultPDF, DeleteIcon, ExpandIcon, HomeIcon } from '../../assets';
-import { Button, Col, Divider, Row, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import {
+	DefaultMap,
+	DefaultPDF,
+	DeleteIcon,
+	FilterIcon,
+	HomeIcon
+} from '../../assets';
+import { Button, Checkbox, Col, Divider, Input, Row, Tooltip } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../ShareLinks/ShareLinks';
-// import MemberList from './components/MemberList/MemberList';
-// import FileTabBar from './components/FileTabBar/FileTabBar';
-// import ToolBar from './components/ToolBar/ToolBar';
 
 const FileListing = () => {
 	return (
@@ -33,9 +35,17 @@ const FileListing = () => {
 
 					{/* File Tab bar start */}
 
-					<HeaderFileTab span={18}>
-						{/* <FileTabBar initialPanes={initialPanes} onTabChange={onTabChange} /> */}
-					</HeaderFileTab>
+					<HeaderSubContainer span={18}>
+						<HeaderSubContainer span={6} className="flex items-center">
+							<Input
+								bordered={false}
+								style={{ width: 250 }}
+								placeholder="Search"
+								prefix={<SearchOutlined />}
+							/>
+							<img src={FilterIcon} alt="filter" className="icon16" />
+						</HeaderSubContainer>
+					</HeaderSubContainer>
 
 					{/* File Tab bar over */}
 
@@ -44,7 +54,7 @@ const FileListing = () => {
 					<Col span={5}>
 						<RightHeaderContainer>
 							<RightIconGroup span={10}>
-								<img src={DeleteIcon} alt="chat" className="icon22" />
+								<img src={DeleteIcon} alt="delete" className="icon22" />
 								<Button shape="round" style={{ color: '#686087' }}>
 									Open
 								</Button>
@@ -66,10 +76,10 @@ const FileListing = () => {
 					{/* Content part start */}
 					<CenterColumn>
 						<Row>{/* <ToolBar /> */}</Row>
-						<p style={{ color: 'gray', marginLeft: '10px' }}>
+						<p style={{ color: '#C5C9CE', marginLeft: '10px' }}>
 							Personal Documents
 						</p>
-						<ContentSection>
+						<Row>
 							{[...Array(11)].map((_, index) => (
 								<div
 									key={index}
@@ -87,7 +97,7 @@ const FileListing = () => {
 							))}
 
 							{/*---------------------- more Button ----------------*/}
-						</ContentSection>
+						</Row>
 						{true && (
 							<div className="flex justify-center">
 								<Button shape="round" style={{ color: '#686087' }}>
@@ -98,12 +108,12 @@ const FileListing = () => {
 						<Divider
 							orientation="left"
 							orientationMargin="0px"
-							style={{ fontSize: '13px', color: 'gray' }}
+							style={{ fontSize: '13px', color: '#C5C9CE' }}
 						>
 							Documents from Others
 						</Divider>
-						<ContentSection>
-							{[...Array(11)].map((_, index) => (
+						<Row>
+							{[...Array(2)].map((_, index) => (
 								<div key={index} style={{ width: '160px' }}>
 									<img src={DefaultPDF} width="138px" height="158px" />
 									<Tooltip placement="top" title={`${index}.pdf`}>
@@ -113,7 +123,7 @@ const FileListing = () => {
 									</Tooltip>
 								</div>
 							))}
-						</ContentSection>
+						</Row>
 					</CenterColumn>
 
 					{/* Content part over */}
@@ -126,10 +136,26 @@ const FileListing = () => {
 								<OwnerInfo />
 							</OwnerInfoContainer>
 						</Row>
-						<Row style={{ justifyContent: 'start' }}>
-							<OwnerInfoContainer>
-								<ShareLinks />
-							</OwnerInfoContainer>
+
+						<OwnerInfoContainer>
+							<ShareLinks />
+						</OwnerInfoContainer>
+
+						<Row
+							className="flex justify-center  py1 "
+							style={{ height: '44%' }}
+						>
+							<MemberCount>28 members</MemberCount>
+							<Checkbox
+								className="py1"
+								style={{ width: '90%', color: '#686087' }}
+								// onChange={onChange}
+							>
+								Allow location
+							</Checkbox>
+							<Col span={23}>
+								<img src={DefaultMap} width="100%" height="230px" />
+							</Col>
 						</Row>
 					</Col>
 

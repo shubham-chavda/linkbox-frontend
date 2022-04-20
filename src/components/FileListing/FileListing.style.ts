@@ -15,12 +15,10 @@ export const HeaderHome = styled(Col)`
 	justify-content: center;
 	align-items: center;
 `;
-export const HeaderFileTab = styled(Col)`
-	font-size: 20px;
-
-	/* padding-left: 10px; */
+export const HeaderSubContainer = styled(Col)`
 	border-right: 1px solid #e3ecf3;
-`;
+	height: 100%;
+`
 
 export const RightIconGroup = styled(Col)`
 	display: flex !important;
@@ -50,10 +48,9 @@ export const CenterColumn = styled(Col)`
 	overflow:auto;
 `;
 
-export const ContentSection = styled(Row)`
-	/* display: flex !important;
-	justify-content: start;
-	align-items: center; */
-	/* overflow:visible; */
-	
+export const MemberCount = styled.div`
+	font-weight: bold;
+	width:90%;
+    color:#C4CEDB;
+    font-size:12px;
 `;

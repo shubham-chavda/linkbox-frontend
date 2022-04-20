@@ -61,7 +61,7 @@ const ToolBar = () => {
 			<Col style={{ paddingLeft: '20px' }}>
 				<Avatar.Group
 					maxCount={1}
-					maxPopoverTrigger="click"
+					maxPopoverTrigger="focus"
 					size="large"
 					maxStyle={{
 						color: '#fff',

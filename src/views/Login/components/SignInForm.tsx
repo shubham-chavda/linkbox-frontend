@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Form, Input, Checkbox, Row, Col, Divider } from 'antd';
+import { Form, Checkbox, Row, Col, Divider } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
 import { FacebookIcon, LinkedInIcon } from '../../../assets';
 import {
@@ -96,7 +95,7 @@ const SignInForm = () => {
 					<SignInButton type="submit"> Sign In </SignInButton>
 				</Form.Item>
 			</Form>
-			<Divider style={{ fontSize: '12px', color: 'gray', height: '10px' }}>
+			<Divider style={{ fontSize: '12px', color: '#C5C9CE', height: '10px' }}>
 				OR
 			</Divider>
 			<Row>
@@ -106,11 +105,11 @@ const SignInForm = () => {
 				</SignInOptions>
 				<SignInOptions span={3}>
 					{/* <FacebookIcon /> */}
-					<img src={FacebookIcon} width="25px" height="25px" alt="Facebook" />
+					<img src={FacebookIcon} className="icon25" alt="Facebook" />
 				</SignInOptions>
 				<SignInOptions span={3}>
 					{/* <LinkedInIcon /> */}
-					<img src={LinkedInIcon} width="22px" height="22px" alt="linkedIn" />
+					<img src={LinkedInIcon} className="icon22" alt="linkedIn" />
 				</SignInOptions>
 			</Row>
 		</MainContainer>

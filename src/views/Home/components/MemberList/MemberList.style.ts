@@ -8,8 +8,10 @@ export const MainContainer = styled.div`
 `;
 
 export const MemberCount = styled.div`
+	font-weight: bold;
+
     padding:20px;
-    color:gray;
+    color:#C4CEDB;
     font-size:12px;
 `;
 

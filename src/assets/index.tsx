@@ -18,11 +18,13 @@ import UserStarIcon from './icons/userStarIcon.svg';
 import VideoIcon from './icons/videoIcon.svg';
 import DeleteIcon from './icons/DeleteIcon.svg';
 import ShareLinkIcon from './icons/ShareLinkIcon.svg';
+import FilterIcon from './icons/FilterIcon.svg';
 
 // ------------------- images ----------------------------
 
 import SignInSVG from './images/signInSVG.svg';
 import DefaultPDF from './images/DefaultPDF.svg';
+import DefaultMap from './images/DefaultMap.png';
 
 export {
 	// ------------------- icons ----------------------------
@@ -46,7 +48,9 @@ export {
 	VideoIcon,
 	DeleteIcon,
 	ShareLinkIcon,
+	FilterIcon,
 	// ------------------- images ----------------------------
 	SignInSVG,
-	DefaultPDF
+	DefaultPDF,
+	DefaultMap
 };
