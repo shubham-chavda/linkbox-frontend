@@ -15,7 +15,7 @@ function Login() {
 			<Container>
 				<LeftCol span={10}>
 					<LogoContainer className="pt1" justify="start">
-						<p style={{ color: '#25CA69' }}>Link</p>
+						<p className="color-green">Link</p>
 						<p>Box</p>
 					</LogoContainer>
 					<FormContainer>

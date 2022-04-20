@@ -5,9 +5,16 @@ import { Title, Name, Tag } from './OwnerInfo.style';
 
 interface IOwnerInfo {
 	fileListing: boolean;
+	ownerData?: {
+		key?: string;
+		name?: string;
+		fileName?: string;
+		description?: string;
+	};
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing } = props;
+	const { fileListing, ownerData } = props;
+	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 12 ~ ownerData', ownerData);
 	return (
 		<>
 			<Row>
@@ -18,7 +25,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						size={35}
 						style={{ border: '1px solid gray' }}
 					/>
-					<Name>Robert__fox_</Name>
+					<Name>{ownerData?.name || 'Robert__fox_'}</Name>
 				</Col>
 
 				<Col span={6} className="flex justify-center items-center">
@@ -30,12 +37,12 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				</Col>
 			</Row>
 			<Row className="mt2">
-				<Title>Gmat Official Guide 2019</Title>
+				<Title>{ownerData?.fileName || 'Gmat Official Guide 2019'}</Title>
 			</Row>
 			<Row>
 				<p className="font-12">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-					eiusmod tempor incididunt ut labore et dolore magna aliqua.
+					{ownerData?.description ||
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'}
 				</p>
 			</Row>
 		</>

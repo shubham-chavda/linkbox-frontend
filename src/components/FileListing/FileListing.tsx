@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import { MemberCount } from './FileListing.style';
 import { SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
 	DefaultPdf,
+	DefaultPdfGreen,
 	DeleteIcon,
 	DownloadButton,
 	FilterIcon,
@@ -28,7 +29,31 @@ import {
 } from '../../styles/Layout.style';
 
 const FileListing = () => {
-	const [docClicked, setDocClicked] = useState(false);
+	const [docClicked, setDocClicked] = useState(0);
+	const [docSize, setDocSize] = useState(14);
+	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
+
+	useEffect(() => {
+		const data = [];
+		for (let i = 0; i < docSize; i++) {
+			const ownerdata = {
+				key: i,
+				name: `jacob_jones ${i}`,
+				fileName: `Gmat Official Guide 2019 ${i}`,
+				description:
+					'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et'
+			};
+			data.push(ownerdata);
+		}
+		setOwnerInfo(data);
+		console.log(
+			'🚀 ~ file: FileListing.tsx ~ line 49 ~ useEffect ~ data',
+			data
+		);
+	}, [docSize]);
+	const handleDocClick = (index: number) => {
+		setDocClicked(index);
+	};
 	return (
 		<>
 			<MainContainer>
@@ -95,16 +120,26 @@ const FileListing = () => {
 							Personal Documents
 						</p>
 						<Row>
-							{[...Array(31)].map((_, index) => (
+							{[...Array(docSize)].map((_, index) => (
 								<div
 									key={index}
 									style={{
 										width: '160px'
 									}}
+									onClick={() => handleDocClick(index)}
 								>
-									<img src={DefaultPdf} width="138px" height="158px" />
+									<img
+										src={docClicked === index ? DefaultPdfGreen : DefaultPdf}
+										width="138px"
+										height="158px"
+									/>
 									<Tooltip placement="top" title={`${index}.pdf`}>
-										<p className=" truncate px1 font-12">
+										<p
+											style={{
+												color: docClicked === index ? '#25CA69' : 'black'
+											}}
+											className=" truncate px1 font-12"
+										>
 											{index} Gmat official Guide 2019.pdf
 										</p>
 									</Tooltip>
@@ -115,7 +150,11 @@ const FileListing = () => {
 						</Row>
 						{true && (
 							<div className="flex justify-center mb2">
-								<Button className="color-sl" shape="round">
+								<Button
+									onClick={() => setDocSize((prev) => prev + 14)}
+									className="color-sl"
+									shape="round"
+								>
 									More
 								</Button>
 							</div>
@@ -129,7 +168,10 @@ const FileListing = () => {
 					<Col className="pt1" span={5}>
 						<Row>
 							<OwnerInfoContainer>
-								<OwnerInfo fileListing={true} />
+								<OwnerInfo
+									ownerData={ownerInfo[docClicked]}
+									fileListing={true}
+								/>
 							</OwnerInfoContainer>
 						</Row>
 
