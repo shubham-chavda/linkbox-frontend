@@ -92,9 +92,9 @@ const Home = () => {
 			documentViewer.setOptions({ enableAnnotations: true });
 			// documentViewer.loadDocument(documentPath);
 
-			setDocumentViewer(Core.documentViewer);
 
 			documentViewer.addEventListener('documentLoaded', () => {
+				setDocumentViewer(Core.documentViewer);
 				console.log('document loaded');
 				documentViewer.setToolMode(documentViewer.getTool(Core.Tools.ToolNames.EDIT));
 				// setAnnotationManager(documentViewer.getAnnotationManager());
