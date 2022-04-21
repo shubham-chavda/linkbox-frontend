@@ -26,7 +26,14 @@ import { Avatar, Button, Col, Popover, Row } from 'antd';
 import AvatarGroup from '@atlaskit/avatar-group';
 import { PopOverContent } from '../MemberList/MemberList.style';
 import PopoverComponent from '../../../../components/PopupMenu/PopupMenu';
-const ToolBar = () => {
+
+interface IToolBarProps {
+	zoomIn: any;
+	zoomOut: any;
+	// documentViewer: any;
+}
+
+const ToolBar = ({ zoomIn, zoomOut }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(100);
 	const [zoomLevel, setZoomLevel] = useState('100');
@@ -155,6 +162,7 @@ const ToolBar = () => {
 				<IncDecContainer>
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
+						onClick={() => zoomIn()}
 						// onClick={() => decrementPageCount()}
 						{...IncDecContainerProps}
 					/>
@@ -172,6 +180,7 @@ const ToolBar = () => {
 					<PlusCircleOutlined
 						// onClick={() => incrementPageCount()}
 						disabled={pageCount === maxCount}
+						onClick={() => zoomOut()}
 						{...IncDecContainerProps}
 					/>
 				</IncDecContainer>

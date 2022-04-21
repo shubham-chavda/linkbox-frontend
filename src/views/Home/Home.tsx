@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { ContentSection, RightCollapsibleSider } from './Home.style';
+import { ContentSection, RightCollapsibleSider, WebviewerSection } from './Home.style';
+
+import WebViewer from '@pdftron/webviewer';
 
 import {
 	BookmarkIcon,
@@ -30,9 +32,29 @@ import {
 	RightIconGroup
 } from '../../styles/Layout.style';
 
+declare global {
+	interface Window {
+		Core: any;
+	}
+}
+
 const Home = () => {
+	const viewer: any = useRef(null);
+	const scrollView = useRef(null);
+	const searchTerm = useRef(null);
+
 	const [activeKey, setActiveKey] = useState('1');
 	const [collapsed, setCollapsed] = useState(false);
+
+	const searchContainerRef = useRef(null);
+
+	const [documentViewer, setDocumentViewer] = useState<any>(null);
+	const [annotationManager, setAnnotationManager] = useState(null);
+	const [searchContainerOpen, setSearchContainerOpen] = useState(false);
+
+	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
+	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
+
 	useEffect(() => {
 		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
 	}, [collapsed]);
@@ -50,6 +72,103 @@ const Home = () => {
 		{ title: 'Tab 11', content: 'Content of Tab 11', key: '11' },
 		{ title: 'Tab 12', content: 'Content of Tab 12', key: '12' }
 	];
+	const loadPdfDocumentByPath = (documentPath: string) => {
+		WebViewer({
+			path: '/webviewer/lib',
+			initialDoc: documentPath,
+			fullAPI: true
+		}, viewer.current,
+		).then(async (instance) => {
+			// const { documentViewer, annotationManager, Annotations, PDFNet } = instance.Core;
+
+			const Core = instance.Core;
+			// Core.setWorkerPath('/webviewer');
+			Core.enableFullPDF();
+
+
+			const documentViewer = new Core.DocumentViewer();
+			documentViewer.setScrollViewElement(scrollView.current!);
+			documentViewer.setViewerElement(viewer.current);
+			documentViewer.setOptions({ enableAnnotations: true });
+			// documentViewer.loadDocument(documentPath);
+
+			setDocumentViewer(Core.documentViewer);
+
+			documentViewer.addEventListener('documentLoaded', () => {
+				console.log('document loaded');
+				documentViewer.setToolMode(documentViewer.getTool(Core.Tools.ToolNames.EDIT));
+				// setAnnotationManager(documentViewer.getAnnotationManager());
+			});
+		})
+
+	}
+
+
+	const zoomOut = (zoomPercentages?: number) => {
+		console.log("zoomPercentages ------->", zoomPercentages);
+		if (zoomPercentages) {
+			documentViewer.zoomTo(zoomPercentages);
+		} else {
+			documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
+		}
+	};
+
+	const zoomIn = () => {
+		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
+	};
+
+	const startEditingContent = () => {
+		const contentEditTool = documentViewer.getTool(window.Core.Tools.ToolNames.CONTENT_EDIT);
+		documentViewer.setToolMode(contentEditTool);
+	};
+
+	const createRectangle = () => {
+		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE));
+	};
+
+	const selectTool = () => {
+		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.EDIT));
+	};
+
+	const createRedaction = () => {
+		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION));
+	};
+
+	const applyRedactions = async () => {
+		const annotationManager = documentViewer.getAnnotationManager();
+		annotationManager.enableRedaction();
+		await annotationManager.applyRedactions();
+	};
+
+	const richTextEditorChangeHandler = (value: any) => {
+		setEditBoxCurrentValue(value);
+	};
+
+	const applyEditModal = () => {
+		window.Core.ContentEdit.updateDocumentContent(editBoxAnnotation, editBoxCurrentValue);
+
+		setEditBoxAnnotation(null);
+		setEditBoxCurrentValue(null);
+	};
+
+	const editSelectedBox = async () => {
+		const selectedAnnotations = documentViewer.getAnnotationManager().getSelectedAnnotations();
+		const selectedAnnotation = selectedAnnotations[0];
+
+		if (selectedAnnotation &&
+			selectedAnnotation.isContentEditPlaceholder() &&
+			selectedAnnotation.getContentEditType() === window.Core.ContentEdit.Types.TEXT) {
+			const content = await window.Core.ContentEdit.getDocumentContent(selectedAnnotation);
+			setEditBoxAnnotation(selectedAnnotation);
+			setEditBoxCurrentValue(content);
+		} else {
+			alert('Text edit box is not selected');
+		}
+	};
+	useEffect(() => {
+		loadPdfDocumentByPath('/files/PDFTRON_about.pdf')
+	}, []);
+
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
 	};
@@ -123,12 +242,14 @@ const Home = () => {
 					{/* Content part start */}
 					<CenterColumn>
 						<Row>
-							<ToolBar />
+							<ToolBar
+								zoomIn={zoomIn}
+								zoomOut={zoomOut}
+							// documentViewer={documentViewer}
+							/>
 						</Row>
 
-						<ContentSection>
-							{initialPanes[+activeKey - 1].content}
-						</ContentSection>
+						<WebviewerSection ref={viewer} />
 					</CenterColumn>
 					{/* Content part over */}
 					{/* right sider Start */}

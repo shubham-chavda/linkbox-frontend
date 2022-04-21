@@ -2,7 +2,13 @@ import { Col, Row } from 'antd';
 import styled from 'styled-components';
 
 
-
+export const WebviewerSection = styled.div`
+	flex: 1;
+	margin: 8px;
+	height: 100%;
+  -webkit-box-shadow: 1px 1px 10px #999;
+  box-shadow: 1px 1px 10px #999;
+`;
 
 export const ContentSection = styled(Row)`
 	height: calc(100vh - 100px);
