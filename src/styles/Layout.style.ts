@@ -18,6 +18,7 @@ export const HeaderHome = styled(Col)`
 export const OwnerInfoContainer = styled(Col)`
 	padding: 10px 20px;
 	border-bottom: 1px solid #e3ecf3;
+	transition: all 0.5s ease-in-out;
 `;
 
 export const RightHeaderContainer = styled(Row)`

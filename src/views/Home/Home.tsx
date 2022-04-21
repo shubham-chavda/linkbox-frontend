@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { ContentSection } from './Home.style';
+import { ContentSection, RightCollapsibleSider } from './Home.style';
 
 import {
 	BookmarkIcon,
@@ -31,8 +31,11 @@ import {
 } from '../../styles/Layout.style';
 
 const Home = () => {
-	const [activeKey, setActiveKey] = React.useState('1');
-
+	const [activeKey, setActiveKey] = useState('1');
+	const [collapsed, setCollapsed] = useState(false);
+	useEffect(() => {
+		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
+	}, [collapsed]);
 	const initialPanes: initPanel = [
 		{ title: 'Tab 1 ', content: 'Content of Tab 1', key: '1' },
 		{ title: 'Tab 2', content: 'Content of Tab 2', key: '2' },
@@ -49,6 +52,16 @@ const Home = () => {
 	];
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
+	};
+	const openRightSider = () => {
+		setCollapsed(false);
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
+			'320px';
+	};
+	const closeRightSider = () => {
+		setCollapsed(true);
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
+			'0px';
 	};
 	return (
 		<>
@@ -72,13 +85,26 @@ const Home = () => {
 					<Col span={5}>
 						<RightHeaderContainer>
 							<LeftIconGroup span={7}>
-								<img src={ExpandIcon} alt="expand" className="icon22" />
+								{!collapsed && (
+									<img
+										src={ExpandIcon}
+										onClick={() => closeRightSider()}
+										alt="expand"
+										className="icon22"
+									/>
+								)}
 							</LeftIconGroup>
 							<RightIconGroup span={16}>
 								<img src={ChatIcon2} alt="chat" className="icon22" />
 								<img src={BookmarkIcon} alt="bookmark" className="icon22" />
 								<img src={UserStarIcon} alt="userStar" className="icon22" />
-								<img src={InfoIcon} alt="Info" className="icon22" />
+
+								<img
+									src={InfoIcon}
+									onClick={() => openRightSider()}
+									alt="Info"
+									className="icon22"
+								/>
 							</RightIconGroup>
 						</RightHeaderContainer>
 					</Col>
@@ -104,22 +130,17 @@ const Home = () => {
 							{initialPanes[+activeKey - 1].content}
 						</ContentSection>
 					</CenterColumn>
-
 					{/* Content part over */}
-
 					{/* right sider Start */}
-
-					<Col className="pt1" span={5}>
+					{/* span={collapsed ? 0 : 5} */}
+					<RightCollapsibleSider id="mySidebar" className="pt1">
 						<Row>
 							<OwnerInfoContainer>
-								<OwnerInfo fileListing={false} />
+								{!collapsed && <OwnerInfo fileListing={false} />}
 							</OwnerInfoContainer>
 						</Row>
-						<Row className="justify-start">
-							<MemberList />
-						</Row>
-					</Col>
-
+						<Row className="justify-start">{!collapsed && <MemberList />}</Row>
+					</RightCollapsibleSider>
 					{/* right sider Over */}
 				</Row>
 			</MainContainer>

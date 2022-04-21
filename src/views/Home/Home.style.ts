@@ -10,3 +10,7 @@ export const ContentSection = styled(Row)`
 	justify-content: center;
 	align-items: center;
 `;
+export const RightCollapsibleSider = styled(Col)`
+	transition: all 0.3s ease-in-out;
+	width:320px;
+`;

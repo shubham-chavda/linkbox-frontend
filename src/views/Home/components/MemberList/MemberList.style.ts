@@ -50,8 +50,8 @@ export const PopOverContent = styled(Col)`
       flex-direction: column;
       justify-content: flex-start;
       && div{
-          padding:6px 10px;
-
+          padding:2px 10px;
+          font-size:11px;
           :hover{
               background-color: #ffffff11;
           }

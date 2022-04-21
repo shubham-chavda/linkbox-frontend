@@ -28,7 +28,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 					<Name>{ownerData?.name || 'Robert__fox_'}</Name>
 				</Col>
 
-				<Col span={6} className="flex justify-center items-center">
+				<Col span={6}>
 					{fileListing ? (
 						<img src={EditIcon} alt="edit" />
 					) : (
