@@ -9,9 +9,6 @@ export const ToolBarContainer = styled(Row)`
   padding:0 18px;
 `;
 
-<<<<<<< HEAD
-=======
-
 export const SearchButton = styled(Input)`
   border-radius:24px;
   width: 180px;
@@ -24,7 +21,6 @@ export const SearchButton = styled(Input)`
   }  
 `;
 
->>>>>>> bc36ba120de3866cf3affbaeb5c9a81528cd8c57
 export const IncDecContainer = styled.div`
   border: 1px solid #F2F2F2;
   border-radius: 24px;
