@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 import {
 	IncDecContainer,
-	SearchButton,
 	SelectContainer,
 	ToolBarContainer
 } from './ToolBar.style';
@@ -24,6 +23,8 @@ import {
 import { Button, Col, Row } from 'antd';
 import AvatarGroup from '@atlaskit/avatar-group';
 import PopoverComponent from '../../../../components/PopupMenu/PopupMenu';
+import { SearchButtonFilled } from '../../../../styles/Layout.style';
+import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 
 interface IToolBarProps {
 	zoomIn: any;
@@ -38,9 +39,9 @@ const ToolBar = ({
 	zoomIn,
 	zoomOut,
 	documentViewer,
-	setCustomZoomLevel,
 	createRectangle,
 	selectTool,
+	setCustomZoomLevel
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(100);
@@ -49,22 +50,6 @@ const ToolBar = ({
 	const IncDecContainerProps = {
 		padding: '7px'
 	};
-	const data = [...Array(10)].map((_, i) => ({
-		email: `johnDoe@gmail.com ${i}`,
-		key: `johnDoe@gmail.com ${i}`,
-		name: `johnDoe ${i}`,
-		href: '#',
-		src: 'https://joeschmoe.io/api/v1/random'
-	}));
-	const content = (
-		<div>
-			<div>Send a Message</div>
-			<div>Video call</div>
-			<div>Audio call</div>
-			<div>Report inappropriate actions</div>
-			<div>Block User</div>
-		</div>
-	);
 
 	const decrementPageCount = () => {
 		if (pageCount >= 1) setPageCount((prev) => prev - 1);
@@ -74,7 +59,7 @@ const ToolBar = ({
 		else setPageCount(maxCount);
 	};
 	const onChangeZoomLevel = (value: string) => {
-		console.log("documentViewer.getZoomLevel() ========>", value);
+		console.log('documentViewer.getZoomLevel() ========>', value);
 		// setZoomLevel(+value);
 		setCustomZoomLevel(value);
 		// setZoomLevel(documentViewer.getZoomLevel() * 100);
@@ -82,15 +67,16 @@ const ToolBar = ({
 
 	const refreshZoomLevel = () => {
 		const newZoomLevel = documentViewer.getZoomLevel() * 100;
+		console.log('newZoomLevel==>', newZoomLevel);
 		setZoomLevel(newZoomLevel);
-	}
+	};
 
 	return (
 		<ToolBarContainer>
 			{/* Search Button */}
 
 			<Col>
-				<SearchButton
+				<SearchButtonFilled
 					style={{ width: 250 }}
 					placeholder="Search"
 					prefix={<SearchOutlined />}
@@ -100,55 +86,7 @@ const ToolBar = ({
 			{/* Members Avatar */}
 
 			<Col className="pl2	">
-				<AvatarGroup
-					maxCount={2}
-					testId="overrides"
-					appearance="stack"
-					data={data}
-					size="large"
-					css={{ background: 'red' }}
-					overrides={{
-						AvatarGroupItem: {
-							render: (Component, props, index) => {
-								console.log(
-									'🚀 ~ file: ToolBar.tsx ~ line 90 ~ ToolBar ~ index',
-									index
-								);
-								const avatarItem = <Component {...props} key={index} />;
-
-								return index === 1 ? (
-									<React.Fragment key={`${index}-overridden`}>
-										<SearchButton
-											className="m1"
-											style={{ width: 250 }}
-											placeholder="Search"
-											prefix={<SearchOutlined />}
-										/>
-										<Row className="flex items-center">
-											<Col span={21}>{avatarItem}</Col>
-											<Col>
-												<PopoverComponent
-													content={content}
-													placement="rightTop"
-												/>
-											</Col>
-										</Row>
-									</React.Fragment>
-								) : (
-									<Row className="flex items-center">
-										<Col span={21}>{avatarItem}</Col>
-										<Col>
-											<PopoverComponent
-												content={content}
-												placement="rightTop"
-											/>
-										</Col>
-									</Row>
-								);
-							}
-						}
-					}}
-				/>
+				<MemberListPopup />
 			</Col>
 			<Col>
 				<IncDecContainer>
@@ -179,7 +117,7 @@ const ToolBar = ({
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
 						onClick={() => {
-							zoomIn()
+							zoomIn();
 							refreshZoomLevel();
 						}}
 						{...IncDecContainerProps}

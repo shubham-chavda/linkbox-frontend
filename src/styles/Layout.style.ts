@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd';
+import { Col, Input, Row } from 'antd';
 import styled from 'styled-components';
 
 export const MainContainer = styled.div`
@@ -50,4 +50,17 @@ export const CenterColumn = styled(Col)`
 	padding-top: 10px;
 	border-right: 1px solid #e3ecf3;
 	flex: 1;
+`;
+
+export const SearchButtonFilled = styled(Input)`
+    border-radius:24px;
+    width: 180px;
+    padding:10px;
+    background:#F5F7F9;
+    border:none;
+    && .ant-input-affix-wrapper, input.ant-input{
+        background:#F5F7F9;
+        padding-left: 12px;
+    }
+   
 `;
