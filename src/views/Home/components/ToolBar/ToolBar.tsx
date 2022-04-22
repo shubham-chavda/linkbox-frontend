@@ -20,13 +20,26 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
-const ToolBar = () => {
+
+import { Col } from 'antd';
+interface IToolBarProps {
+	zoomIn: any;
+	zoomOut: any;
+	documentViewer: any;
+	setCustomZoomLevel: any;
+}
+
+const ToolBar = ({
+	zoomIn,
+	zoomOut,
+	documentViewer,
+	setCustomZoomLevel
+}: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(100);
-	const [zoomLevel, setZoomLevel] = useState('100');
+	const [zoomLevel, setZoomLevel] = useState(100);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -40,8 +53,19 @@ const ToolBar = () => {
 		else setPageCount(maxCount);
 	};
 	const onChangeZoomLevel = (value: string) => {
-		setZoomLevel(value);
+		console.log('documentViewer.getZoomLevel() ========>', value);
+		// setZoomLevel(+value);
+		setCustomZoomLevel(value);
+		// setZoomLevel(documentViewer.getZoomLevel() * 100);
 	};
+
+	const refreshZoomLevel = () => {
+		const newZoomLevel = documentViewer.getZoomLevel() * 100;
+		console.log('newZoomLevel==>', newZoomLevel);
+		setZoomLevel(newZoomLevel);
+	};
+
+	console.log('on re-render zoom level is -------> ', zoomLevel);
 
 	return (
 		<ToolBarContainer>
@@ -88,23 +112,31 @@ const ToolBar = () => {
 				<IncDecContainer>
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
-						// onClick={() => decrementPageCount()}
+						onClick={() => {
+							zoomIn();
+							refreshZoomLevel();
+						}}
 						{...IncDecContainerProps}
 					/>
 					<>
 						<SelectContainer
-							defaultValue="100%"
+							disabled={false}
+							value={`${Math.floor(zoomLevel)}%`}
 							onChange={() => onChangeZoomLevel}
 						>
-							<option value="100">100%</option>
-							<option value="125">125%</option>
-							<option value="150">150%</option>
-							<option value="175">175%</option>
+							<option value={100}>100%</option>
+							<option value={125}>125%</option>
+							<option value={150}>150%</option>
+							<option value={175}>175%</option>
 						</SelectContainer>
 					</>
 					<PlusCircleOutlined
 						// onClick={() => incrementPageCount()}
 						disabled={pageCount === maxCount}
+						onClick={() => {
+							zoomOut();
+							refreshZoomLevel();
+						}}
 						{...IncDecContainerProps}
 					/>
 				</IncDecContainer>
