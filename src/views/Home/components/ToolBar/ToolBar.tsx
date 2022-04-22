@@ -65,7 +65,7 @@ const ToolBar = ({ zoomIn, zoomOut, documentViewer, setCustomZoomLevel }: IToolB
 		else setPageCount(maxCount);
 	};
 	const onChangeZoomLevel = (value: string) => {
-		// console.log("documentViewer.getZoomLevel() ========>", documentViewer.getZoomLevel());
+		console.log("documentViewer.getZoomLevel() ========>", value);
 		// setZoomLevel(+value);
 		setCustomZoomLevel(value);
 		// setZoomLevel(documentViewer.getZoomLevel() * 100);

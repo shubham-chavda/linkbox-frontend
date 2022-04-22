@@ -77,7 +77,10 @@ const Home = () => {
 		WebViewer({
 			path: '/webviewer/lib',
 			initialDoc: documentPath,
-			fullAPI: true
+			fullAPI: true,
+			disabledElements: [
+				'header',
+			]
 		}, viewer.current,
 		).then(async (instance) => {
 			// const { documentViewer, annotationManager, Annotations, PDFNet } = instance.Core;
@@ -96,12 +99,8 @@ const Home = () => {
 
 
 			documentViewer.addEventListener('documentLoaded', () => {
-				setTimeout(() => {
-					setIsDocumentLoaded(true);
-				}, 500);
+				setIsDocumentLoaded(true);
 				console.log('document loaded');
-				documentViewer.setToolMode(documentViewer.getTool(Core.Tools.ToolNames.EDIT));
-				// setAnnotationManager(documentViewer.getAnnotationManager());
 			});
 		})
 	}
