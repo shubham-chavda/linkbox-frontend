@@ -4,8 +4,7 @@ import {
 	LeftOutlined,
 	RightOutlined,
 	PlusCircleOutlined,
-	MinusCircleOutlined,
-	MoreOutlined
+	MinusCircleOutlined
 } from '@ant-design/icons';
 import {
 	IncDecContainer,
@@ -22,21 +21,21 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Avatar, Button, Col, Popover, Row } from 'antd';
+import { Col, Row } from 'antd';
 import AvatarGroup from '@atlaskit/avatar-group';
-import { PopOverContent } from '../MemberList/MemberList.style';
 import PopoverComponent from '../../../../components/PopupMenu/PopupMenu';
 
 interface IToolBarProps {
 	zoomIn: any;
 	zoomOut: any;
-	// documentViewer: any;
+	documentViewer: any;
+	setCustomZoomLevel: any;
 }
 
-const ToolBar = ({ zoomIn, zoomOut }: IToolBarProps) => {
+const ToolBar = ({ zoomIn, zoomOut, documentViewer, setCustomZoomLevel }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(100);
-	const [zoomLevel, setZoomLevel] = useState('100');
+	const [zoomLevel, setZoomLevel] = useState(100);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -66,8 +65,19 @@ const ToolBar = ({ zoomIn, zoomOut }: IToolBarProps) => {
 		else setPageCount(maxCount);
 	};
 	const onChangeZoomLevel = (value: string) => {
-		setZoomLevel(value);
+		// console.log("documentViewer.getZoomLevel() ========>", documentViewer.getZoomLevel());
+		// setZoomLevel(+value);
+		setCustomZoomLevel(value);
+		// setZoomLevel(documentViewer.getZoomLevel() * 100);
 	};
+
+	const refreshZoomLevel = () => {
+		const newZoomLevel = documentViewer.getZoomLevel() * 100;
+		console.log("newZoomLevel==>", newZoomLevel);
+		setZoomLevel(newZoomLevel);
+	}
+
+	console.log("on re-render zoom level is -------> ", zoomLevel);
 
 	return (
 		<ToolBarContainer>
@@ -162,25 +172,31 @@ const ToolBar = ({ zoomIn, zoomOut }: IToolBarProps) => {
 				<IncDecContainer>
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
-						onClick={() => zoomIn()}
-						// onClick={() => decrementPageCount()}
+						onClick={() => {
+							zoomIn()
+							refreshZoomLevel();
+						}}
 						{...IncDecContainerProps}
 					/>
 					<>
 						<SelectContainer
-							defaultValue="100%"
+							disabled={false}
+							value={`${Math.floor(zoomLevel)}%`}
 							onChange={() => onChangeZoomLevel}
 						>
-							<option value="100">100%</option>
-							<option value="125">125%</option>
-							<option value="150">150%</option>
-							<option value="175">175%</option>
+							<option value={100}>100%</option>
+							<option value={125}>125%</option>
+							<option value={150}>150%</option>
+							<option value={175}>175%</option>
 						</SelectContainer>
 					</>
 					<PlusCircleOutlined
 						// onClick={() => incrementPageCount()}
 						disabled={pageCount === maxCount}
-						onClick={() => zoomOut()}
+						onClick={() => {
+							zoomOut();
+							refreshZoomLevel();
+						}}
 						{...IncDecContainerProps}
 					/>
 				</IncDecContainer>

@@ -49,6 +49,7 @@ const Home = () => {
 	const searchContainerRef = useRef(null);
 
 	const [documentViewer, setDocumentViewer] = useState<any>(null);
+	const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
 	const [annotationManager, setAnnotationManager] = useState(null);
 	const [searchContainerOpen, setSearchContainerOpen] = useState(false);
 
@@ -90,32 +91,32 @@ const Home = () => {
 			documentViewer.setScrollViewElement(scrollView.current!);
 			documentViewer.setViewerElement(viewer.current);
 			documentViewer.setOptions({ enableAnnotations: true });
+			setDocumentViewer(Core.documentViewer);
 			// documentViewer.loadDocument(documentPath);
 
 
 			documentViewer.addEventListener('documentLoaded', () => {
-				setDocumentViewer(Core.documentViewer);
+				setTimeout(() => {
+					setIsDocumentLoaded(true);
+				}, 500);
 				console.log('document loaded');
 				documentViewer.setToolMode(documentViewer.getTool(Core.Tools.ToolNames.EDIT));
 				// setAnnotationManager(documentViewer.getAnnotationManager());
 			});
 		})
-
 	}
 
-
 	const zoomOut = (zoomPercentages?: number) => {
-		console.log("zoomPercentages ------->", zoomPercentages);
-		if (zoomPercentages) {
-			documentViewer.zoomTo(zoomPercentages);
-		} else {
-			documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
-		}
+		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
 	};
 
 	const zoomIn = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
+
+	const setCustomZoomLevel = (zoomPercentages: number) => {
+		documentViewer.zoomTo(zoomPercentages);
+	}
 
 	const startEditingContent = () => {
 		const contentEditTool = documentViewer.getTool(window.Core.Tools.ToolNames.CONTENT_EDIT);
@@ -245,7 +246,8 @@ const Home = () => {
 							<ToolBar
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
-							// documentViewer={documentViewer}
+								setCustomZoomLevel={setCustomZoomLevel}
+								documentViewer={documentViewer}
 							/>
 						</Row>
 
