@@ -21,7 +21,7 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col, Row } from 'antd';
+import { Button, Col, Row } from 'antd';
 import AvatarGroup from '@atlaskit/avatar-group';
 import PopoverComponent from '../../../../components/PopupMenu/PopupMenu';
 
@@ -30,9 +30,18 @@ interface IToolBarProps {
 	zoomOut: any;
 	documentViewer: any;
 	setCustomZoomLevel: any;
+	createRectangle: any;
+	selectTool: any
 }
 
-const ToolBar = ({ zoomIn, zoomOut, documentViewer, setCustomZoomLevel }: IToolBarProps) => {
+const ToolBar = ({
+	zoomIn,
+	zoomOut,
+	documentViewer,
+	setCustomZoomLevel,
+	createRectangle,
+	selectTool,
+}: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(100);
 	const [zoomLevel, setZoomLevel] = useState(100);
@@ -73,11 +82,8 @@ const ToolBar = ({ zoomIn, zoomOut, documentViewer, setCustomZoomLevel }: IToolB
 
 	const refreshZoomLevel = () => {
 		const newZoomLevel = documentViewer.getZoomLevel() * 100;
-		console.log("newZoomLevel==>", newZoomLevel);
 		setZoomLevel(newZoomLevel);
 	}
-
-	console.log("on re-render zoom level is -------> ", zoomLevel);
 
 	return (
 		<ToolBarContainer>
@@ -203,7 +209,7 @@ const ToolBar = ({ zoomIn, zoomOut, documentViewer, setCustomZoomLevel }: IToolB
 			</Col>
 
 			<img src={PageIcon} alt="page" className="icon22" />
-			<img src={HandMoveIcon} alt="move" className="icon22" />
+			<img onClick={() => createRectangle()} src={HandMoveIcon} alt="move" className="icon22" />
 			<img src={VideoIcon} alt="video" className="icon22" />
 			<img src={CallIcon} alt="call" className="icon22" />
 			<img src={SizeChangeIcon} alt="size" className="icon22" />

@@ -174,13 +174,11 @@ const Home = () => {
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
-			'320px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '320px';
 	};
 	const closeRightSider = () => {
 		setCollapsed(true);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
-			'0px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '0px';
 	};
 	return (
 		<>
@@ -247,6 +245,8 @@ const Home = () => {
 								zoomOut={zoomOut}
 								setCustomZoomLevel={setCustomZoomLevel}
 								documentViewer={documentViewer}
+								createRectangle={createRectangle}
+								selectTool={selectTool}
 							/>
 						</Row>
 
