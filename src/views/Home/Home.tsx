@@ -56,6 +56,7 @@ const Home = () => {
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
+	const [documentInstance, setDocumentInstance] = useState<any>(null);
 
 	useEffect(() => {
 		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
@@ -81,23 +82,26 @@ const Home = () => {
 			fullAPI: true,
 			disabledElements: [
 				'header',
+				'textToolGroupButton',
+				'eraserToolButton',
+				'signatureToolGroupButton',
+				'toolsButton',
+				'eraserToolButton',
+				'signatureToolGroupButton',
+				'freeTextToolButton',
+				'stickyToolButton',
 			]
-		}, viewer.current,
-		).then(async (instance) => {
-			// const { documentViewer, annotationManager, Annotations, PDFNet } = instance.Core;
-
+		}, viewer.current).then(async (instance) => {
 			const Core = instance.Core;
-			// Core.setWorkerPath('/webviewer');
 			Core.enableFullPDF();
-
-
 			const documentViewer = new Core.DocumentViewer();
 			documentViewer.setScrollViewElement(scrollView.current!);
 			documentViewer.setViewerElement(viewer.current);
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
+			setDocumentInstance(instance);
+			documentViewer.disableViewportRenderMode()
 			// documentViewer.loadDocument(documentPath);
-
 
 			documentViewer.addEventListener('documentLoaded', () => {
 				setIsDocumentLoaded(true);
@@ -152,6 +156,20 @@ const Home = () => {
 		setEditBoxAnnotation(null);
 		setEditBoxCurrentValue(null);
 	};
+
+	const downloadPfd = async () => {
+		await documentInstance.UI.downloadPdf({
+			includeAnnotations: true,
+			flatten: true,
+		});
+	}
+
+	const printPfd = async () => {
+		await documentInstance.UI.print({
+			includeAnnotations: true,
+			flatten: true,
+		});
+	}
 
 	const editSelectedBox = async () => {
 		const selectedAnnotations = documentViewer.getAnnotationManager().getSelectedAnnotations();
@@ -250,6 +268,7 @@ const Home = () => {
 								createRectangle={createRectangle}
 								selectTool={selectTool}
 								totalPageCount={maxCount}
+								downloadPfd={downloadPfd}
 							/>
 						</Row>
 

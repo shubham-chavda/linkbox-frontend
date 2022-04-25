@@ -34,6 +34,7 @@ interface IToolBarProps {
 	createRectangle: any;
 	selectTool: any;
 	totalPageCount: number;
+	downloadPfd: any;
 }
 
 const ToolBar = ({
@@ -44,6 +45,7 @@ const ToolBar = ({
 	selectTool,
 	setCustomZoomLevel,
 	totalPageCount,
+	downloadPfd
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -60,10 +62,9 @@ const ToolBar = ({
 	}, [totalPageCount])
 
 	const decrementPageCount = () => {
-		if (pageCount >= 1) {
+		if (pageCount > 1) {
 			setPageCount((prev) => prev - 1);
 			documentViewer.setCurrentPage(pageCount - 1);
-			//  getCurrentPage
 		}
 	};
 	const incrementPageCount = () => {
@@ -169,7 +170,7 @@ const ToolBar = ({
 			<img src={CallIcon} alt="call" className="icon22" />
 			<img src={SizeChangeIcon} alt="size" className="icon22" />
 			<img src={ShareIcon} alt="share" className="icon22" />
-			<img src={CopyIcon} alt="copy" className="icon22" />
+			<img src={CopyIcon} onClick={() => downloadPfd()} alt="copy" className="icon22" />
 		</ToolBarContainer>
 	);
 };
