@@ -43,6 +43,7 @@ const Home = () => {
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
 
+	const [maxCount, setMaxCount] = useState(10);
 	const [activeKey, setActiveKey] = useState('1');
 	const [collapsed, setCollapsed] = useState(false);
 
@@ -101,6 +102,7 @@ const Home = () => {
 			documentViewer.addEventListener('documentLoaded', () => {
 				setIsDocumentLoaded(true);
 				console.log('document loaded');
+				// setMaxCount(documentViewer.getPageCount());
 			});
 		})
 	}
@@ -247,6 +249,7 @@ const Home = () => {
 								documentViewer={documentViewer}
 								createRectangle={createRectangle}
 								selectTool={selectTool}
+								totalPageCount={maxCount}
 							/>
 						</Row>
 

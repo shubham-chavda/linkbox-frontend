@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	SearchOutlined,
 	LeftOutlined,
@@ -32,7 +32,8 @@ interface IToolBarProps {
 	documentViewer: any;
 	setCustomZoomLevel: any;
 	createRectangle: any;
-	selectTool: any
+	selectTool: any;
+	totalPageCount: number;
 }
 
 const ToolBar = ({
@@ -41,22 +42,38 @@ const ToolBar = ({
 	documentViewer,
 	createRectangle,
 	selectTool,
-	setCustomZoomLevel
+	setCustomZoomLevel,
+	totalPageCount,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
-	const [maxCount, setMaxCount] = useState(100);
+	const [maxCount, setMaxCount] = useState(totalPageCount);
 	const [zoomLevel, setZoomLevel] = useState(100);
 
 	const IncDecContainerProps = {
 		padding: '7px'
 	};
 
+	useEffect(() => {
+		console.log("totalPageCount -------->", totalPageCount);
+		setMaxCount(totalPageCount);
+		// setPageCount(documentViewer.getCurrentPage());
+	}, [totalPageCount])
+
 	const decrementPageCount = () => {
-		if (pageCount >= 1) setPageCount((prev) => prev - 1);
+		if (pageCount >= 1) {
+			setPageCount((prev) => prev - 1);
+			documentViewer.setCurrentPage(pageCount - 1);
+			//  getCurrentPage
+		}
 	};
 	const incrementPageCount = () => {
-		if (pageCount <= maxCount) setPageCount((prev) => prev + 1);
-		else setPageCount(maxCount);
+		if (pageCount <= maxCount) {
+			setPageCount((prev) => prev + 1);
+			documentViewer.setCurrentPage(pageCount + 1);
+		}
+		else {
+			setPageCount(maxCount);
+		}
 	};
 	const onChangeZoomLevel = (value: string) => {
 		console.log('documentViewer.getZoomLevel() ========>', value);
