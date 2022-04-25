@@ -82,14 +82,15 @@ const Home = () => {
 			fullAPI: true,
 			disabledElements: [
 				'header',
-				'textToolGroupButton',
-				'eraserToolButton',
-				'signatureToolGroupButton',
-				'toolsButton',
-				'eraserToolButton',
-				'signatureToolGroupButton',
-				'freeTextToolButton',
-				'stickyToolButton',
+				'toolsHeader',
+				// 'textToolGroupButton',
+				// 'eraserToolButton',
+				// 'signatureToolGroupButton',
+				// 'toolsButton',
+				// 'eraserToolButton',
+				// 'signatureToolGroupButton',
+				// 'freeTextToolButton',
+				// 'stickyToolButton',
 			]
 		}, viewer.current).then(async (instance) => {
 			const Core = instance.Core;
@@ -103,20 +104,25 @@ const Home = () => {
 			documentViewer.disableViewportRenderMode()
 			// documentViewer.loadDocument(documentPath);
 
-			documentViewer.addEventListener('documentLoaded', () => {
+			documentViewer.addEventListener('documentLoaded', async () => {
 				setIsDocumentLoaded(true);
-				console.log('document loaded');
-				// setMaxCount(documentViewer.getPageCount());
+				console.log('document loaded', documentViewer.getPageCount());
+				setMaxCount(documentViewer.getPageCount());
 			});
+			// documentViewer.addEventListener('documentLoaded', () => {
+			// 	setIsDocumentLoaded(true);
+			// 	console.log('document loaded');
+			// 	// setMaxCount(documentViewer.getPageCount());
+			// });
 		})
 	}
 
 	const zoomOut = (zoomPercentages?: number) => {
-		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
+		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
 
 	const zoomIn = () => {
-		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
+		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
 	};
 
 	const setCustomZoomLevel = (zoomPercentages: number) => {
@@ -250,7 +256,7 @@ const Home = () => {
 				</HeaderContainer>
 				{/* Header part Over */}
 
-				<Row>
+				<Row id="main-column">
 					{/* Left sider start */}
 					<LeftSliderContainer>
 						<LeftSlider />
@@ -259,7 +265,7 @@ const Home = () => {
 
 					{/* Content part start */}
 					<CenterColumn>
-						<Row>
+						<Row id={"tools"}>
 							<ToolBar
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
@@ -271,7 +277,6 @@ const Home = () => {
 								downloadPfd={downloadPfd}
 							/>
 						</Row>
-
 						<WebviewerSection ref={viewer} />
 					</CenterColumn>
 					{/* Content part over */}
