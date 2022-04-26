@@ -83,15 +83,7 @@ const Home = () => {
 			disabledElements: [
 				'header',
 				'toolsHeader',
-				// 'textToolGroupButton',
-				// 'eraserToolButton',
-				// 'signatureToolGroupButton',
-				// 'toolsButton',
-				// 'eraserToolButton',
-				// 'signatureToolGroupButton',
-				// 'freeTextToolButton',
-				// 'stickyToolButton',
-			]
+			],
 		}, viewer.current).then(async (instance) => {
 			const Core = instance.Core;
 			Core.enableFullPDF();
@@ -101,19 +93,15 @@ const Home = () => {
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
 			setDocumentInstance(instance);
-			documentViewer.disableViewportRenderMode()
-			// documentViewer.loadDocument(documentPath);
+			documentViewer.disableViewportRenderMode();
+			const LayoutMode = instance.UI.LayoutMode;
+			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
 			documentViewer.addEventListener('documentLoaded', async () => {
 				setIsDocumentLoaded(true);
 				console.log('document loaded', documentViewer.getPageCount());
 				setMaxCount(documentViewer.getPageCount());
 			});
-			// documentViewer.addEventListener('documentLoaded', () => {
-			// 	setIsDocumentLoaded(true);
-			// 	console.log('document loaded');
-			// 	// setMaxCount(documentViewer.getPageCount());
-			// });
 		})
 	}
 
