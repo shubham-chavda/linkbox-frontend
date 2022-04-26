@@ -189,6 +189,10 @@ const Home = () => {
 		});
 	};
 
+	const toggleFullScreen = async () =>{
+		await documentInstance.UI.toggleFullScreen();
+	} 
+
 	const printPfd = async () => {
 		await documentInstance.UI.print({
 			includeAnnotations: true,
@@ -302,6 +306,7 @@ const Home = () => {
 								selectTool={selectTool}
 								totalPageCount={maxCount}
 								downloadPfd={downloadPfd}
+								toggleFullScreen = {toggleFullScreen}
 							/>
 						</Row>
 						<ContentSection>

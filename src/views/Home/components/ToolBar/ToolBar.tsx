@@ -34,6 +34,7 @@ interface IToolBarProps {
 	selectTool: any;
 	totalPageCount: number;
 	downloadPfd: any;
+	toggleFullScreen : any
 }
 
 const ToolBar = ({
@@ -44,7 +45,8 @@ const ToolBar = ({
 	selectTool,
 	setCustomZoomLevel,
 	totalPageCount,
-	downloadPfd
+	downloadPfd,
+	toggleFullScreen
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -174,7 +176,7 @@ const ToolBar = ({
 			/>
 			<img src={VideoIcon} alt="video" className="icon22" />
 			<img src={CallIcon} alt="call" className="icon22" />
-			<img src={SizeChangeIcon} alt="size" className="icon22" />
+			<img src={SizeChangeIcon} onClick={() => toggleFullScreen()}  alt="size" className="icon22" />
 			<img src={ShareIcon} alt="share" className="icon22" />
 			<img
 				src={CopyIcon}
