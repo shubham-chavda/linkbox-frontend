@@ -97,6 +97,20 @@ const Home = () => {
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
+			// const searchListener = (searchPattern, options, results) => {
+			// 	// add redaction annotation for each search result
+			// 	const newAnnotations = results.map(result => {
+			// 		const annotation = new Annotations.RedactionAnnotation();
+			// 		annotation.PageNumber = result.pageNum;
+			// 		annotation.Quads = result.quads.map(quad => quad.getPoints());
+			// 		annotation.StrokeColor = new Annotations.Color(136, 39, 31);
+			// 		return annotation;
+			// 	});
+
+			// 	annotationManager.addAnnotations(newAnnotations);
+			// 	annotationManager.drawAnnotationsFromList(newAnnotations);
+			// };		
+
 			documentViewer.addEventListener('documentLoaded', async () => {
 				setIsDocumentLoaded(true);
 				setMaxCount(documentViewer.getPageCount());
@@ -198,6 +212,25 @@ const Home = () => {
 		setCollapsed(true);
 		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '0px';
 	};
+
+	const onChangeSearchInput = async () => {
+		console.log("onChangeSearchInput -------->");
+		// documentViewer.addEventListener('documentLoaded', function () {
+		documentInstance.UI.searchTextFull('Important', {
+			wholeWord: true
+		});
+		// });
+		// const data = await documentViewer.textSearchInit("Important", 1, {
+		// 	fullSearch: true,
+		// 	onResult: (e: any) => {
+		// 		console.log("onResult --------->", e)
+		// 	}
+		// });
+		// console.log("data ------->", data);
+
+		// textSearchInit(pattern, mode [, searchOptions])
+	}
+
 	return (
 		<>
 			<MainContainer>
@@ -268,6 +301,7 @@ const Home = () => {
 								totalPageCount={maxCount}
 								downloadPfd={downloadPfd}
 								changeLayOutMode={changeLayOutMode}
+								onChangeSearchInput={onChangeSearchInput}
 							/>
 						</Row>
 						<WebviewerSection ref={viewer} />

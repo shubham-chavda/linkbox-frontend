@@ -36,6 +36,7 @@ interface IToolBarProps {
 	totalPageCount: number;
 	downloadPfd: any;
 	changeLayOutMode: any;
+	onChangeSearchInput: any;
 }
 
 const ToolBar = ({
@@ -48,6 +49,7 @@ const ToolBar = ({
 	totalPageCount,
 	downloadPfd,
 	changeLayOutMode,
+	onChangeSearchInput,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -105,6 +107,7 @@ const ToolBar = ({
 				<SearchButtonFilled
 					style={{ width: 250 }}
 					placeholder="Search"
+					onChange={(e) => onChangeSearchInput(e.target.value)}
 					prefix={<SearchOutlined />}
 				/>
 			</Col>
