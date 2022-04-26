@@ -61,6 +61,8 @@ const Home = () => {
 
 	const [searchTextMode, setSearchTextMode] = useState<any>(null);
 
+	const [searchResults, setSearchResults] = useState<any>([]);
+
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
@@ -117,11 +119,6 @@ const Home = () => {
 				// documentViewer.loadDocument(documentPath);
 
 			});
-
-			// documentViewer.addEventListener('documentLoaded', async () => {
-			// 	setIsDocumentLoaded(true);
-			// 	setMaxCount(documentViewer.getPageCount());
-			// });
 		});
 	}
 
@@ -135,6 +132,8 @@ const Home = () => {
 			annotation.StrokeColor = new annotations.Color(136, 39, 31);
 			return annotation;
 		});
+
+		setSearchResults(results);
 
 		annotationManager.addAnnotations(newAnnotations);
 		annotationManager.drawAnnotationsFromList(newAnnotations);
@@ -335,6 +334,7 @@ const Home = () => {
 					<CenterColumn>
 						<Row id={'tools'}>
 							<ToolBar
+								searchResults={searchResults}
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
 								setCustomZoomLevel={setCustomZoomLevel}

@@ -21,9 +21,10 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col } from 'antd';
+import { Col, List, Typography } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
+// import Item from 'antd/lib/list/Item';
 
 interface IToolBarProps {
 	zoomIn: any;
@@ -36,12 +37,14 @@ interface IToolBarProps {
 	downloadPfd: any;
 	changeLayOutMode: any;
 	onChangeSearchInput: any;
-	toggleFullScreen: any
+	toggleFullScreen: any;
+	searchResults: any;
 }
 
 const ToolBar = ({
 	zoomIn,
 	zoomOut,
+	searchResults,
 	documentViewer,
 	createRectangle,
 	selectTool,
@@ -110,6 +113,38 @@ const ToolBar = ({
 					onChange={(e) => onChangeSearchInput(e.target.value)}
 					prefix={<SearchOutlined />}
 				/>
+				{/* 
+					ambientStr: "UX, test functionality with the types of documents your users will"
+					ambient_str: "UX, test functionality with the types of documents your users will"
+					pageNum: 6
+					page_num: 6
+					quads: [e]
+					resultCode: 2
+					resultStr: "test"
+					resultStrEnd: 8
+					resultStrStart: 4
+					result_str: "test"
+					result_str_end: 8
+					result_str_start: 4
+				*/}
+				{searchResults.length &&
+					<List
+						bordered
+						dataSource={searchResults}
+						renderItem={(item: any, index: any) => (
+							<div
+								key={index}
+								onClick={() => {
+									documentViewer.setCurrentPage(item.page_num);
+								}}
+							>
+								<Typography.Text>{item.result_str}</Typography.Text>
+								<Typography.Text>{item.pageNum}</Typography.Text>
+								<Typography.Text>{item.ambient_str}</Typography.Text>
+							</div>
+						)}
+					/>
+				}
 			</Col>
 
 			{/* Members Avatar */}
@@ -126,7 +161,7 @@ const ToolBar = ({
 					/>
 					<>
 						<input
-							className="border-none "
+							className="border-none"
 							value={pageCount}
 							onChange={(e) => setPageCount(parseInt(e.target.value))}
 							style={{ width: '25px' }}
@@ -135,9 +170,9 @@ const ToolBar = ({
 						<span style={{ paddingLeft: '7px' }}>{maxCount}</span>
 					</>
 					<RightOutlined
-						onClick={() => incrementPageCount()}
-						disabled={pageCount === maxCount}
 						{...IncDecContainerProps}
+						disabled={pageCount === maxCount}
+						onClick={() => incrementPageCount()}
 					/>
 				</IncDecContainer>
 			</Col>
