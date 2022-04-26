@@ -50,9 +50,11 @@ const Home = () => {
 	const searchContainerRef = useRef(null);
 
 	const [documentViewer, setDocumentViewer] = useState<any>(null);
-	const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
-	const [annotationManager, setAnnotationManager] = useState(null);
+	const [annotationManager, setAnnotationManager] = useState<any>(null);
 	const [searchContainerOpen, setSearchContainerOpen] = useState(false);
+	const [annotations, setAnnotations] = useState<any>(null);
+
+	const [searchTextMode, setSearchTextMode] = useState<any>(null);
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
@@ -76,6 +78,7 @@ const Home = () => {
 		{ title: 'Tab 12', content: 'Content of Tab 12', key: '12' }
 	];
 	const loadPdfDocumentByPath = (documentPath: string) => {
+
 		WebViewer({
 			path: '/webviewer/lib',
 			initialDoc: documentPath,
@@ -83,8 +86,12 @@ const Home = () => {
 			disabledElements: [
 				'header',
 				'toolsHeader',
+				'searchPanel'
 			],
 		}, viewer.current).then(async (instance) => {
+
+			const { Annotations, Search, annotationManager } = instance.Core;
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -93,30 +100,39 @@ const Home = () => {
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
 			setDocumentInstance(instance);
+			setAnnotationManager(annotationManager);
+			setAnnotations(Annotations);
 			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+			setMaxCount(documentViewer.getPageCount());
 
-			// const searchListener = (searchPattern, options, results) => {
-			// 	// add redaction annotation for each search result
-			// 	const newAnnotations = results.map(result => {
-			// 		const annotation = new Annotations.RedactionAnnotation();
-			// 		annotation.PageNumber = result.pageNum;
-			// 		annotation.Quads = result.quads.map(quad => quad.getPoints());
-			// 		annotation.StrokeColor = new Annotations.Color(136, 39, 31);
-			// 		return annotation;
-			// 	});
+			documentViewer.addEventListener('documentLoaded', () => {
 
-			// 	annotationManager.addAnnotations(newAnnotations);
-			// 	annotationManager.drawAnnotationsFromList(newAnnotations);
-			// };		
-
-			documentViewer.addEventListener('documentLoaded', async () => {
-				setIsDocumentLoaded(true);
-				setMaxCount(documentViewer.getPageCount());
 			});
-		})
+		});
+
+		// documentViewer.addEventListener('documentLoaded', async () => {
+		// 	setIsDocumentLoaded(true);
+		// 	setMaxCount(documentViewer.getPageCount());
+		// });
 	}
+
+	const searchListener = (searchPattern: any, options: any, results: any) => {
+		console.log("results ------->", results);
+
+		const newAnnotations = results.map((result: any) => {
+			const annotation = new annotations.RedactionAnnotation();
+			annotation.PageNumber = result.pageNum;
+			annotation.Quads = result.quads.map((quad: any) => quad.getPoints());
+			annotation.StrokeColor = new annotations.Color(136, 39, 31);
+			return annotation;
+		});
+
+		annotationManager.addAnnotations(newAnnotations);
+		annotationManager.drawAnnotationsFromList(newAnnotations);
+	};
+
 
 	const zoomOut = (zoomPercentages?: number) => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
@@ -213,22 +229,19 @@ const Home = () => {
 		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '0px';
 	};
 
-	const onChangeSearchInput = async () => {
-		console.log("onChangeSearchInput -------->");
-		// documentViewer.addEventListener('documentLoaded', function () {
-		documentInstance.UI.searchTextFull('Important', {
-			wholeWord: true
-		});
-		// });
-		// const data = await documentViewer.textSearchInit("Important", 1, {
-		// 	fullSearch: true,
-		// 	onResult: (e: any) => {
-		// 		console.log("onResult --------->", e)
-		// 	}
-		// });
-		// console.log("data ------->", data);
+	const onChangeSearchInput = async (string: any) => {
+		const searchPattern = string;
+		const searchOptions = {
+			caseSensitive: true,  // match case
+			wholeWord: true,      // match whole words only
+			wildcard: false,      // allow using '*' as a wildcard value
+			regex: false,         // string is treated as a regular expression
+			searchUp: false,      // search from the end of the document upwards
+			ambientString: true,  // return ambient string as part of the result
+		};
 
-		// textSearchInit(pattern, mode [, searchOptions])
+		documentInstance.UI.addSearchListener(searchListener);
+		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	}
 
 	return (
