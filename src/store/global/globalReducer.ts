@@ -12,7 +12,7 @@ interface IGlobalState {
 // Define the initial state using that type
 export const initialState: Immutable<IGlobalState> = {
 	user: null,
-	globalLoading: true
+	globalLoading: false
 };
 
 export const globalReducer = createSlice({

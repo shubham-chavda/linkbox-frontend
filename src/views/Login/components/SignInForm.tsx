@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Checkbox, Row, Col, Divider } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
 import { FacebookIcon, LinkedInIcon } from '../../../assets';
@@ -13,24 +13,22 @@ import {
 } from './SignInForm.style';
 import { useAppDispatch } from '../../../hooks/useAppDispatch';
 import { logInUser } from '../../../store/global/globalReducer';
-import history from '../../../history';
+import { useAppSelector } from '../../../hooks/useAppSelector';
 
 const SignInForm = () => {
 	const dispatch = useAppDispatch();
+	const globalLoading = useAppSelector(
+		(RootState) => RootState.global.globalLoading
+	);
 	const onFinish = ({
-		email,
+		username,
 		password
 	}: {
-		email: string;
+		username: string;
 		password: string;
 	}) => {
-		dispatch(logInUser({ email: email, password: password }));
+		dispatch(logInUser({ username: username, password: password }));
 	};
-	useEffect(() => {
-		if (window.localStorage.getItem('token')) {
-			history.navigate?.('/');
-		}
-	}, []);
 
 	return (
 		<MainContainer>
@@ -50,16 +48,16 @@ const SignInForm = () => {
 				requiredMark={false}
 			>
 				<Form.Item
-					label="E-mail / Login"
-					name="email"
+					label="E-mail / Username"
+					name="username"
 					rules={[
-						{
-							type: 'email',
-							message: 'The input is not valid E-mail!'
-						},
+						// {
+						// 	type: 'email',
+						// 	message: 'The input is not valid E-mail!'
+						// },
 						{
 							required: true,
-							message: 'Please input your E-mail!'
+							message: 'Please input your E-mail/ Username!'
 						}
 					]}
 				>
@@ -93,7 +91,9 @@ const SignInForm = () => {
 				<Form.Item
 				// {...tailFormItemLayout}
 				>
-					<SignInButton type="submit"> Sign In </SignInButton>
+					<SignInButton htmlType="submit" loading={globalLoading}>
+						Sign In
+					</SignInButton>
 				</Form.Item>
 			</Form>
 			<Divider className="font-12" style={{ color: '#C5C9CE', height: '10px' }}>

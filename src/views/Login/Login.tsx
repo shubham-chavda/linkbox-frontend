@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	Container,
 	FormContainer,
@@ -9,7 +9,13 @@ import {
 } from './Login.styles';
 import SignInForm from './components/SignInForm';
 import { SignInSVG } from '../../assets';
+import history from '../../history';
 function Login() {
+	useEffect(() => {
+		if (window.localStorage.getItem('token')) {
+			history.navigate?.('/');
+		}
+	}, []);
 	return (
 		<>
 			<Container>

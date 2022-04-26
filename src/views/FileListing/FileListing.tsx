@@ -30,16 +30,18 @@ import {
 import { getUserDetails } from '../../store/global/globalReducer';
 import history from '../../history';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
-
+	const isUserExist = useAppSelector((state) => state.global.user);
 	useEffect(() => {
-		if (window.localStorage.getItem('token')) dispatch(getUserDetails());
-		else history.navigate?.('/login');
+		if (window.localStorage.getItem('token')) {
+			if (!isUserExist) dispatch(getUserDetails());
+		} else history.navigate?.('/login');
 	}, []);
 
 	useEffect(() => {

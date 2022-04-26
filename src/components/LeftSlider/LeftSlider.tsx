@@ -4,8 +4,10 @@ import { Menu } from 'antd';
 import { AvatarImg, Sider, SiderMenu } from './LeftSlider.style';
 
 import { BellIcon, ChatIcon } from '../../assets';
+import { logOut } from '../../store/global/globalReducer';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 
-class LeftSlider extends PureComponent {
+const LeftSlider = () => {
 	// state = {
 	// 	isCollapsed: false,
 	// 	selectedMenu: "dashboard",
@@ -28,55 +30,55 @@ class LeftSlider extends PureComponent {
 	// 	}
 	// };
 
-	render() {
-		// const { isCollapsed, selectedMenu } = this.state;
-		// const {location} = this.props;
+	// const { isCollapsed, selectedMenu } = this.state;
+	// const {location} = this.props;
 
-		const menu = (
-			<Fragment>
-				<Menu.Item
-					key="/"
-					icon={
-						<AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
-					}
-				>
-					<Link to="/">Dashboard</Link>
-				</Menu.Item>
+	const dispatch = useAppDispatch();
+	const menu = (
+		<Fragment>
+			<Menu.Item
+				key="/"
+				onClick={() => dispatch(logOut())}
+				icon={
+					<AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
+				}
+			>
+				<Link to="/">Logout</Link>
+			</Menu.Item>
 
-				<Menu.Item
-					key="/messages/"
-					icon={<img src={ChatIcon} alt="chat" width="25px" height="25px" />}
-				>
-					<Link to="/messages/">Messages</Link>
-				</Menu.Item>
+			<Menu.Item
+				key="/messages/"
+				icon={<img src={ChatIcon} alt="chat" width="25px" height="25px" />}
+			>
+				<Link to="/messages/">Messages</Link>
+			</Menu.Item>
 
-				<Menu.Item
-					key="/Notifications/"
-					icon={
-						<img src={BellIcon} alt="notification" width="25px" height="25px" />
-					}
-				>
-					<Link to="/Notifications/">Notifications</Link>
-				</Menu.Item>
-			</Fragment>
-		);
+			<Menu.Item
+				key="/Notifications/"
+				icon={
+					<img src={BellIcon} alt="notification" width="25px" height="25px" />
+				}
+			>
+				<Link to="/Notifications/">Notifications</Link>
+			</Menu.Item>
+		</Fragment>
+	);
 
-		return (
-			<Sider theme="light" collapsed={true}>
-				{/* <StrongName>{isCollapsed ? "LB" : "LinkBox"}</StrongName> */}
-				<SiderMenu
-					theme="light"
-					mode="inline"
+	return (
+		<Sider theme="light" collapsed={true}>
+			{/* <StrongName>{isCollapsed ? "LB" : "LinkBox"}</StrongName> */}
+			<SiderMenu
+				theme="light"
+				mode="inline"
 
-					// defaultSelectedKeys={[selectedMenu]}
-					// selectedKeys={[location.pathname]}
-				>
-					{menu}
-				</SiderMenu>
-			</Sider>
-		);
-	}
-}
+				// defaultSelectedKeys={[selectedMenu]}
+				// selectedKeys={[location.pathname]}
+			>
+				{menu}
+			</SiderMenu>
+		</Sider>
+	);
+};
 
 // LeftSlider.propTypes = {
 
