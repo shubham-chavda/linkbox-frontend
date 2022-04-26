@@ -35,6 +35,7 @@ interface IToolBarProps {
 	selectTool: any;
 	totalPageCount: number;
 	downloadPfd: any;
+	changeLayOutMode: any;
 }
 
 const ToolBar = ({
@@ -45,11 +46,13 @@ const ToolBar = ({
 	selectTool,
 	setCustomZoomLevel,
 	totalPageCount,
-	downloadPfd
+	downloadPfd,
+	changeLayOutMode,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
 	const [zoomLevel, setZoomLevel] = useState(100);
+	const [isSingleLayout, setIsSingleLayout] = useState(false);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -88,6 +91,11 @@ const ToolBar = ({
 		console.log('newZoomLevel==>', newZoomLevel);
 		setZoomLevel(newZoomLevel);
 	};
+
+	const onClickChangeLayout = () => {
+		setIsSingleLayout(!isSingleLayout);
+		changeLayOutMode(isSingleLayout);
+	}
 
 	return (
 		<ToolBarContainer>
@@ -164,7 +172,7 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			<img src={PageIcon} alt="page" className="icon22" />
+			<img src={PageIcon} onClick={onClickChangeLayout} alt="page" className="icon22" />
 			<img onClick={() => createRectangle()} src={HandMoveIcon} alt="move" className="icon22" />
 			<img src={VideoIcon} alt="video" className="icon22" />
 			<img src={CallIcon} alt="call" className="icon22" />

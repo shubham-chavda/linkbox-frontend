@@ -99,7 +99,6 @@ const Home = () => {
 
 			documentViewer.addEventListener('documentLoaded', async () => {
 				setIsDocumentLoaded(true);
-				console.log('document loaded', documentViewer.getPageCount());
 				setMaxCount(documentViewer.getPageCount());
 			});
 		})
@@ -150,6 +149,11 @@ const Home = () => {
 		setEditBoxAnnotation(null);
 		setEditBoxCurrentValue(null);
 	};
+
+	const changeLayOutMode = (isSingle?: boolean) => {
+		const LayoutMode = documentInstance.UI.LayoutMode;
+		documentInstance.UI.setLayoutMode(isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single);
+	}
 
 	const downloadPfd = async () => {
 		await documentInstance.UI.downloadPdf({
@@ -263,6 +267,7 @@ const Home = () => {
 								selectTool={selectTool}
 								totalPageCount={maxCount}
 								downloadPfd={downloadPfd}
+								changeLayOutMode={changeLayOutMode}
 							/>
 						</Row>
 						<WebviewerSection ref={viewer} />
