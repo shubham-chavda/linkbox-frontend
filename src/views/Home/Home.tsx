@@ -43,6 +43,7 @@ const Home = () => {
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
 
+	const [maxCount, setMaxCount] = useState(10);
 	const [activeKey, setActiveKey] = useState('1');
 	const [collapsed, setCollapsed] = useState(false);
 
@@ -55,6 +56,7 @@ const Home = () => {
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
+	const [documentInstance, setDocumentInstance] = useState<any>(null);
 
 	useEffect(() => {
 		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
@@ -80,37 +82,47 @@ const Home = () => {
 			fullAPI: true,
 			disabledElements: [
 				'header',
+				'toolsHeader',
+				// 'textToolGroupButton',
+				// 'eraserToolButton',
+				// 'signatureToolGroupButton',
+				// 'toolsButton',
+				// 'eraserToolButton',
+				// 'signatureToolGroupButton',
+				// 'freeTextToolButton',
+				// 'stickyToolButton',
 			]
-		}, viewer.current,
-		).then(async (instance) => {
-			// const { documentViewer, annotationManager, Annotations, PDFNet } = instance.Core;
-
+		}, viewer.current).then(async (instance) => {
 			const Core = instance.Core;
-			// Core.setWorkerPath('/webviewer');
 			Core.enableFullPDF();
-
-
 			const documentViewer = new Core.DocumentViewer();
 			documentViewer.setScrollViewElement(scrollView.current!);
 			documentViewer.setViewerElement(viewer.current);
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
+			setDocumentInstance(instance);
+			documentViewer.disableViewportRenderMode()
 			// documentViewer.loadDocument(documentPath);
 
-
-			documentViewer.addEventListener('documentLoaded', () => {
+			documentViewer.addEventListener('documentLoaded', async () => {
 				setIsDocumentLoaded(true);
-				console.log('document loaded');
+				console.log('document loaded', documentViewer.getPageCount());
+				setMaxCount(documentViewer.getPageCount());
 			});
+			// documentViewer.addEventListener('documentLoaded', () => {
+			// 	setIsDocumentLoaded(true);
+			// 	console.log('document loaded');
+			// 	// setMaxCount(documentViewer.getPageCount());
+			// });
 		})
 	}
 
 	const zoomOut = (zoomPercentages?: number) => {
-		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
+		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
 
 	const zoomIn = () => {
-		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
+		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
 	};
 
 	const setCustomZoomLevel = (zoomPercentages: number) => {
@@ -151,6 +163,20 @@ const Home = () => {
 		setEditBoxCurrentValue(null);
 	};
 
+	const downloadPfd = async () => {
+		await documentInstance.UI.downloadPdf({
+			includeAnnotations: true,
+			flatten: true,
+		});
+	}
+
+	const printPfd = async () => {
+		await documentInstance.UI.print({
+			includeAnnotations: true,
+			flatten: true,
+		});
+	}
+
 	const editSelectedBox = async () => {
 		const selectedAnnotations = documentViewer.getAnnotationManager().getSelectedAnnotations();
 		const selectedAnnotation = selectedAnnotations[0];
@@ -174,13 +200,11 @@ const Home = () => {
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
-			'320px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '320px';
 	};
 	const closeRightSider = () => {
 		setCollapsed(true);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
-			'0px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '0px';
 	};
 	return (
 		<>
@@ -232,7 +256,7 @@ const Home = () => {
 				</HeaderContainer>
 				{/* Header part Over */}
 
-				<Row>
+				<Row id="main-column">
 					{/* Left sider start */}
 					<LeftSliderContainer>
 						<LeftSlider />
@@ -241,15 +265,18 @@ const Home = () => {
 
 					{/* Content part start */}
 					<CenterColumn>
-						<Row>
+						<Row id={"tools"}>
 							<ToolBar
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
 								setCustomZoomLevel={setCustomZoomLevel}
 								documentViewer={documentViewer}
+								createRectangle={createRectangle}
+								selectTool={selectTool}
+								totalPageCount={maxCount}
+								downloadPfd={downloadPfd}
 							/>
 						</Row>
-
 						<WebviewerSection ref={viewer} />
 					</CenterColumn>
 					{/* Content part over */}

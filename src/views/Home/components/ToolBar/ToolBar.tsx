@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	SearchOutlined,
 	LeftOutlined,
@@ -21,37 +21,58 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
+import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 
-import { Col } from 'antd';
 interface IToolBarProps {
 	zoomIn: any;
 	zoomOut: any;
 	documentViewer: any;
 	setCustomZoomLevel: any;
+	createRectangle: any;
+	selectTool: any;
+	totalPageCount: number;
+	downloadPfd: any;
 }
 
 const ToolBar = ({
 	zoomIn,
 	zoomOut,
 	documentViewer,
-	setCustomZoomLevel
+	createRectangle,
+	selectTool,
+	setCustomZoomLevel,
+	totalPageCount,
+	downloadPfd
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
-	const [maxCount, setMaxCount] = useState(100);
+	const [maxCount, setMaxCount] = useState(totalPageCount);
 	const [zoomLevel, setZoomLevel] = useState(100);
 
 	const IncDecContainerProps = {
 		padding: '7px'
 	};
 
+	useEffect(() => {
+		console.log('totalPageCount -------->', totalPageCount);
+		setMaxCount(totalPageCount);
+		// setPageCount(documentViewer.getCurrentPage());
+	}, [totalPageCount]);
+
 	const decrementPageCount = () => {
-		if (pageCount >= 1) setPageCount((prev) => prev - 1);
+		if (pageCount > 1) {
+			setPageCount((prev) => prev - 1);
+			documentViewer.setCurrentPage(pageCount - 1);
+		}
 	};
 	const incrementPageCount = () => {
-		if (pageCount <= maxCount) setPageCount((prev) => prev + 1);
-		else setPageCount(maxCount);
+		if (pageCount <= maxCount) {
+			setPageCount((prev) => prev + 1);
+			documentViewer.setCurrentPage(pageCount + 1);
+		} else {
+			setPageCount(maxCount);
+		}
 	};
 	const onChangeZoomLevel = (value: string) => {
 		console.log('documentViewer.getZoomLevel() ========>', value);
@@ -65,8 +86,6 @@ const ToolBar = ({
 		console.log('newZoomLevel==>', newZoomLevel);
 		setZoomLevel(newZoomLevel);
 	};
-
-	console.log('on re-render zoom level is -------> ', zoomLevel);
 
 	return (
 		<ToolBarContainer>
@@ -147,12 +166,22 @@ const ToolBar = ({
 			</Col>
 
 			<img src={PageIcon} alt="page" className="icon22" />
-			<img src={HandMoveIcon} alt="move" className="icon22" />
+			<img
+				onClick={() => createRectangle()}
+				src={HandMoveIcon}
+				alt="move"
+				className="icon22"
+			/>
 			<img src={VideoIcon} alt="video" className="icon22" />
 			<img src={CallIcon} alt="call" className="icon22" />
 			<img src={SizeChangeIcon} alt="size" className="icon22" />
 			<img src={ShareIcon} alt="share" className="icon22" />
-			<img src={CopyIcon} alt="copy" className="icon22" />
+			<img
+				src={CopyIcon}
+				onClick={() => downloadPfd()}
+				alt="copy"
+				className="icon22"
+			/>
 		</ToolBarContainer>
 	);
 };
