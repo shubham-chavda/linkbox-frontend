@@ -1,4 +1,4 @@
-import { Col, Divider, Input } from 'antd';
+import { Button, Col, Divider, Input } from 'antd';
 
 import styled from 'styled-components';
 const { Password } = Input;
@@ -39,7 +39,7 @@ export const PasswordField = styled(Password)`
 		min-height: 58px;
 	}
 `;
-export const SignInButton = styled.button`
+export const SignInButton = styled(Button)`
 	border-radius: 18px;
 	min-height: 48px;
 	border-radius: 24px;

@@ -2,9 +2,11 @@ import { ISimpleInterface } from '../config/simpleInterface';
 
 export default (base: ISimpleInterface) => {
 	return {
+		login(data:any){
+			return base.post('auth/login',data);
+		},
 		getUserData() {
-            console.log("🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 ~ file: user.ts ~ line 6 ~ getUserData ~ getUserData")
-			return base.detail('user/details');
+            return base.detail('auth/me');
 		}
 	};
 };

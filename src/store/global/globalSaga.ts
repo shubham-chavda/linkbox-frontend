@@ -6,12 +6,13 @@ import history from '../../history';
 import { getUserDetails, setUserDetails, toggleLoader,logOut, logInUser } from './globalReducer';
 
 function* GetUser(): Generator<StrictEffect, void, any> {
-	try {
+   try {
 		// if (!window.localStorage.refreshToken) {
 		// 	// throw Error('refreshToken not Found');
 		// } else
 		{
 			const response = yield call(apis.user.getUserData);
+            console.log("🚀 ~ file: globalSaga.ts ~ line 15 ~ function*GetUser ~ response", response)
 			const { status, data } = response;
 			if (status === 200 && data) {
 				yield put(setUserDetails(data));
@@ -35,24 +36,18 @@ function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 	try {
 		
 		yield put(toggleLoader(true));
-		// if (payload.email !== 'root' || payload.password !== 'root') {
-		// 	notification.error({
-		// 		message: 'Invalid Credentials',
-		// 		description: 'Please enter valid credentials'
-		// 	});
-		// 	throw Error('Invalid Credentials');
-		// }
-		// const response = yield call(apis.user.getUserData);
-		// const { status, data } = response;
-		// if (status === 200 && data) {
-		// 	window.localStorage.setItem('token', data?.id || 'accessToken');
-		// 	yield put(setUserDetails(data));
-		// 	history.navigate?.('/', { replace: true });
-		// }
-		const response = yield call(apis.user.getUserData);
-        console.log("🚀 ~ file: globalSaga.ts ~ line 53 ~ function*LoginFunc ~ response", response)
+		const response = yield call(apis.user.login,payload);
+		const { status, data } = response;
+       if (status === 200 && data) {
+			window.localStorage.setItem('token', data?.token?.accessToken );
+			yield put(setUserDetails(data?.user));
+			history.navigate?.('/', { replace: true });
+		}
 	} catch (error) {
-		console.error(error);
+		notification.error({
+				message: 'Invalid Credentials',
+				description: 'Please enter valid credentials'
+			});
 		yield put(toggleLoader(false));
 	} finally {
 		yield put(toggleLoader(false));

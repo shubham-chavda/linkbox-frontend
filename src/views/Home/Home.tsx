@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { ContentSection, RightCollapsibleSider, WebviewerSection } from './Home.style';
+import {
+	ContentSection,
+	RightCollapsibleSider,
+	WebviewerSection
+} from './Home.style';
 
 import WebViewer from '@pdftron/webviewer';
 
@@ -31,7 +35,8 @@ import {
 	RightHeaderContainer,
 	RightIconGroup
 } from '../../styles/Layout.style';
-
+import { ExpandAltOutlined } from '@ant-design/icons';
+import Comment from '../../components/Comment';
 declare global {
 	interface Window {
 		Core: any;
@@ -108,14 +113,16 @@ const Home = () => {
 			setMaxCount(documentViewer.getPageCount());
 
 			documentViewer.addEventListener('documentLoaded', () => {
+				documentViewer.disableViewportRenderMode();
+				// documentViewer.loadDocument(documentPath);
 
 			});
-		});
 
-		// documentViewer.addEventListener('documentLoaded', async () => {
-		// 	setIsDocumentLoaded(true);
-		// 	setMaxCount(documentViewer.getPageCount());
-		// });
+			// documentViewer.addEventListener('documentLoaded', async () => {
+			// 	setIsDocumentLoaded(true);
+			// 	setMaxCount(documentViewer.getPageCount());
+			// });
+		});
 	}
 
 	const searchListener = (searchPattern: any, options: any, results: any) => {
@@ -144,23 +151,31 @@ const Home = () => {
 
 	const setCustomZoomLevel = (zoomPercentages: number) => {
 		documentViewer.zoomTo(zoomPercentages);
-	}
+	};
 
 	const startEditingContent = () => {
-		const contentEditTool = documentViewer.getTool(window.Core.Tools.ToolNames.CONTENT_EDIT);
+		const contentEditTool = documentViewer.getTool(
+			window.Core.Tools.ToolNames.CONTENT_EDIT
+		);
 		documentViewer.setToolMode(contentEditTool);
 	};
 
 	const createRectangle = () => {
-		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE));
+		documentViewer.setToolMode(
+			documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE)
+		);
 	};
 
 	const selectTool = () => {
-		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.EDIT));
+		documentViewer.setToolMode(
+			documentViewer.getTool(window.Core.Tools.ToolNames.EDIT)
+		);
 	};
 
 	const createRedaction = () => {
-		documentViewer.setToolMode(documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION));
+		documentViewer.setToolMode(
+			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
+		);
 	};
 
 	const applyRedactions = async () => {
@@ -174,7 +189,10 @@ const Home = () => {
 	};
 
 	const applyEditModal = () => {
-		window.Core.ContentEdit.updateDocumentContent(editBoxAnnotation, editBoxCurrentValue);
+		window.Core.ContentEdit.updateDocumentContent(
+			editBoxAnnotation,
+			editBoxCurrentValue
+		);
 
 		setEditBoxAnnotation(null);
 		setEditBoxCurrentValue(null);
@@ -188,25 +206,36 @@ const Home = () => {
 	const downloadPfd = async () => {
 		await documentInstance.UI.downloadPdf({
 			includeAnnotations: true,
-			flatten: true,
+			flatten: true
 		});
+	};
+
+	const toggleFullScreen = async () => {
+		await documentInstance.UI.toggleFullScreen();
 	}
 
 	const printPfd = async () => {
 		await documentInstance.UI.print({
 			includeAnnotations: true,
-			flatten: true,
+			flatten: true
 		});
-	}
+	};
 
 	const editSelectedBox = async () => {
-		const selectedAnnotations = documentViewer.getAnnotationManager().getSelectedAnnotations();
+		const selectedAnnotations = documentViewer
+			.getAnnotationManager()
+			.getSelectedAnnotations();
 		const selectedAnnotation = selectedAnnotations[0];
 
-		if (selectedAnnotation &&
+		if (
+			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
-			selectedAnnotation.getContentEditType() === window.Core.ContentEdit.Types.TEXT) {
-			const content = await window.Core.ContentEdit.getDocumentContent(selectedAnnotation);
+			selectedAnnotation.getContentEditType() ===
+			window.Core.ContentEdit.Types.TEXT
+		) {
+			const content = await window.Core.ContentEdit.getDocumentContent(
+				selectedAnnotation
+			);
 			setEditBoxAnnotation(selectedAnnotation);
 			setEditBoxCurrentValue(content);
 		} else {
@@ -214,7 +243,7 @@ const Home = () => {
 		}
 	};
 	useEffect(() => {
-		loadPdfDocumentByPath('/files/PDFTRON_about.pdf')
+		loadPdfDocumentByPath('/files/PDFTRON_about.pdf');
 	}, []);
 
 	const onTabChange = (currentKey: string) => {
@@ -222,11 +251,13 @@ const Home = () => {
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '320px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
+			'320px';
 	};
 	const closeRightSider = () => {
 		setCollapsed(true);
-		(document.getElementById('mySidebar') as HTMLInputElement).style.width = '0px';
+		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
+			'0px';
 	};
 
 	const onChangeSearchInput = async (string: any) => {
@@ -266,12 +297,17 @@ const Home = () => {
 					<Col span={5}>
 						<RightHeaderContainer>
 							<LeftIconGroup span={7}>
-								{!collapsed && (
+								{!collapsed ? (
 									<img
 										src={ExpandIcon}
 										onClick={() => closeRightSider()}
 										alt="expand"
 										className="icon22"
+									/>
+								) : (
+									<ExpandAltOutlined
+										style={{ fontSize: '20px' }}
+										onClick={() => openRightSider()}
 									/>
 								)}
 							</LeftIconGroup>
@@ -279,13 +315,7 @@ const Home = () => {
 								<img src={ChatIcon2} alt="chat" className="icon22" />
 								<img src={BookmarkIcon} alt="bookmark" className="icon22" />
 								<img src={UserStarIcon} alt="userStar" className="icon22" />
-
-								<img
-									src={InfoIcon}
-									onClick={() => openRightSider()}
-									alt="Info"
-									className="icon22"
-								/>
+								<img src={InfoIcon} alt="Info" className="icon22" />
 							</RightIconGroup>
 						</RightHeaderContainer>
 					</Col>
@@ -303,7 +333,7 @@ const Home = () => {
 
 					{/* Content part start */}
 					<CenterColumn>
-						<Row id={"tools"}>
+						<Row id={'tools'}>
 							<ToolBar
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
@@ -315,20 +345,25 @@ const Home = () => {
 								downloadPfd={downloadPfd}
 								changeLayOutMode={changeLayOutMode}
 								onChangeSearchInput={onChangeSearchInput}
+								toggleFullScreen={toggleFullScreen}
 							/>
 						</Row>
-						<WebviewerSection ref={viewer} />
+						<ContentSection>
+							<WebviewerSection ref={viewer} />
+						</ContentSection>
 					</CenterColumn>
 					{/* Content part over */}
 					{/* right sider Start */}
-					{/* span={collapsed ? 0 : 5} */}
 					<RightCollapsibleSider id="mySidebar" className="pt1">
-						<Row>
+						{/* <Row>
 							<OwnerInfoContainer>
 								{!collapsed && <OwnerInfo fileListing={false} />}
 							</OwnerInfoContainer>
 						</Row>
-						<Row className="justify-start">{!collapsed && <MemberList />}</Row>
+						<Row className="justify-start">
+							{!collapsed && <MemberList />}
+						</Row> */}
+						<Comment />
 					</RightCollapsibleSider>
 					{/* right sider Over */}
 				</Row>

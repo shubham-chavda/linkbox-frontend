@@ -4,7 +4,8 @@ import {
 	LeftOutlined,
 	RightOutlined,
 	PlusCircleOutlined,
-	MinusCircleOutlined
+	MinusCircleOutlined,
+	DownOutlined
 } from '@ant-design/icons';
 import {
 	IncDecContainer,
@@ -20,9 +21,7 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Button, Col, Row } from 'antd';
-import AvatarGroup from '@atlaskit/avatar-group';
-import PopoverComponent from '../../../../components/PopupMenu/PopupMenu';
+import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 
@@ -37,6 +36,7 @@ interface IToolBarProps {
 	downloadPfd: any;
 	changeLayOutMode: any;
 	onChangeSearchInput: any;
+	toggleFullScreen: any
 }
 
 const ToolBar = ({
@@ -50,6 +50,7 @@ const ToolBar = ({
 	downloadPfd,
 	changeLayOutMode,
 	onChangeSearchInput,
+	toggleFullScreen
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -61,10 +62,10 @@ const ToolBar = ({
 	};
 
 	useEffect(() => {
-		console.log("totalPageCount -------->", totalPageCount);
+		console.log('totalPageCount -------->', totalPageCount);
 		setMaxCount(totalPageCount);
 		// setPageCount(documentViewer.getCurrentPage());
-	}, [totalPageCount])
+	}, [totalPageCount]);
 
 	const decrementPageCount = () => {
 		if (pageCount > 1) {
@@ -76,8 +77,7 @@ const ToolBar = ({
 		if (pageCount <= maxCount) {
 			setPageCount((prev) => prev + 1);
 			documentViewer.setCurrentPage(pageCount + 1);
-		}
-		else {
+		} else {
 			setPageCount(maxCount);
 		}
 	};
@@ -105,7 +105,7 @@ const ToolBar = ({
 
 			<Col>
 				<SearchButtonFilled
-					style={{ width: 250 }}
+					style={{ width: 241 }}
 					placeholder="Search"
 					onChange={(e) => onChangeSearchInput(e.target.value)}
 					prefix={<SearchOutlined />}
@@ -114,7 +114,7 @@ const ToolBar = ({
 
 			{/* Members Avatar */}
 
-			<Col className="pl2	">
+			<Col className="pl2	pointer">
 				<MemberListPopup />
 			</Col>
 			<Col>
@@ -142,7 +142,7 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 			<Col>
-				<IncDecContainer>
+				<IncDecContainer className="px2">
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
 						onClick={() => {
@@ -153,7 +153,10 @@ const ToolBar = ({
 					/>
 					<>
 						<SelectContainer
+							className="flex items-center"
+							bordered={false}
 							disabled={false}
+							suffixIcon={<DownOutlined style={{ color: 'black' }} />}
 							value={`${Math.floor(zoomLevel)}%`}
 							onChange={() => onChangeZoomLevel}
 						>
@@ -177,11 +180,22 @@ const ToolBar = ({
 
 			<img src={PageIcon} onClick={onClickChangeLayout} alt="page" className="icon22" />
 			<img onClick={() => createRectangle()} src={HandMoveIcon} alt="move" className="icon22" />
+			<img
+				onClick={() => createRectangle()}
+				src={HandMoveIcon}
+				alt="move"
+				className="icon22"
+			/>
 			<img src={VideoIcon} alt="video" className="icon22" />
 			<img src={CallIcon} alt="call" className="icon22" />
-			<img src={SizeChangeIcon} alt="size" className="icon22" />
+			<img src={SizeChangeIcon} onClick={() => toggleFullScreen()} alt="size" className="icon22" />
 			<img src={ShareIcon} alt="share" className="icon22" />
-			<img src={CopyIcon} onClick={() => downloadPfd()} alt="copy" className="icon22" />
+			<img
+				src={CopyIcon}
+				onClick={() => downloadPfd()}
+				alt="copy"
+				className="icon22"
+			/>
 		</ToolBarContainer>
 	);
 };

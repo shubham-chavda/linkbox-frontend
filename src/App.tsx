@@ -5,16 +5,16 @@ import { ProtectedRoutes } from './components/App/ProtectedRoutes';
 import NotFound from './components/NotFound';
 import Home from './views/Home/Home';
 import Login from './views/Login/Login';
-import FileListing from './components/FileListing/FileListing';
+import FileListing from './views/FileListing/FileListing';
 const App: React.FC = () => {
 	return (
 		<BrowserRouter>
 			<AppNavigate />
 			<Routes>
 				<Route path="/" element={<ProtectedRoutes />}>
-					<Route index element={<Home />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/documents" element={<FileListing />} />
+					<Route index element={<FileListing />} />
+					{/* <Route path="/" element={<FileListing />} /> */}
+					<Route path="/documents" element={<Home />} />
 					<Route path="*" element={<NotFound />} />
 				</Route>
 
