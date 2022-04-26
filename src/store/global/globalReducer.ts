@@ -22,20 +22,16 @@ export const globalReducer = createSlice({
   reducers: {
     getUserDetails(){},
     toggleLoader(state,action){
-      produce(draft =>{
-        draft.globalLoading = action.payload;     
-        })
+    
+        state.globalLoading = action.payload;     
+       
     },
     setUserDetails(state,action){
-      produce(draft =>{
-        const { data } = action.payload;
-        draft.user = data;
-        })
+      state.user = action.payload; 
     },
     logOut(){},
-    logInUser(state,action){
-   }
-  },
+    logInUser(state,action){}
+  }
 })
 
 export const { getUserDetails,toggleLoader,setUserDetails,logOut,logInUser } = globalReducer.actions

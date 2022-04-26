@@ -17,7 +17,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 12 ~ ownerData', ownerData);
 	return (
 		<>
-			<Row>
+			<Row className="flex items-center">
 				<Col span={17} className="flex items-center">
 					<Avatar
 						className="mr2"

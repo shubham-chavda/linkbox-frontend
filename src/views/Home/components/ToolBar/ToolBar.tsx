@@ -4,7 +4,8 @@ import {
 	LeftOutlined,
 	RightOutlined,
 	PlusCircleOutlined,
-	MinusCircleOutlined
+	MinusCircleOutlined,
+	DownOutlined
 } from '@ant-design/icons';
 import {
 	IncDecContainer,
@@ -73,7 +74,7 @@ const ToolBar = ({
 
 			<Col>
 				<SearchButtonFilled
-					style={{ width: 250 }}
+					style={{ width: 241 }}
 					placeholder="Search"
 					prefix={<SearchOutlined />}
 				/>
@@ -81,7 +82,7 @@ const ToolBar = ({
 
 			{/* Members Avatar */}
 
-			<Col className="pl2	">
+			<Col className="pl2	pointer">
 				<MemberListPopup />
 			</Col>
 			<Col>
@@ -109,7 +110,7 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 			<Col>
-				<IncDecContainer>
+				<IncDecContainer className="px2">
 					<MinusCircleOutlined
 						disabled={pageCount === 1}
 						onClick={() => {
@@ -120,7 +121,10 @@ const ToolBar = ({
 					/>
 					<>
 						<SelectContainer
+							className="flex items-center"
+							bordered={false}
 							disabled={false}
+							suffixIcon={<DownOutlined style={{ color: 'black' }} />}
 							value={`${Math.floor(zoomLevel)}%`}
 							onChange={() => onChangeZoomLevel}
 						>

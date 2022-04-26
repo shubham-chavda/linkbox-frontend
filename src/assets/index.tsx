@@ -22,6 +22,7 @@ import FilterIcon from './icons/FilterIcon.svg';
 import EditIcon from './icons/EditIcon.svg';
 import PrintIcon from './icons/PrintIcon.svg';
 import DownloadButton from './icons/DownloadButton.svg';
+import Cursor from './icons/Cursor.svg';
 
 // ------------------- images ----------------------------
 
@@ -56,6 +57,7 @@ export {
 	EditIcon,
 	PrintIcon,
 	DownloadButton,
+	Cursor,
 	// ------------------- images ----------------------------
 	SignInSVG,
 	DefaultPdf,

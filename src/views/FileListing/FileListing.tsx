@@ -14,7 +14,7 @@ import {
 } from '../../assets';
 import { Button, Checkbox, Col, Input, Row, Tooltip } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
-import ShareLinks from '../ShareLinks/ShareLinks';
+import ShareLinks from '../../components/ShareLinks/ShareLinks';
 import {
 	CenterColumn,
 	HeaderContainer,
@@ -27,11 +27,20 @@ import {
 	RightHeaderContainer,
 	RightIconGroup
 } from '../../styles/Layout.style';
+import { getUserDetails } from '../../store/global/globalReducer';
+import history from '../../history';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 
 const FileListing = () => {
+	const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
+
+	useEffect(() => {
+		if (window.localStorage.getItem('token')) dispatch(getUserDetails());
+		else history.navigate?.('/login');
+	}, []);
 
 	useEffect(() => {
 		const data = [];
@@ -46,10 +55,6 @@ const FileListing = () => {
 			data.push(ownerdata);
 		}
 		setOwnerInfo(data);
-		console.log(
-			'🚀 ~ file: FileListing.tsx ~ line 49 ~ useEffect ~ data',
-			data
-		);
 	}, [docSize]);
 	const handleDocClick = (index: number) => {
 		setDocClicked(index);
@@ -122,6 +127,7 @@ const FileListing = () => {
 						<Row>
 							{[...Array(docSize)].map((_, index) => (
 								<div
+									className=""
 									key={index}
 									style={{
 										width: '160px'
@@ -145,9 +151,8 @@ const FileListing = () => {
 									</Tooltip>
 								</div>
 							))}
-
-							{/*---------------------- more Button ----------------*/}
 						</Row>
+						{/*---------------------- more Button ----------------*/}
 						{true && (
 							<div className="flex justify-center mb2">
 								<Button
@@ -189,7 +194,7 @@ const FileListing = () => {
 								Allow location
 							</Checkbox>
 							<Col span={23} className="flex justify-center">
-								<img src={DefaultMap} width="80%" />
+								<img src={DefaultMap} height="190px" width="80%" />
 							</Col>
 						</Row>
 					</Col>

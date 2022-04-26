@@ -5,7 +5,8 @@ export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default {
 	init(opts: Config) {
 		let baseUrl: URL;
-		// const accessToken: string | null = null
+		const token = window.localStorage.getItem('token');
+		const accessToken = token ? 'Bearer '+ token : '';
 		const cancelToken = opts.CancelTokenSrc?.token;
 
 		if (Object.hasOwnProperty.call(opts, 'baseUrl')) {
@@ -16,6 +17,7 @@ export default {
 		const defaultConfig: AxiosRequestConfig = {
 			cancelToken,
 			headers: {
+				authorization:accessToken,
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 				'Access-Control-Allow-Origin': 'http://localhost:8080',
