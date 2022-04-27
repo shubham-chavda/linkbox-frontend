@@ -44,6 +44,7 @@ declare global {
 }
 
 const Home = () => {
+	const [rightSiderClicks, setRightSiderClicks] = useState('comment');
 	const viewer: any = useRef(null);
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
@@ -189,9 +190,9 @@ const Home = () => {
 		});
 	};
 
-	const toggleFullScreen = async () =>{
+	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
-	} 
+	};
 
 	const printPfd = async () => {
 		await documentInstance.UI.print({
@@ -238,13 +239,16 @@ const Home = () => {
 		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
 			'0px';
 	};
+	const iconClicked = (e: any) => {
+		setRightSiderClicks(e.target.id);
+	};
 	return (
 		<>
 			<MainContainer>
 				{/* Header part start */}
 				<HeaderContainer>
-					<HeaderHome span={1}>
-						<img src={HomeIcon} alt="home" className="icon22" />
+					<HeaderHome className="height-full" span={1}>
+						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
 
 					{/* File Tab bar start */}
@@ -261,11 +265,10 @@ const Home = () => {
 						<RightHeaderContainer>
 							<LeftIconGroup span={7}>
 								{!collapsed ? (
-									<img
-										src={ExpandIcon}
+									<ExpandIcon
 										onClick={() => closeRightSider()}
-										alt="expand"
 										className="icon22"
+										color="black"
 									/>
 								) : (
 									<ExpandAltOutlined
@@ -274,11 +277,21 @@ const Home = () => {
 									/>
 								)}
 							</LeftIconGroup>
-							<RightIconGroup span={16}>
-								<img src={ChatIcon2} alt="chat" className="icon22" />
-								<img src={BookmarkIcon} alt="bookmark" className="icon22" />
-								<img src={UserStarIcon} alt="userStar" className="icon22" />
-								<img src={InfoIcon} alt="Info" className="icon22" />
+							<RightIconGroup span={16} className="p1">
+								<ChatIcon2
+									id="comment"
+									className="icon22"
+									color={rightSiderClicks === 'comment' ? '#1379FF' : 'black'}
+									onClick={(e: any) => iconClicked(e)}
+								/>
+								<BookmarkIcon className="icon22" color="black" />
+								<UserStarIcon className="icon22" />
+								<InfoIcon
+									id="info"
+									className="icon22"
+									onClick={(e: any) => iconClicked(e)}
+									color={rightSiderClicks === 'info' ? '#1379FF' : 'black'}
+								/>
 							</RightIconGroup>
 						</RightHeaderContainer>
 					</Col>
@@ -306,7 +319,7 @@ const Home = () => {
 								selectTool={selectTool}
 								totalPageCount={maxCount}
 								downloadPfd={downloadPfd}
-								toggleFullScreen = {toggleFullScreen}
+								toggleFullScreen={toggleFullScreen}
 							/>
 						</Row>
 						<ContentSection>
@@ -316,15 +329,20 @@ const Home = () => {
 					{/* Content part over */}
 					{/* right sider Start */}
 					<RightCollapsibleSider id="mySidebar" className="pt1">
-						{/* <Row>
-							<OwnerInfoContainer>
-								{!collapsed && <OwnerInfo fileListing={false} />}
-							</OwnerInfoContainer>
-						</Row>
-						<Row className="justify-start">
-							{!collapsed && <MemberList />}
-						</Row> */}
-						<Comment />
+						{rightSiderClicks === 'info' ? (
+							<>
+								<Row>
+									<OwnerInfoContainer>
+										{!collapsed && <OwnerInfo fileListing={false} />}
+									</OwnerInfoContainer>
+								</Row>
+								<Row className="justify-start">
+									{!collapsed && <MemberList />}
+								</Row>
+							</>
+						) : (
+							<Comment />
+						)}
 					</RightCollapsibleSider>
 					{/* right sider Over */}
 				</Row>

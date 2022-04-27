@@ -34,7 +34,7 @@ interface IToolBarProps {
 	selectTool: any;
 	totalPageCount: number;
 	downloadPfd: any;
-	toggleFullScreen : any
+	toggleFullScreen: any;
 }
 
 const ToolBar = ({
@@ -167,23 +167,21 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			<img src={PageIcon} alt="page" className="icon22" />
-			<img
+			<PageIcon alt="page" className="icon22" />
+			<HandMoveIcon
 				onClick={() => createRectangle()}
-				src={HandMoveIcon}
 				alt="move"
 				className="icon22"
 			/>
-			<img src={VideoIcon} alt="video" className="icon22" />
-			<img src={CallIcon} alt="call" className="icon22" />
-			<img src={SizeChangeIcon} onClick={() => toggleFullScreen()}  alt="size" className="icon22" />
-			<img src={ShareIcon} alt="share" className="icon22" />
-			<img
-				src={CopyIcon}
-				onClick={() => downloadPfd()}
-				alt="copy"
+			<VideoIcon alt="video" className="icon22" />
+			<CallIcon alt="call" className="icon22" />
+			<SizeChangeIcon
+				onClick={() => toggleFullScreen()}
+				alt="size"
 				className="icon22"
 			/>
+			<ShareIcon alt="share" className="icon22" />
+			<CopyIcon onClick={() => downloadPfd()} alt="copy" className="icon22" />
 		</ToolBarContainer>
 	);
 };

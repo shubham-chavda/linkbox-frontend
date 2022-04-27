@@ -30,8 +30,7 @@ function Login() {
 				</LeftCol>
 				<RightCol span={14}>
 					<ImageContainer>
-						{/* <SignInSVG /> */}
-						<img src={SignInSVG} width="720px" height="720px" alt="" />
+						<SignInSVG width="720px" height="720px" alt="" />
 					</ImageContainer>
 				</RightCol>
 			</Container>

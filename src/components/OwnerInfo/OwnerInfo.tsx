@@ -30,7 +30,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 				<Col span={6}>
 					{fileListing ? (
-						<img src={EditIcon} alt="edit" />
+						<EditIcon alt="edit" />
 					) : (
 						<Tag className="font-12">Owner</Tag>
 					)}
