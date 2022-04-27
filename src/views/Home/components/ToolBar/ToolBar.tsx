@@ -113,13 +113,13 @@ const ToolBar = ({
 		setSearchValue(value);
 	};
 	const options = searchResults.map((d: any) => (
-		<Select.Option
-			key={d.ambientStr}
-			onClick={() => {
-				documentViewer.setCurrentPage(d.page_num);
-			}}
-		>
-			<div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+		<Select.Option key={d.ambientStr}>
+			<div
+				style={{ display: 'flex', flexDirection: 'column-reverse' }}
+				onClick={() => {
+					documentViewer.setCurrentPage(d.page_num);
+				}}
+			>
 				<Row className="font-12 truncate">
 					[{d.result_str}]{d.ambientStr}
 				</Row>
