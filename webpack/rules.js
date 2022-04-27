@@ -31,9 +31,13 @@ module.exports = [
 		use: 'url-loader?limit=10000&mimetype=application/octet-stream'
 	},
 	{
-		test: /\.(jpe?g|png|gif|svg)$/i,
+		test: /\.(jpe?g|png|gif)$/i,
 		use: ['url-loader?limit=10000', 'img-loader']
 	},
+	{
+        test: /\.svg$/,
+        use: ['@svgr/webpack', 'img-loader'],
+      },
 	{
 		test: /\.css$/,
 		use: [

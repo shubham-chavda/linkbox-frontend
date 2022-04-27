@@ -100,7 +100,7 @@ const ToolBar = ({
 	const onClickChangeLayout = () => {
 		setIsSingleLayout(!isSingleLayout);
 		changeLayOutMode(isSingleLayout);
-	}
+	};
 
 	return (
 		<ToolBarContainer>
@@ -127,7 +127,7 @@ const ToolBar = ({
 					result_str_end: 8
 					result_str_start: 4
 				*/}
-				{searchResults.length &&
+				{searchResults.length && (
 					<List
 						bordered
 						dataSource={searchResults}
@@ -145,7 +145,7 @@ const ToolBar = ({
 							</div>
 						)}
 					/>
-				}
+				)}
 			</Col>
 
 			{/* Members Avatar */}
@@ -214,24 +214,21 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			<img src={PageIcon} onClick={onClickChangeLayout} alt="page" className="icon22" />
-			<img onClick={() => createRectangle()} src={HandMoveIcon} alt="move" className="icon22" />
-			<img
+			<PageIcon alt="page" onClick={onClickChangeLayout} className="icon22" />
+			<HandMoveIcon
 				onClick={() => createRectangle()}
-				src={HandMoveIcon}
 				alt="move"
 				className="icon22"
 			/>
-			<img src={VideoIcon} alt="video" className="icon22" />
-			<img src={CallIcon} alt="call" className="icon22" />
-			<img src={SizeChangeIcon} onClick={() => toggleFullScreen()} alt="size" className="icon22" />
-			<img src={ShareIcon} alt="share" className="icon22" />
-			<img
-				src={CopyIcon}
-				onClick={() => downloadPfd()}
-				alt="copy"
+			<VideoIcon alt="video" className="icon22" />
+			<CallIcon alt="call" className="icon22" />
+			<SizeChangeIcon
+				onClick={() => toggleFullScreen()}
+				alt="size"
 				className="icon22"
 			/>
+			<ShareIcon alt="share" className="icon22" />
+			<CopyIcon onClick={() => downloadPfd()} alt="copy" className="icon22" />
 		</ToolBarContainer>
 	);
 };

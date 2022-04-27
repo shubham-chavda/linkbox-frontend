@@ -48,16 +48,14 @@ const LeftSlider = () => {
 
 			<Menu.Item
 				key="/messages/"
-				icon={<img src={ChatIcon} alt="chat" width="25px" height="25px" />}
+				icon={<ChatIcon alt="chat" width="25px" height="25px" />}
 			>
 				<Link to="/messages/">Messages</Link>
 			</Menu.Item>
 
 			<Menu.Item
 				key="/Notifications/"
-				icon={
-					<img src={BellIcon} alt="notification" width="25px" height="25px" />
-				}
+				icon={<BellIcon alt="notification" width="25px" height="25px" />}
 			>
 				<Link to="/Notifications/">Notifications</Link>
 			</Menu.Item>

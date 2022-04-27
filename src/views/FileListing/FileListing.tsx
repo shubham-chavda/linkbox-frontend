@@ -66,8 +66,8 @@ const FileListing = () => {
 			<MainContainer>
 				{/* Header part start */}
 				<HeaderContainer>
-					<HeaderHome span={1}>
-						<img src={HomeIcon} alt="home" className="icon22" />
+					<HeaderHome className="height-full" span={1}>
+						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
 
 					{/* File Tab bar start */}
@@ -80,7 +80,7 @@ const FileListing = () => {
 								placeholder="Search"
 								prefix={<SearchOutlined />}
 							/>
-							<img src={FilterIcon} alt="filter" className="icon16" />
+							<FilterIcon alt="filter" className="icon16" />
 						</HeaderFileTab>
 					</HeaderFileTab>
 
@@ -91,15 +91,11 @@ const FileListing = () => {
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
 							<LeftIconGroup span={6}>
-								<img
-									src={DownloadButton}
-									alt="download"
-									className="mr1 icon22"
-								/>
-								<img src={PrintIcon} alt="Print" className="icon22" />
+								<DownloadButton alt="download" className="mr1 icon22" />
+								<PrintIcon alt="Print" className="icon22" />
 							</LeftIconGroup>
 							<RightIconGroup span={15} className="pr2 justify-end">
-								<img src={DeleteIcon} alt="delete" className="icon22" />
+								<DeleteIcon alt="delete" className="icon22" />
 								<Button className="ml1 color-sl" shape="round">
 									Open
 								</Button>

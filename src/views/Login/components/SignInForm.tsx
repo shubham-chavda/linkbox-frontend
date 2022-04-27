@@ -106,7 +106,7 @@ const SignInForm = () => {
 				</SignInOptions>
 				<SignInOptions span={3}>
 					{/* <FacebookIcon /> */}
-					<img src={FacebookIcon} className="icon25" alt="Facebook" />
+					<FacebookIcon className="icon25" alt="Facebook" />
 				</SignInOptions>
 				<SignInOptions span={3}>
 					{/* <LinkedInIcon /> */}

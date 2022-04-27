@@ -44,6 +44,7 @@ declare global {
 }
 
 const Home = () => {
+	const [rightSiderClicks, setRightSiderClicks] = useState('comment');
 	const viewer: any = useRef(null);
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
@@ -85,18 +86,15 @@ const Home = () => {
 		{ title: 'Tab 12', content: 'Content of Tab 12', key: '12' }
 	];
 	const loadPdfDocumentByPath = (documentPath: string) => {
-
-		WebViewer({
-			path: '/webviewer/lib',
-			initialDoc: documentPath,
-			fullAPI: true,
-			disabledElements: [
-				'header',
-				'toolsHeader',
-				'searchPanel'
-			],
-		}, viewer.current).then(async (instance) => {
-
+		WebViewer(
+			{
+				path: '/webviewer/lib',
+				initialDoc: documentPath,
+				fullAPI: true,
+				disabledElements: ['header', 'toolsHeader', 'searchPanel']
+			},
+			viewer.current
+		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
 			const Core = instance.Core;
@@ -117,13 +115,12 @@ const Home = () => {
 			documentViewer.addEventListener('documentLoaded', () => {
 				documentViewer.disableViewportRenderMode();
 				// documentViewer.loadDocument(documentPath);
-
 			});
 		});
-	}
+	};
 
 	const searchListener = (searchPattern: any, options: any, results: any) => {
-		console.log("results ------->", results);
+		console.log('results ------->', results);
 
 		const newAnnotations = results.map((result: any) => {
 			const annotation = new annotations.RedactionAnnotation();
@@ -138,7 +135,6 @@ const Home = () => {
 		annotationManager.addAnnotations(newAnnotations);
 		annotationManager.drawAnnotationsFromList(newAnnotations);
 	};
-
 
 	const zoomOut = (zoomPercentages?: number) => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
@@ -199,8 +195,10 @@ const Home = () => {
 
 	const changeLayOutMode = (isSingle?: boolean) => {
 		const LayoutMode = documentInstance.UI.LayoutMode;
-		documentInstance.UI.setLayoutMode(isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single);
-	}
+		documentInstance.UI.setLayoutMode(
+			isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single
+		);
+	};
 
 	const downloadPfd = async () => {
 		await documentInstance.UI.downloadPdf({
@@ -211,7 +209,7 @@ const Home = () => {
 
 	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
-	}
+	};
 
 	const printPfd = async () => {
 		await documentInstance.UI.print({
@@ -230,7 +228,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -258,29 +256,32 @@ const Home = () => {
 		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
 			'0px';
 	};
+	const iconClicked = (e: any) => {
+		setRightSiderClicks(e.target.id);
+	};
 
 	const onChangeSearchInput = async (string: any) => {
 		const searchPattern = string;
 		const searchOptions = {
-			caseSensitive: true,  // match case
-			wholeWord: true,      // match whole words only
-			wildcard: false,      // allow using '*' as a wildcard value
-			regex: false,         // string is treated as a regular expression
-			searchUp: false,      // search from the end of the document upwards
-			ambientString: true,  // return ambient string as part of the result
+			caseSensitive: true, // match case
+			wholeWord: true, // match whole words only
+			wildcard: false, // allow using '*' as a wildcard value
+			regex: false, // string is treated as a regular expression
+			searchUp: false, // search from the end of the document upwards
+			ambientString: true // return ambient string as part of the result
 		};
 
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
-	}
+	};
 
 	return (
 		<>
 			<MainContainer>
 				{/* Header part start */}
 				<HeaderContainer>
-					<HeaderHome span={1}>
-						<img src={HomeIcon} alt="home" className="icon22" />
+					<HeaderHome className="height-full" span={1}>
+						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
 
 					{/* File Tab bar start */}
@@ -297,11 +298,10 @@ const Home = () => {
 						<RightHeaderContainer>
 							<LeftIconGroup span={7}>
 								{!collapsed ? (
-									<img
-										src={ExpandIcon}
+									<ExpandIcon
 										onClick={() => closeRightSider()}
-										alt="expand"
 										className="icon22"
+										color="black"
 									/>
 								) : (
 									<ExpandAltOutlined
@@ -310,11 +310,21 @@ const Home = () => {
 									/>
 								)}
 							</LeftIconGroup>
-							<RightIconGroup span={16}>
-								<img src={ChatIcon2} alt="chat" className="icon22" />
-								<img src={BookmarkIcon} alt="bookmark" className="icon22" />
-								<img src={UserStarIcon} alt="userStar" className="icon22" />
-								<img src={InfoIcon} alt="Info" className="icon22" />
+							<RightIconGroup span={16} className="p1">
+								<ChatIcon2
+									id="comment"
+									className="icon22"
+									color={rightSiderClicks === 'comment' ? '#1379FF' : 'black'}
+									onClick={(e: any) => iconClicked(e)}
+								/>
+								<BookmarkIcon className="icon22" color="black" />
+								<UserStarIcon className="icon22" />
+								<InfoIcon
+									id="info"
+									className="icon22"
+									onClick={(e: any) => iconClicked(e)}
+									color={rightSiderClicks === 'info' ? '#1379FF' : 'black'}
+								/>
 							</RightIconGroup>
 						</RightHeaderContainer>
 					</Col>
@@ -355,15 +365,20 @@ const Home = () => {
 					{/* Content part over */}
 					{/* right sider Start */}
 					<RightCollapsibleSider id="mySidebar" className="pt1">
-						{/* <Row>
-							<OwnerInfoContainer>
-								{!collapsed && <OwnerInfo fileListing={false} />}
-							</OwnerInfoContainer>
-						</Row>
-						<Row className="justify-start">
-							{!collapsed && <MemberList />}
-						</Row> */}
-						<Comment />
+						{rightSiderClicks === 'info' ? (
+							<>
+								<Row>
+									<OwnerInfoContainer>
+										{!collapsed && <OwnerInfo fileListing={false} />}
+									</OwnerInfoContainer>
+								</Row>
+								<Row className="justify-start">
+									{!collapsed && <MemberList />}
+								</Row>
+							</>
+						) : (
+							<Comment />
+						)}
 					</RightCollapsibleSider>
 					{/* right sider Over */}
 				</Row>
