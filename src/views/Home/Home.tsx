@@ -211,7 +211,7 @@ const Home = () => {
 		await documentInstance.UI.toggleFullScreen();
 	};
 
-	const printPfd = async () => {
+	const printPdf = async () => {
 		await documentInstance.UI.print({
 			includeAnnotations: true,
 			flatten: true

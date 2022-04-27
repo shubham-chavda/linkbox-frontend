@@ -5,7 +5,6 @@ export const Tab = styled(Tabs)`
    
     && .ant-tabs-nav{
         margin:0 !important;
-        
     }
     && .ant-tabs-tab{
         border: none;

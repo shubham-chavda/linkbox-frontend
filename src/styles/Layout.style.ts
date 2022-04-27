@@ -1,4 +1,4 @@
-import { Col, Input, Row } from 'antd';
+import { Col, Input, Row, Select } from 'antd';
 import styled from 'styled-components';
 
 export const MainContainer = styled.div`
@@ -42,7 +42,7 @@ export const LeftSliderContainer = styled(Col)`
 
 export const HeaderFileTab = styled(Col)`
 	font-size: 20px;
-    height: 100%;
+    height: 90%;
 	border-right: 1px solid #e3ecf3;
 `;
 
@@ -62,5 +62,20 @@ export const SearchButtonFilled = styled(Input)`
         background:#F5F7F9;
         padding-left: 12px;
     }
+   
+`;
+export const SearchButtonDropDown = styled(Select)`
+    border-radius:24px;
+    width: 180px;
+    padding:10px;
+    background:#F5F7F9;
+    border:none;
+    && .ant-select-selector{
+        background:#F5F7F9 !important;
+        padding-left: 12px;
+    }
+	&& .ant-select-selector:hover{
+		border-color:none !important;
+	}
    
 `;

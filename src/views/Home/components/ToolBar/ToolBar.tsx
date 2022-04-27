@@ -21,8 +21,11 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col, List, Typography } from 'antd';
-import { SearchButtonFilled } from '../../../../styles/Layout.style';
+import { Col, List, Row, Select, Typography } from 'antd';
+import {
+	SearchButtonDropDown,
+	SearchButtonFilled
+} from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 // import Item from 'antd/lib/list/Item';
 
@@ -59,6 +62,7 @@ const ToolBar = ({
 	const [maxCount, setMaxCount] = useState(totalPageCount);
 	const [zoomLevel, setZoomLevel] = useState(100);
 	const [isSingleLayout, setIsSingleLayout] = useState(false);
+	const [searchValue, setSearchValue] = useState<string | undefined>(undefined);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -101,18 +105,54 @@ const ToolBar = ({
 		setIsSingleLayout(!isSingleLayout);
 		changeLayOutMode(isSingleLayout);
 	};
-
+	const handleSearchChange = (value: string) => {
+		console.log(
+			'🚀 ~ file: ToolBar.tsx ~ line 110 ~ handleSearchChange ~ value',
+			value
+		);
+		setSearchValue(value);
+	};
+	const options = searchResults.map((d: any) => (
+		<Select.Option
+			key={d.ambientStr}
+			onClick={() => {
+				documentViewer.setCurrentPage(d.page_num);
+			}}
+		>
+			<div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+				<Row className="font-12 truncate">
+					[{d.result_str}]{d.ambientStr}
+				</Row>
+				<Row className="font-12" style={{ color: '#686087' }}>
+					Page {d.page_num}
+				</Row>
+			</div>
+		</Select.Option>
+	));
 	return (
 		<ToolBarContainer>
 			{/* Search Button */}
 
 			<Col>
-				<SearchButtonFilled
+				<SearchButtonDropDown
+					showSearch
+					value={searchValue}
+					showArrow={false}
+					bordered={false}
 					style={{ width: 241 }}
 					placeholder="Search"
-					onChange={(e) => onChangeSearchInput(e.target.value)}
-					prefix={<SearchOutlined />}
-				/>
+					filterOption={false}
+					onSearch={onChangeSearchInput}
+					onChange={() => handleSearchChange}
+					dropdownMatchSelectWidth={false}
+					// prefix={<SearchOutlined />}
+					dropdownStyle={{
+						borderRadius: '12px',
+						width: '400px'
+					}}
+				>
+					{options}
+				</SearchButtonDropDown>
 				{/* 
 					ambientStr: "UX, test functionality with the types of documents your users will"
 					ambient_str: "UX, test functionality with the types of documents your users will"
@@ -127,7 +167,7 @@ const ToolBar = ({
 					result_str_end: 8
 					result_str_start: 4
 				*/}
-				{searchResults.length && (
+				{/* {searchResults.length && (
 					<List
 						bordered
 						dataSource={searchResults}
@@ -145,7 +185,7 @@ const ToolBar = ({
 							</div>
 						)}
 					/>
-				)}
+				)} */}
 			</Col>
 
 			{/* Members Avatar */}
