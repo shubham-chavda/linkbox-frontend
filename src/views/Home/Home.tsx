@@ -97,6 +97,10 @@ const Home = () => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
+
+			const style = instance.UI.iframeWindow.document.documentElement.style;
+			style.setProperty(`--document-background-color`, 'white');
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -228,7 +232,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation

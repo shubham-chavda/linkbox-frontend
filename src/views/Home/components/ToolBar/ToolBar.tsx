@@ -113,13 +113,13 @@ const ToolBar = ({
 		setSearchValue(value);
 	};
 	const options = searchResults.map((d: any) => (
-		<Select.Option
-			key={d.ambientStr}
-			onClick={() => {
-				documentViewer.setCurrentPage(d.page_num);
-			}}
-		>
-			<div style={{ display: 'flex', flexDirection: 'column-reverse' }}>
+		<Select.Option key={d.ambientStr}>
+			<div
+				style={{ display: 'flex', flexDirection: 'column-reverse' }}
+				onClick={() => {
+					documentViewer.setCurrentPage(d.page_num);
+				}}
+			>
 				<Row className="font-12 truncate">
 					[{d.result_str}]{d.ambientStr}
 				</Row>
@@ -153,39 +153,6 @@ const ToolBar = ({
 				>
 					{options}
 				</SearchButtonDropDown>
-				{/* 
-					ambientStr: "UX, test functionality with the types of documents your users will"
-					ambient_str: "UX, test functionality with the types of documents your users will"
-					pageNum: 6
-					page_num: 6
-					quads: [e]
-					resultCode: 2
-					resultStr: "test"
-					resultStrEnd: 8
-					resultStrStart: 4
-					result_str: "test"
-					result_str_end: 8
-					result_str_start: 4
-				*/}
-				{/* {searchResults.length && (
-					<List
-						bordered
-						dataSource={searchResults}
-						renderItem={(item: any, index: any) => (
-							<div
-								key={index}
-								onClick={() => {
-									documentViewer.setCurrentPage(item.page_num);
-								}}
-							>
-								<Typography.Text mark>[{item.result_str}]</Typography.Text>
-								{item.result_str}
-								<Typography.Text>{item.pageNum}</Typography.Text>
-								<Typography.Text>{item.ambient_str}</Typography.Text>
-							</div>
-						)}
-					/>
-				)} */}
 			</Col>
 
 			{/* Members Avatar */}
