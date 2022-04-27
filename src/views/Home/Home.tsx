@@ -56,9 +56,13 @@ const Home = () => {
 	const searchContainerRef = useRef(null);
 
 	const [documentViewer, setDocumentViewer] = useState<any>(null);
-	const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
-	const [annotationManager, setAnnotationManager] = useState(null);
+	const [annotationManager, setAnnotationManager] = useState<any>(null);
 	const [searchContainerOpen, setSearchContainerOpen] = useState(false);
+	const [annotations, setAnnotations] = useState<any>(null);
+
+	const [searchTextMode, setSearchTextMode] = useState<any>(null);
+
+	const [searchResults, setSearchResults] = useState<any>([]);
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
@@ -87,21 +91,12 @@ const Home = () => {
 				path: '/webviewer/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
-				disabledElements: [
-					'header',
-					'toolsHeader'
-					// 'textToolGroupButton',
-					// 'eraserToolButton',
-					// 'signatureToolGroupButton',
-					// 'toolsButton',
-					// 'eraserToolButton',
-					// 'signatureToolGroupButton',
-					// 'freeTextToolButton',
-					// 'stickyToolButton',
-				]
+				disabledElements: ['header', 'toolsHeader', 'searchPanel']
 			},
 			viewer.current
 		).then(async (instance) => {
+			const { Annotations, Search, annotationManager } = instance.Core;
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -110,20 +105,35 @@ const Home = () => {
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
 			setDocumentInstance(instance);
+			setAnnotationManager(annotationManager);
+			setAnnotations(Annotations);
 			documentViewer.disableViewportRenderMode();
-			// documentViewer.loadDocument(documentPath);
+			const LayoutMode = instance.UI.LayoutMode;
+			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+			setMaxCount(documentViewer.getPageCount());
 
-			documentViewer.addEventListener('documentLoaded', async () => {
-				setIsDocumentLoaded(true);
-				console.log('document loaded', documentViewer.getPageCount());
-				setMaxCount(documentViewer.getPageCount());
+			documentViewer.addEventListener('documentLoaded', () => {
+				documentViewer.disableViewportRenderMode();
+				// documentViewer.loadDocument(documentPath);
 			});
-			// documentViewer.addEventListener('documentLoaded', () => {
-			// 	setIsDocumentLoaded(true);
-			// 	console.log('document loaded');
-			// 	// setMaxCount(documentViewer.getPageCount());
-			// });
 		});
+	};
+
+	const searchListener = (searchPattern: any, options: any, results: any) => {
+		console.log('results ------->', results);
+
+		const newAnnotations = results.map((result: any) => {
+			const annotation = new annotations.RedactionAnnotation();
+			annotation.PageNumber = result.pageNum;
+			annotation.Quads = result.quads.map((quad: any) => quad.getPoints());
+			annotation.StrokeColor = new annotations.Color(136, 39, 31);
+			return annotation;
+		});
+
+		setSearchResults(results);
+
+		annotationManager.addAnnotations(newAnnotations);
+		annotationManager.drawAnnotationsFromList(newAnnotations);
 	};
 
 	const zoomOut = (zoomPercentages?: number) => {
@@ -181,6 +191,13 @@ const Home = () => {
 
 		setEditBoxAnnotation(null);
 		setEditBoxCurrentValue(null);
+	};
+
+	const changeLayOutMode = (isSingle?: boolean) => {
+		const LayoutMode = documentInstance.UI.LayoutMode;
+		documentInstance.UI.setLayoutMode(
+			isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single
+		);
 	};
 
 	const downloadPfd = async () => {
@@ -242,6 +259,22 @@ const Home = () => {
 	const iconClicked = (e: any) => {
 		setRightSiderClicks(e.target.id);
 	};
+
+	const onChangeSearchInput = async (string: any) => {
+		const searchPattern = string;
+		const searchOptions = {
+			caseSensitive: true, // match case
+			wholeWord: true, // match whole words only
+			wildcard: false, // allow using '*' as a wildcard value
+			regex: false, // string is treated as a regular expression
+			searchUp: false, // search from the end of the document upwards
+			ambientString: true // return ambient string as part of the result
+		};
+
+		documentInstance.UI.addSearchListener(searchListener);
+		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
+	};
+
 	return (
 		<>
 			<MainContainer>
@@ -311,6 +344,7 @@ const Home = () => {
 					<CenterColumn>
 						<Row id={'tools'}>
 							<ToolBar
+								searchResults={searchResults}
 								zoomIn={zoomIn}
 								zoomOut={zoomOut}
 								setCustomZoomLevel={setCustomZoomLevel}
@@ -319,6 +353,8 @@ const Home = () => {
 								selectTool={selectTool}
 								totalPageCount={maxCount}
 								downloadPfd={downloadPfd}
+								changeLayOutMode={changeLayOutMode}
+								onChangeSearchInput={onChangeSearchInput}
 								toggleFullScreen={toggleFullScreen}
 							/>
 						</Row>
