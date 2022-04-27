@@ -38,11 +38,11 @@ const FileListing = () => {
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
 	const isUserExist = useAppSelector((state) => state.global.user);
-	useEffect(() => {
-		if (window.localStorage.getItem('token')) {
-			if (!isUserExist) dispatch(getUserDetails());
-		} else history.navigate?.('/login');
-	}, []);
+	// useEffect(() => {
+	// 	if (window.localStorage.getItem('token')) {
+	// 		if (!isUserExist) dispatch(getUserDetails());
+	// 	} else history.navigate?.('/login');
+	// }, []);
 
 	useEffect(() => {
 		const data = [];
@@ -125,24 +125,53 @@ const FileListing = () => {
 						<Row>
 							{[...Array(docSize)].map((_, index) => (
 								<div
-									className=""
+									className="hover-blue "
 									key={index}
 									style={{
 										width: '160px'
 									}}
 									onClick={() => handleDocClick(index)}
 								>
-									<img
+									{/* <img
 										src={docClicked === index ? DefaultPdfGreen : DefaultPdf}
 										width="138px"
 										height="158px"
+									/> */}
+									{/* {docClicked === index ? (
+										<DefaultPdfGreen
+											className="hover-blue"
+											width="138px"
+											height="158px"
+											color={docClicked === index ? 'green' : '#1379FF'}
+										/>
+									) : (
+										<DefaultPdf
+											className="hover-blue"
+											width="138px"
+											height="158px"
+											color={docClicked === index ? 'green' : '#1379FF'}
+										/>
+									)} */}
+									<DefaultPdf
+										stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
+										className="hover-blue"
+										width="138px"
+										height="158px"
+										color={docClicked === index ? '#25CA69' : '#1379FF'}
 									/>
 									<Tooltip placement="top" title={`${index}.pdf`}>
 										<p
 											style={{
-												color: docClicked === index ? '#25CA69' : 'black'
+												color:
+													docClicked === index ? '#25CA69' : 'currentColor',
+												width: '80%',
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												display: '-webkit-box',
+												WebkitLineClamp: 2,
+												WebkitBoxOrient: 'vertical'
 											}}
-											className=" truncate px1 font-12"
+											className=" pl2 font-12"
 										>
 											{index} Gmat official Guide 2019.pdf
 										</p>
