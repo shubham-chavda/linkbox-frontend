@@ -138,7 +138,8 @@ const ToolBar = ({
 									documentViewer.setCurrentPage(item.page_num);
 								}}
 							>
-								<Typography.Text>{item.result_str}</Typography.Text>
+								<Typography.Text mark>[{item.result_str}]</Typography.Text>
+								{item.result_str}
 								<Typography.Text>{item.pageNum}</Typography.Text>
 								<Typography.Text>{item.ambient_str}</Typography.Text>
 							</div>
