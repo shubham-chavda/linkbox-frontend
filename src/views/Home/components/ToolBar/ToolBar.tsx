@@ -35,14 +35,10 @@ interface IToolBarProps {
 	selectTool: any;
 	totalPageCount: number;
 	downloadPfd: any;
-<<<<<<< HEAD
-	toggleFullScreen: any;
-=======
 	changeLayOutMode: any;
 	onChangeSearchInput: any;
 	toggleFullScreen: any;
 	searchResults: any;
->>>>>>> f1432856008ff3df5771bcb7870ba4deccdd6059
 }
 
 const ToolBar = ({
@@ -104,7 +100,7 @@ const ToolBar = ({
 	const onClickChangeLayout = () => {
 		setIsSingleLayout(!isSingleLayout);
 		changeLayOutMode(isSingleLayout);
-	}
+	};
 
 	return (
 		<ToolBarContainer>
@@ -131,7 +127,7 @@ const ToolBar = ({
 					result_str_end: 8
 					result_str_start: 4
 				*/}
-				{searchResults.length &&
+				{searchResults.length && (
 					<List
 						bordered
 						dataSource={searchResults}
@@ -148,7 +144,7 @@ const ToolBar = ({
 							</div>
 						)}
 					/>
-				}
+				)}
 			</Col>
 
 			{/* Members Avatar */}
@@ -217,34 +213,17 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-<<<<<<< HEAD
-			<PageIcon alt="page" className="icon22" />
+			<PageIcon alt="page" onClick={onClickChangeLayout} className="icon22" />
 			<HandMoveIcon
-=======
-			<img src={PageIcon} onClick={onClickChangeLayout} alt="page" className="icon22" />
-			<img onClick={() => createRectangle()} src={HandMoveIcon} alt="move" className="icon22" />
-			<img
->>>>>>> f1432856008ff3df5771bcb7870ba4deccdd6059
 				onClick={() => createRectangle()}
 				alt="move"
 				className="icon22"
 			/>
-<<<<<<< HEAD
 			<VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
 				onClick={() => toggleFullScreen()}
 				alt="size"
-=======
-			<img src={VideoIcon} alt="video" className="icon22" />
-			<img src={CallIcon} alt="call" className="icon22" />
-			<img src={SizeChangeIcon} onClick={() => toggleFullScreen()} alt="size" className="icon22" />
-			<img src={ShareIcon} alt="share" className="icon22" />
-			<img
-				src={CopyIcon}
-				onClick={() => downloadPfd()}
-				alt="copy"
->>>>>>> f1432856008ff3df5771bcb7870ba4deccdd6059
 				className="icon22"
 			/>
 			<ShareIcon alt="share" className="icon22" />
