@@ -1,6 +1,15 @@
-import { Avatar, Col, Comment, Row } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Comment, Row } from 'antd';
 import React, { useState } from 'react';
-import { DeleteIcon, LocationIcon } from '../../assets';
+import {
+	DeleteIcon,
+	EditIcon,
+	HeartIcon,
+	LocationComment,
+	LocationIcon,
+	ReplyIcon
+} from '../../assets';
+import { CommentStyled } from './Comment.style';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
@@ -22,34 +31,59 @@ export default function CommentSection() {
 		</div>
 	) : (
 		<div style={{ height: '93vh', overflowX: 'hidden' }}>
-			<ExampleComment>
-				<ExampleComment />
-				<ExampleComment />
-			</ExampleComment>
-			<ExampleComment />
-			<ExampleComment />
 			<ExampleComment />
 		</div>
 	);
 }
 const ExampleComment = ({ children }: any) => (
-	<Comment
-		actions={[<span key="comment-nested-reply-to">Reply to</span>]}
-		author={
-			<Row>
-				<Col className="font-14" style={{ color: 'black' }}>
-					John Martin
-				</Col>
-			</Row>
-		}
-		avatar={<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />}
-		content={
+	<div style={{ paddingLeft: '10px' }}>
+		<Row>
+			<Col>
+				<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+			</Col>
+			<Col>Helsinky Martin</Col>
+			<Col>
+				<DeleteIcon className="icon16" />
+				<EditIcon className="icon16" />
+			</Col>
+		</Row>
+		<Row>
 			<p className="font-12">
 				We supply a series of design principles, practical patterns and high
 				quality design resources (Sketch and Axure).
 			</p>
-		}
-	>
-		<div style={{ borderLeft: '1px solid #ECF2F7' }}>{children}</div>
-	</Comment>
+		</Row>
+		<Row className="flex items-center" style={{ color: 'black' }}>
+			<Col span={19} className="">
+				<Row>
+					<Col>
+						<LocationComment width="12px" height="12px" />
+						<span style={{ marginLeft: '5px' }}>15</span>
+					</Col>
+					<Col>
+						<HeartIcon width="12px" height="12px" />
+						<span style={{ marginLeft: '5px' }}>18</span>
+					</Col>
+					<Col>
+						<div
+							className="flex items-center px1"
+							style={{
+								marginLeft: '5px',
+								borderRadius: '12px',
+								border: '1px solid #F0F0F0'
+							}}
+						>
+							<ReplyIcon
+								width="12px"
+								height="12px"
+								style={{ marginRight: '5px' }}
+							/>
+							reply
+						</div>
+					</Col>
+				</Row>
+			</Col>
+			<Col style={{ fontSize: '12px', color: '#C4CEDB' }}>18/01/2021</Col>
+		</Row>
+	</div>
 );

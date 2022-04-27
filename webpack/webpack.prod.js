@@ -3,7 +3,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const paths = require("./paths");
-
+const dotenv = require('dotenv-webpack');
 module.exports = {
 	mode: "production",
 	entry: paths.entryPath,
@@ -21,6 +21,9 @@ module.exports = {
 	},
 	plugins: [
 		// [paths.outputPath.split('/').pop()]
+		new dotenv({
+			path: paths.devEnvPath
+		}),
 		new CleanWebpackPlugin(),
 		new CompressionPlugin({
 			test: /\.js$|\.css$|\.html$/,
