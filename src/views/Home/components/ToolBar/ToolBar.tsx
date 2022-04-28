@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import {
 	IncDecContainer,
+	PaginationContainer,
 	SelectContainer,
 	ToolBarContainer
 } from './ToolBar.style';
@@ -21,12 +22,10 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col, List, Row, Select, Typography } from 'antd';
-import {
-	SearchButtonDropDown,
-	SearchButtonFilled
-} from '../../../../styles/Layout.style';
+import { Col } from 'antd';
+import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
+import { Popover } from 'react-tiny-popover';
 // import Item from 'antd/lib/list/Item';
 
 interface IToolBarProps {
@@ -64,6 +63,7 @@ const ToolBar = ({
 	const [isSingleLayout, setIsSingleLayout] = useState(false);
 	const [searchValue, setSearchValue] = useState<string | undefined>(undefined);
 	const [currentSearchResultOn, setCurrentSearchResultOn] = useState<number>(0);
+	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -106,52 +106,55 @@ const ToolBar = ({
 		setIsSingleLayout(!isSingleLayout);
 		changeLayOutMode(isSingleLayout);
 	};
-	const handleSearchChange = (value: string) => {
+	const handleSearchChange = (e: any) => {
 		console.log(
-			'🚀 ~ file: ToolBar.tsx ~ line 110 ~ handleSearchChange ~ value',
-			value
+			'🚀 ~ file: ToolBar.tsx ~ line 114 ~ handleSearchChange ~ e',
+			e
 		);
-		setSearchValue(value);
+		onChangeSearchInput(e.target.value);
+		setSearchValue(e.target.value);
+		setIsPopoverOpen(true);
 	};
 
 	const jumpToSearchResult = (jumpTo: number) => {
-		if (currentSearchResultOn <= searchResults.length) {
+		if (currentSearchResultOn <= searchResults.length - 1) {
 			setCurrentSearchResultOn(currentSearchResultOn + jumpTo);
 			const pageNumber = searchResults[currentSearchResultOn].page_num;
 			documentViewer.setCurrentPage(pageNumber);
 		}
-	}
+	};
 
 	const options = () => {
 		return (
-			<Col>
-				<IncDecContainer>
-					<LeftOutlined
-						disabled={pageCount === 1}
-						onClick={() => jumpToSearchResult(-1)}
-						{...IncDecContainerProps}
-					/>
-					<>
-						<span style={{ paddingLeft: '7px' }}>{currentSearchResultOn}</span>
-						<span>of</span>
-						<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
-					</>
-					<RightOutlined
-						{...IncDecContainerProps}
-						disabled={searchResults.length === currentSearchResultOn}
-						onClick={() => jumpToSearchResult(1)}
-					/>
-				</IncDecContainer>
-			</Col>
-		)
+			<PaginationContainer
+				className="box-shadow flex justify-between items-center"
+				style={{ background: '#fff' }}
+			>
+				<LeftOutlined
+					disabled={pageCount === 1}
+					onClick={() => jumpToSearchResult(-1)}
+					{...IncDecContainerProps}
+				/>
+				<>
+					<span style={{ paddingLeft: '7px' }}>{currentSearchResultOn}</span>
+					<span>of</span>
+					<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
+				</>
+				<RightOutlined
+					{...IncDecContainerProps}
+					disabled={searchResults.length === currentSearchResultOn}
+					onClick={() => jumpToSearchResult(1)}
+				/>
+			</PaginationContainer>
+		);
 	};
 
 	return (
-		<ToolBarContainer>
+		<ToolBarContainer className="flex items-center justify-between">
 			{/* Search Button */}
 
 			<Col>
-				<SearchButtonDropDown
+				{/* <SearchButtonDropDown
 					showSearch
 					value={searchValue}
 					showArrow={false}
@@ -160,7 +163,7 @@ const ToolBar = ({
 					placeholder="Search"
 					filterOption={false}
 					onSearch={onChangeSearchInput}
-					onChange={() => handleSearchChange}
+					onChange={(e) => handleSearchChange(e)}
 					dropdownMatchSelectWidth={false}
 					// prefix={<SearchOutlined />}
 					dropdownStyle={{
@@ -169,7 +172,22 @@ const ToolBar = ({
 					}}
 				>
 					{options()}
-				</SearchButtonDropDown>
+				</SearchButtonDropDown> */}
+				<Popover
+					isOpen={isPopoverOpen}
+					containerStyle={{ top: '14%', left: '5%' }}
+					// positions={['bottom']}
+					onClickOutside={() => setIsPopoverOpen(false)}
+					content={options}
+				>
+					<SearchButtonFilled
+						value={searchValue}
+						onChange={handleSearchChange}
+						style={{ width: 250 }}
+						placeholder="Search"
+						prefix={<SearchOutlined />}
+					/>
+				</Popover>
 			</Col>
 
 			{/* Members Avatar */}

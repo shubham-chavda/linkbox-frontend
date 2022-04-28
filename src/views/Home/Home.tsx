@@ -68,9 +68,6 @@ const Home = () => {
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
 
-	useEffect(() => {
-		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
-	}, [collapsed]);
 	const initialPanes: initPanel = [
 		{
 			title: 'Gmat Official Guide 2020 ',
@@ -87,7 +84,7 @@ const Home = () => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: 'http://linkbox-dev-webappsite.s3-website-us-east-1.amazonaws.com/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: ['header', 'toolsHeader', 'searchPanel']

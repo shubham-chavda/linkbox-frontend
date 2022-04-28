@@ -12,8 +12,7 @@ function* GetUser(): Generator<StrictEffect, void, any> {
 		// } else
 		{
 			const response = yield call(apis.user.getUserData);
-            console.log("🚀 ~ file: globalSaga.ts ~ line 15 ~ function*GetUser ~ response", response)
-			const { status, data } = response;
+            const { status, data } = response;
 			if (status === 200 && data) {
 				yield put(setUserDetails(data));
 			}

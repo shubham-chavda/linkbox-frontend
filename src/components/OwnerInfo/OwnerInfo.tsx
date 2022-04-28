@@ -14,7 +14,6 @@ interface IOwnerInfo {
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing, ownerData } = props;
-	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 12 ~ ownerData', ownerData);
 	return (
 		<>
 			<Row className="flex items-center">

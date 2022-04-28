@@ -10,6 +10,7 @@ import {
 	PopOverContent
 } from './MemberList.style';
 import { MoreOutlined } from '@ant-design/icons';
+import PopupMenu from '../../../../components/PopupMenu/PopupMenu';
 
 const MemberList: React.FC = () => {
 	const content = (

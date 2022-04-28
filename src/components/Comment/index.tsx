@@ -45,7 +45,6 @@ export default function CommentSection() {
 }
 const Comments = (a: any) => (
 	<CommentContainer>
-		{console.log('🚀 ~ file: index.tsx ~ line 40 ~ children', a)}
 		<div className={`mb2 ${a.className}`} style={{ paddingLeft: '10px' }}>
 			<Row>
 				<Col span={19} className="truncate">
