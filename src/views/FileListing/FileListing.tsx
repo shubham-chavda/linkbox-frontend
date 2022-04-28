@@ -125,36 +125,15 @@ const FileListing = () => {
 						<Row>
 							{[...Array(docSize)].map((_, index) => (
 								<div
-									className="hover-blue "
+									className={`${docClicked !== index ? 'hover-blue' : ''}`}
 									key={index}
 									style={{
 										width: '160px'
 									}}
 									onClick={() => handleDocClick(index)}
 								>
-									{/* <img
-										src={docClicked === index ? DefaultPdfGreen : DefaultPdf}
-										width="138px"
-										height="158px"
-									/> */}
-									{/* {docClicked === index ? (
-										<DefaultPdfGreen
-											className="hover-blue"
-											width="138px"
-											height="158px"
-											color={docClicked === index ? 'green' : '#1379FF'}
-										/>
-									) : (
-										<DefaultPdf
-											className="hover-blue"
-											width="138px"
-											height="158px"
-											color={docClicked === index ? 'green' : '#1379FF'}
-										/>
-									)} */}
 									<DefaultPdf
 										stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
-										className="hover-blue"
 										width="138px"
 										height="158px"
 										color={docClicked === index ? '#25CA69' : '#1379FF'}

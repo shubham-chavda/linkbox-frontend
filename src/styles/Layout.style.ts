@@ -5,7 +5,7 @@ export const MainContainer = styled.div`
 	/* height: 100vh; */
 `;
 export const HeaderContainer = styled(Row)`
-	height:5.4vh;
+	height:4.8vh;
 	border-bottom: 1px solid #e3ecf3;
 `;
 export const HeaderHome = styled(Col)`
@@ -42,7 +42,7 @@ export const LeftSliderContainer = styled(Col)`
 
 export const HeaderFileTab = styled(Col)`
 	font-size: 20px;
-    height: 90%;
+    height: 100%;
 	border-right: 1px solid #e3ecf3;
 `;
 

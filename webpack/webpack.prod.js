@@ -4,6 +4,7 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const paths = require("./paths");
 const dotenv = require('dotenv-webpack');
+const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
 	mode: "production",
 	entry: paths.entryPath,
@@ -28,6 +29,11 @@ module.exports = {
 		new CompressionPlugin({
 			test: /\.js$|\.css$|\.html$/,
 		}),
+		new CopyPlugin({
+			patterns: [
+			  { from: "public", to: "public" }
+			],
+		  }),
 	],
 	devtool: false,
 };

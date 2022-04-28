@@ -72,18 +72,17 @@ const Home = () => {
 		console.log('🚀 ~ file: Home.tsx ~ line 36 ~ Home ~ collapsed', collapsed);
 	}, [collapsed]);
 	const initialPanes: initPanel = [
-		{ title: 'Tab 1 ', content: 'Content of Tab 1', key: '1' },
-		{ title: 'Tab 2', content: 'Content of Tab 2', key: '2' },
-		{ title: 'Tab 3', content: 'Content of Tab 3', key: '3' },
-		{ title: 'Tab 4', content: 'Content of Tab 4', key: '4' },
-		{ title: 'Tab 5', content: 'Content of Tab 5', key: '5' },
-		{ title: 'Tab 6', content: 'Content of Tab 6', key: '6' },
-		{ title: 'Tab 7', content: 'Content of Tab 7', key: '7' },
-		{ title: 'Tab 8', content: 'Content of Tab 8', key: '8' },
-		{ title: 'Tab 9', content: 'Content of Tab 9', key: '9' },
-		{ title: 'Tab 10', content: 'Content of Tab 10', key: '10' },
-		{ title: 'Tab 11', content: 'Content of Tab 11', key: '11' },
-		{ title: 'Tab 12', content: 'Content of Tab 12', key: '12' }
+		{
+			title: 'Gmat Official Guide 2020 ',
+			content: 'Content of Tab 1',
+			key: '1'
+		},
+		{
+			title: 'Gmat Official Guide 2021 new shubham',
+			content: 'Content of Tab 2',
+			key: '2'
+		},
+		{ title: 'Gmat Official Guide 2019', content: 'Content of Tab 3', key: '3' }
 	];
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
@@ -96,7 +95,6 @@ const Home = () => {
 			viewer.current
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
-
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
@@ -232,7 +230,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -244,7 +242,9 @@ const Home = () => {
 		}
 	};
 	useEffect(() => {
-		loadPdfDocumentByPath('/files/PDFTRON_about.pdf');
+		loadPdfDocumentByPath(
+			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+		);
 	}, []);
 
 	const onTabChange = (currentKey: string) => {
@@ -253,7 +253,7 @@ const Home = () => {
 	const openRightSider = () => {
 		setCollapsed(false);
 		(document.getElementById('mySidebar') as HTMLInputElement).style.width =
-			'320px';
+			'20.8%';
 	};
 	const closeRightSider = () => {
 		setCollapsed(true);

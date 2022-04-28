@@ -9,7 +9,7 @@ import {
 	LocationIcon,
 	ReplyIcon
 } from '../../assets';
-import { CommentStyled } from './Comment.style';
+import { CommentContainer, CommentStyled, ReplyButton } from './Comment.style';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
@@ -31,59 +31,67 @@ export default function CommentSection() {
 		</div>
 	) : (
 		<div style={{ height: '93vh', overflowX: 'hidden' }}>
-			<ExampleComment />
+			<Comments>
+				<div className="nested ml3">
+					{[...Array(2)].map((_, index) => (
+						<Comments className="nested" key={index} />
+					))}
+				</div>
+			</Comments>
+			<Comments />
+			<Comments />
 		</div>
 	);
 }
-const ExampleComment = ({ children }: any) => (
-	<div style={{ paddingLeft: '10px' }}>
-		<Row>
-			<Col>
-				<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-			</Col>
-			<Col>Helsinky Martin</Col>
-			<Col>
-				<DeleteIcon className="icon16" />
-				<EditIcon className="icon16" />
-			</Col>
-		</Row>
-		<Row>
-			<p className="font-12">
-				We supply a series of design principles, practical patterns and high
-				quality design resources (Sketch and Axure).
-			</p>
-		</Row>
-		<Row className="flex items-center" style={{ color: 'black' }}>
-			<Col span={19} className="">
-				<Row>
-					<Col>
-						<LocationComment width="12px" height="12px" />
-						<span style={{ marginLeft: '5px' }}>15</span>
-					</Col>
-					<Col>
-						<HeartIcon width="12px" height="12px" />
-						<span style={{ marginLeft: '5px' }}>18</span>
-					</Col>
-					<Col>
-						<div
-							className="flex items-center px1"
-							style={{
-								marginLeft: '5px',
-								borderRadius: '12px',
-								border: '1px solid #F0F0F0'
-							}}
-						>
-							<ReplyIcon
-								width="12px"
-								height="12px"
-								style={{ marginRight: '5px' }}
-							/>
-							reply
-						</div>
-					</Col>
-				</Row>
-			</Col>
-			<Col style={{ fontSize: '12px', color: '#C4CEDB' }}>18/01/2021</Col>
-		</Row>
-	</div>
+const Comments = (a: any) => (
+	<CommentContainer>
+		{console.log('🚀 ~ file: index.tsx ~ line 40 ~ children', a)}
+		<div className={`mb2 ${a.className}`} style={{ paddingLeft: '10px' }}>
+			<Row>
+				<Col span={19} className="truncate">
+					<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+					<span className="pl1">Heisenberg Martin</span>
+				</Col>
+				<Col span={4} className="flex justify-around items-center">
+					<DeleteIcon className="icon15" />
+					<EditIcon className="icon16" />
+				</Col>
+			</Row>
+			<Row>
+				<p className="font-12 mr2" style={{ marginLeft: '40px' }}>
+					We supply a series of design principles, practical patterns and high
+					quality design resources (Sketch and Axure).
+				</p>
+			</Row>
+			<Row className="flex items-center font-12">
+				<Col span={3}></Col>
+				<Col span={13}>
+					<Row className="flex justify-around items-center">
+						<Col>
+							<LocationComment className="icon12" />
+							<span className="ml1">15</span>
+						</Col>
+						<Col>
+							<HeartIcon className="icon12" />
+							<span className="ml1">18</span>
+						</Col>
+						<Col>
+							<ReplyButton className="flex items-center px1">
+								<ReplyIcon className="icon12" style={{ marginRight: '5px' }} />
+								reply
+							</ReplyButton>
+						</Col>
+					</Row>
+				</Col>
+				<Col
+					span={7}
+					className="font-12 right-align"
+					style={{ color: '#C4CEDB' }}
+				>
+					18/01/2021
+				</Col>
+			</Row>
+		</div>
+		{a.children}
+	</CommentContainer>
 );

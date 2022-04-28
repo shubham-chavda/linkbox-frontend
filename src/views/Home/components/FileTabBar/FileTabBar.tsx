@@ -80,6 +80,7 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 			hideAdd
 			type="editable-card"
 			size="small"
+			style={{ border: 'none' }}
 			onChange={onChange}
 			activeKey={activeKey}
 			onEdit={onEdit}
