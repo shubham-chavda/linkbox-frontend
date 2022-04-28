@@ -9,7 +9,7 @@ import {
 	LocationIcon,
 	ReplyIcon
 } from '../../assets';
-import { CommentStyled } from './Comment.style';
+// import { CommentStyled } from './Comment.style';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
