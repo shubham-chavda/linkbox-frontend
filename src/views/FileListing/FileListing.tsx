@@ -38,11 +38,11 @@ const FileListing = () => {
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
 	const isUserExist = useAppSelector((state) => state.global.user);
-	// useEffect(() => {
-	// 	if (window.localStorage.getItem('token')) {
-	// 		if (!isUserExist) dispatch(getUserDetails());
-	// 	} else history.navigate?.('/login');
-	// }, []);
+	useEffect(() => {
+		if (window.localStorage.getItem('token')) {
+			if (!isUserExist) dispatch(getUserDetails());
+		} else history.navigate?.('/login');
+	}, []);
 
 	useEffect(() => {
 		const data = [];
@@ -59,7 +59,9 @@ const FileListing = () => {
 		setOwnerInfo(data);
 	}, [docSize]);
 	const handleDocClick = (index: number) => {
-		setDocClicked(index);
+		if (docClicked !== index) {
+			setDocClicked(index);
+		} else history.navigate?.('/documents');
 	};
 	return (
 		<>

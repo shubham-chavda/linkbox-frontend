@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import {
 	SearchOutlined,
@@ -15,16 +16,10 @@ import {
 	ToolBarContainer
 } from './ToolBar.style';
 import {
-	CallIcon,
-	ChatIcon,
 	ChatIcon2,
-	CopyIcon,
 	CursorTextCopyMove,
 	HandMoveIcon,
-	PageIcon,
-	ShareIcon,
-	SizeChangeIcon,
-	VideoIcon
+	PageIcon
 } from '../../../../assets';
 import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
@@ -199,6 +194,7 @@ const ToolBar = ({
 			<Col className="pl2	pointer">
 				<MemberListPopup />
 			</Col>
+			<PageIcon alt="page" onClick={onClickChangeLayout} className="icon22" />
 			<Col>
 				<IncDecContainer>
 					<LeftOutlined
@@ -260,7 +256,6 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			<PageIcon alt="page" onClick={onClickChangeLayout} className="icon22" />
 			<HandMoveIcon
 				onClick={() => createRectangle()}
 				alt="move"

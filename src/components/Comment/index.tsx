@@ -1,6 +1,6 @@
 import { DownloadOutlined } from '@ant-design/icons';
-import { Avatar, Button, Col, Comment, Row } from 'antd';
-import React, { useState } from 'react';
+import { Avatar, Button, Col, Comment, Input, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
 import {
 	DeleteIcon,
 	EditIcon,
@@ -13,7 +13,14 @@ import { CommentContainer, ReplyButton } from './Comment.style';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
+	const [isEdit, setIsEdit] = useState(false);
 
+	useEffect(() => {
+		console.log(
+			'🚀 ~ file: index.tsx ~ line 17 ~ CommentSection ~ isEdit',
+			isEdit
+		);
+	}, [isEdit]);
 	return !isComment ? (
 		<div
 			style={{ height: '100%', color: '#AAAFB5' }}
@@ -31,21 +38,20 @@ export default function CommentSection() {
 		</div>
 	) : (
 		<div style={{ height: '93vh', overflowX: 'hidden' }}>
-			<Comments>
+			<Comments setIsEdit={setIsEdit} isEdit={isEdit}>
 				<div className="nested ml3">
 					{[...Array(2)].map((_, index) => (
 						<Comments className="nested" key={index} />
 					))}
 				</div>
 			</Comments>
-			<Comments />
-			<Comments />
 		</div>
 	);
 }
-const Comments = (a: any) => (
+const Comments = (props: any) => (
 	<CommentContainer>
-		<div className={`mb2 ${a.className}`} style={{ paddingLeft: '10px' }}>
+		{console.log('🚀 ~ file: index.tsx ~ line 52 ~ props', props)}
+		<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
 			<Row>
 				<Col span={19} className="truncate">
 					<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
@@ -53,14 +59,18 @@ const Comments = (a: any) => (
 				</Col>
 				<Col span={4} className="flex justify-around items-center">
 					<DeleteIcon className="icon15" />
-					<EditIcon className="icon16" />
+					<EditIcon onClick={() => props.setIsEdit(true)} className="icon16" />
 				</Col>
 			</Row>
 			<Row>
-				<p className="font-12 mr2" style={{ marginLeft: '40px' }}>
-					We supply a series of design principles, practical patterns and high
-					quality design resources (Sketch and Axure).
-				</p>
+				{!props.isEdit ? (
+					<p className="font-12 mr2" style={{ marginLeft: '40px' }}>
+						We supply a series of design principles, practical patterns and high
+						quality design resources (Sketch and Axure).
+					</p>
+				) : (
+					<Input placeholder="Write comment" />
+				)}
 			</Row>
 			<Row className="flex items-center font-12">
 				<Col span={3}></Col>
@@ -91,6 +101,6 @@ const Comments = (a: any) => (
 				</Col>
 			</Row>
 		</div>
-		{a.children}
+		{props.children}
 	</CommentContainer>
 );
