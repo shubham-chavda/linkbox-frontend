@@ -27,6 +27,7 @@ import LocationIcon from './icons/LocationIcon.svg';
 import LocationComment from './icons/LocationComment.svg';
 import HeartIcon from './icons/HeartIcon.svg';
 import ReplyIcon from './icons/ReplyIcon.svg';
+import CursorTextCopyMove from './icons/CursorTextCopyMove.svg';
 
 // ------------------- images ----------------------------
 
@@ -66,6 +67,7 @@ export {
 	LocationComment,
 	HeartIcon,
 	ReplyIcon,
+	CursorTextCopyMove,
 	// ------------------- images ----------------------------
 	SignInSVG,
 	DefaultPdf,

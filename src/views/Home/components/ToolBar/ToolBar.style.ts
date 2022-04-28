@@ -45,3 +45,8 @@ export const PaginationContainer = styled.div`
   width:130px;
   
 `;
+export const IconBG = styled.div`
+  background:#170944;
+  padding:10px;
+  border-radius:12px;
+`;

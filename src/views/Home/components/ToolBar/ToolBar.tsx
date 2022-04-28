@@ -8,6 +8,7 @@ import {
 	DownOutlined
 } from '@ant-design/icons';
 import {
+	IconBG,
 	IncDecContainer,
 	PaginationContainer,
 	SelectContainer,
@@ -15,7 +16,10 @@ import {
 } from './ToolBar.style';
 import {
 	CallIcon,
+	ChatIcon,
+	ChatIcon2,
 	CopyIcon,
+	CursorTextCopyMove,
 	HandMoveIcon,
 	PageIcon,
 	ShareIcon,
@@ -183,7 +187,7 @@ const ToolBar = ({
 					<SearchButtonFilled
 						value={searchValue}
 						onChange={handleSearchChange}
-						style={{ width: 250 }}
+						style={{ width: 450 }}
 						placeholder="Search"
 						prefix={<SearchOutlined />}
 					/>
@@ -262,15 +266,29 @@ const ToolBar = ({
 				alt="move"
 				className="icon22"
 			/>
-			<VideoIcon alt="video" className="icon22" />
+			{/* <VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
 				onClick={() => toggleFullScreen()}
 				alt="size"
 				className="icon22"
 			/>
-			<ShareIcon alt="share" className="icon22" />
-			<CopyIcon onClick={() => downloadPfd()} alt="copy" className="icon22" />
+			<ShareIcon alt="share" className="icon22" />*/}
+			<IconBG className="flex items-center">
+				<ChatIcon2
+					color="white"
+					onClick={() => downloadPfd()}
+					alt="copy"
+					className="icon22"
+				/>
+			</IconBG>
+			<IconBG className="flex items-center">
+				<CursorTextCopyMove
+					onClick={() => downloadPfd()}
+					alt="copy"
+					className="icon22"
+				/>
+			</IconBG>
 		</ToolBarContainer>
 	);
 };
