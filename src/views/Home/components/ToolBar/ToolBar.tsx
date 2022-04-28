@@ -63,6 +63,7 @@ const ToolBar = ({
 	const [zoomLevel, setZoomLevel] = useState(100);
 	const [isSingleLayout, setIsSingleLayout] = useState(false);
 	const [searchValue, setSearchValue] = useState<string | undefined>(undefined);
+	const [currentSearchResultOn, setCurrentSearchResultOn] = useState<number>(0);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -112,23 +113,39 @@ const ToolBar = ({
 		);
 		setSearchValue(value);
 	};
-	const options = searchResults.map((d: any) => (
-		<Select.Option key={d.ambientStr}>
-			<div
-				style={{ display: 'flex', flexDirection: 'column-reverse' }}
-				onClick={() => {
-					documentViewer.setCurrentPage(d.page_num);
-				}}
-			>
-				<Row className="font-12 truncate">
-					[{d.result_str}]{d.ambientStr}
-				</Row>
-				<Row className="font-12" style={{ color: '#686087' }}>
-					Page {d.page_num}
-				</Row>
-			</div>
-		</Select.Option>
-	));
+
+	const jumpToSearchResult = (jumpTo: number) => {
+		if (currentSearchResultOn <= searchResults.length) {
+			setCurrentSearchResultOn(currentSearchResultOn + jumpTo);
+			const pageNumber = searchResults[currentSearchResultOn].page_num;
+			documentViewer.setCurrentPage(pageNumber);
+		}
+	}
+
+	const options = () => {
+		return (
+			<Col>
+				<IncDecContainer>
+					<LeftOutlined
+						disabled={pageCount === 1}
+						onClick={() => jumpToSearchResult(-1)}
+						{...IncDecContainerProps}
+					/>
+					<>
+						<span style={{ paddingLeft: '7px' }}>{currentSearchResultOn}</span>
+						<span>of</span>
+						<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
+					</>
+					<RightOutlined
+						{...IncDecContainerProps}
+						disabled={searchResults.length === currentSearchResultOn}
+						onClick={() => jumpToSearchResult(1)}
+					/>
+				</IncDecContainer>
+			</Col>
+		)
+	};
+
 	return (
 		<ToolBarContainer>
 			{/* Search Button */}
@@ -151,7 +168,7 @@ const ToolBar = ({
 						width: '400px'
 					}}
 				>
-					{options}
+					{options()}
 				</SearchButtonDropDown>
 			</Col>
 
