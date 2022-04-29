@@ -1,4 +1,4 @@
-// import axios from 'axios';
+import axios from 'axios';
 // axios.interceptors.request.use(
 // 	(config) => {
 // 		console.warn('config', config);
@@ -11,13 +11,13 @@
 // );
 
 // const interceptorsHandler = async (
-// 	error: Error,
+// 	error: any,
 // 	_resolve: (value: unknown) => void,
-// 	// eslint-disable-next-line no-unused-vars
 // 	_reject: (reason?: unknown) => void
 // ) => {
-// 	if (error) {
-// 		console.log('errror from interseptor', { error });
+//     console.log('errror from interseptor', { error });
+// 	if (error && error?.response?.status === 401) {
+//         console.log("🚀🚀 401 401 401 ~ file: intercepter.ts ~ line 20 ~ error?.response", error?.response)
 // 	}
 // };
 // axios.interceptors.response.use(

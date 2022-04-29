@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { Config } from './api.config';
-
+// axios.defaults.withCredentials = true
 export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default {
 	init(opts: Config) {
@@ -8,7 +8,7 @@ export default {
 		const token = window.localStorage.getItem('token');
 		const accessToken = token ? 'Bearer '+ token : '';
 		const cancelToken = opts.CancelTokenSrc?.token;
-
+		// const header = ExtraHeaders || null;
 		if (Object.hasOwnProperty.call(opts, 'baseUrl')) {
 			({ baseUrl } = opts);
 		} else {
@@ -20,8 +20,10 @@ export default {
 				authorization:accessToken,
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': 'http://localhost:8080',
-				'Access-Control-Allow-Credentials': 'true'
+				// 'Access-Control-Allow-Origin': baseUrl?.origin,
+				'Access-Control-Allow-Credentials': 'true',
+				// 'withCredentials':'true',
+				
 			}
 		};
 
@@ -30,7 +32,7 @@ export default {
 				url: string,
 				method: Methods,
 				queryParams: unknown,
-				data: unknown
+				data: unknown,ExtraHeaders?:unknown
 			) {
 				if (!url) {
 					throw new Error('Request - URL not defined');
@@ -51,7 +53,8 @@ export default {
 						return this.get(url, queryParams);
 
 					case 'POST': {
-						return this.post(url, queryParams, data);
+
+						return this.post(url, queryParams, data,ExtraHeaders);
 					}
 
 					case 'PUT':
@@ -80,14 +83,13 @@ export default {
 					}
 				});
 			},
-			post(url: string, queryParams: unknown, data: unknown) {
+			post(url: string, queryParams: unknown, data: unknown,ExtraHeaders?:unknown) {
 				url = baseUrl + url;
 
 				const config: AxiosRequestConfig = {
 					...defaultConfig,
-					params: queryParams
+					params: queryParams,
 				};
-
 				return axios.post(url, data, config).catch((error) => {
 					if (axios.isCancel(error)) {
 						// console.log(error.message);

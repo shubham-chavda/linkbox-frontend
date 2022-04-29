@@ -36,13 +36,14 @@ function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 		
 		yield put(toggleLoader(true));
 		const response = yield call(apis.user.login,payload);
-		const { status, data } = response;
-       if (status === 200 && data) {
-			window.localStorage.setItem('token', data?.token?.accessToken );
-			yield put(setUserDetails(data?.user));
+        console.log("🚀 ~ file: globalSaga.ts ~ line 40 ~ function*LoginFunc ~ response", response)
+        if (response?.user?.uuid) {
+			window.localStorage.setItem('token', response?.token?.accessToken );
+			yield put(setUserDetails(response?.user));
 			history.navigate?.('/', { replace: true });
 		}
 	} catch (error) {
+        console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
 		notification.error({
 				message: 'Invalid Credentials',
 				description: 'Please enter valid credentials'
