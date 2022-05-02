@@ -135,12 +135,10 @@ const Home = () => {
 				{
 					type: 'actionButton',
 					img: "/Icons/bookmarkIcon.svg",
-					label: "test actionbutton",
 				},
 				{
 					type: 'actionButton',
 					img: "/Icons/userStarIcon.svg",
-					label: "test actionbutton",
 				}
 
 			]);
