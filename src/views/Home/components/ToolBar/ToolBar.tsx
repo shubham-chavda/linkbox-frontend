@@ -25,7 +25,6 @@ import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 import { Popover } from 'react-tiny-popover';
-// import Item from 'antd/lib/list/Item';
 
 interface IToolBarProps {
 	zoomIn: any;

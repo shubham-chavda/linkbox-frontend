@@ -11,8 +11,11 @@ import WebViewer from '@pdftron/webviewer';
 
 import {
 	BookmarkIcon,
+	ChatIcon,
 	ChatIcon2,
+	CopyIcon,
 	ExpandIcon,
+	HandMoveIcon,
 	HomeIcon,
 	InfoIcon,
 	UserStarIcon
@@ -68,6 +71,7 @@ const Home = () => {
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
+	const [notes, setNotes] = useState<any>([]);
 
 	const initialPanes: initPanel = [
 		{
@@ -85,10 +89,11 @@ const Home = () => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: 'http://linkbox-dev-webappsite.s3-website-us-east-1.amazonaws.com/lib',
+				path: '/webviewer/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
-				disabledElements: ['header', 'toolsHeader', 'searchPanel']
+				disabledElements: ['header', 'toolsHeader', 'searchPanel', "contextMenuPopup"],
+				css: '/test.css'
 			},
 			viewer.current
 		).then(async (instance) => {
@@ -110,12 +115,74 @@ const Home = () => {
 			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-			setMaxCount(documentViewer.getPageCount());
+			// setMaxCount(documentViewer.getPageCount());
 
-			documentViewer.addEventListener('documentLoaded', () => {
-				documentViewer.disableViewportRenderMode();
-				// documentViewer.loadDocument(documentPath);
-			});
+			// const contextMenuItems = instance.UI.contextMenuPopup.getItems();
+
+			// const textMenuItems = instance.UI.textPopup.getItems();
+			// console.log("contextMenuItems -------->", textMenuItems);
+
+			instance.UI.textPopup.update([
+				{
+					type: 'actionButton',
+					img: "/Icons/copyIcon.svg",
+					onClick: instance.UI.Feature.Copy
+				},
+				{
+					type: 'actionButton',
+					img: "/Icons/chatIcon.svg",
+					onClick: instance.UI.Feature.NotesPanel
+				},
+				{
+					type: 'actionButton',
+					img: "/Icons/bookmarkIcon.svg",
+				},
+				{
+					type: 'actionButton',
+					img: "/Icons/userStarIcon.svg",
+				}
+
+			]);
+
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: 'https://www.pdftron.com/favicon-32x32.png',
+			// 		// onClick: instance.downloadPdf,
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: 'https://www.pdftron.com/favicon-32x32.png',
+			// 		// onClick: instance.print,
+			// 	},
+			// ]);
+
+
+			// const _setNotes = () => {
+			// 	console.log(":_setNotes ---------->")
+			// 	setNotes(
+			// 		annotationManager
+			// 			.getAnnotationsList().filter(annot => annot.Listable && !annot.isReply() && !annot.Hidden && !annot.isGrouped() && annot.ToolName !== window.Core.Tools.ToolNames.CROP && !annot.isContentEditPlaceholder()),
+			// 	);
+			// };
+
+			// annotationManager.addEventListener('annotationChanged', _setNotes);
+			// annotationManager.addEventListener('annotationHidden', _setNotes);
+			// annotationManager.addEventListener('updateAnnotationPermission', _setNotes);
+
+			// _setNotes();
+
+			// documentViewer.addEventListener('documentLoaded', () => {
+			// 	documentViewer.disableViewportRenderMode();
+			// 	// documentViewer.loadDocument(documentPath);
+			// });
+
+			// return () => {
+			// 	annotationManager.removeEventListener('annotationChanged', _setNotes);
+			// 	annotationManager.removeEventListener('annotationHidden', _setNotes);
+			// 	annotationManager.removeEventListener('updateAnnotationPermission', _setNotes);
+			// };
+
 		});
 	};
 
@@ -228,7 +295,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
