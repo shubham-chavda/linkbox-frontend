@@ -32,7 +32,6 @@ export const globalReducer = createSlice({
   }
 });
 
-
 export const { getUserDetails, toggleLoader, setUserDetails, logOut, logInUser } = globalReducer.actions
 
 export default globalReducer.reducer
