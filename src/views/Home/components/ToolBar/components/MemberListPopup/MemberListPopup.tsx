@@ -12,6 +12,7 @@ import {
 
 const MemberListPopup: React.FC = () => {
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+	const [isMorePopoverOpen, setIsMorePopoverOpen] = useState(false);
 	const MemberList = [...Array(20)].map((_, i) => ({
 		key: `johnDoe ${i}`,
 		name: `johnDoe ${i}`,

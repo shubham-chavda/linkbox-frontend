@@ -32,6 +32,10 @@ import history from '../../history';
 const FileListing = () => {
 	// const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
+	console.log(
+		'🚀 ~ file: FileListing.tsx ~ line 35 ~ FileListing ~ document.cookie()',
+		document?.cookie
+	);
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
 	// const isUserExist = useAppSelector((state) => state.global.user);

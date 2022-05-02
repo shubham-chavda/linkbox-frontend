@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PopOverContent } from '../../views/Home/components/MemberList/MemberList.style';
 import { Popover } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
+import { TooltipPlacement } from 'antd/lib/tooltip';
 
 interface IPopoverComponent {
 	content?: any;
-	placement: any;
+	placement: TooltipPlacement;
+	visible?: boolean;
 }
 const PopupMenu: React.FC<IPopoverComponent> = (props) => {
-	const { content, placement } = props;
+	const [handleVisible, setHandleVisible] = useState(false);
+	const { content, placement, visible } = props;
+
 	return (
 		<Popover
-			className="font-12"
+			// visible={visible || handleVisible}
+			className="font-12 flex justify-center items-center"
 			autoAdjustOverflow
 			placement={placement}
 			content={<PopOverContent>{content}</PopOverContent>}

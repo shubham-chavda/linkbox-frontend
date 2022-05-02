@@ -79,3 +79,10 @@ export const SearchButtonDropDown = styled(Select)`
 	}
    
 `;
+export const ButtonFilled = styled.button`
+    border:none;
+    background: #170944;
+    border-radius: 24px;
+    color: white;
+    width:80px;
+`;

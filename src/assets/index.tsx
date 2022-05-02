@@ -28,6 +28,8 @@ import LocationComment from './icons/LocationComment.svg';
 import HeartIcon from './icons/HeartIcon.svg';
 import ReplyIcon from './icons/ReplyIcon.svg';
 import CursorTextCopyMove from './icons/CursorTextCopyMove.svg';
+import VoiceIcon from './icons/VoiceIcon.svg';
+import AttachmentIcon from './icons/AttachmentIcon.svg';
 
 // ------------------- images ----------------------------
 
@@ -68,6 +70,8 @@ export {
 	HeartIcon,
 	ReplyIcon,
 	CursorTextCopyMove,
+	VoiceIcon,
+	AttachmentIcon,
 	// ------------------- images ----------------------------
 	SignInSVG,
 	DefaultPdf,

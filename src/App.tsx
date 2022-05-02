@@ -15,11 +15,11 @@ const App: React.FC = () => {
 
 	const isUserExist = useAppSelector((state) => state.global.user);
 
-	useEffect(() => {
-		if (window.localStorage.getItem('token')) {
-			if (!isUserExist) dispatch(getUserDetails());
-		} else history.navigate?.('/login');
-	}, []);
+	// useEffect(() => {
+	// 	if (window.localStorage.getItem('token')) {
+	// 		if (!isUserExist) dispatch(getUserDetails());
+	// 	} else history.navigate?.('/login');
+	// }, []);
 	return (
 		<BrowserRouter>
 			<AppNavigate />
@@ -28,7 +28,7 @@ const App: React.FC = () => {
 					<Route index element={<FileListing />} />
 					{/* <Route path="/" element={<FileListing />} /> */}
 					<Route path="/documents" element={<Home />} />
-					{/* <Route path="*" element={<NotFound />} /> */}
+					<Route path="*" element={<NotFound />} />
 				</Route>
 
 				<Route path="/login" element={<Login />} />

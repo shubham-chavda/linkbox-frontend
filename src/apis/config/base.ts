@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { Config } from './api.config';
+import axios from './intercepter'
 // axios.defaults.withCredentials = true
 export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default {
