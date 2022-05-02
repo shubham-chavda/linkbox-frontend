@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { MemberCount } from './FileListing.style';
+import { MemberCount, UploadButtonsWrap } from './FileListing.style';
 import { SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
@@ -28,11 +28,12 @@ import {
 	RightIconGroup
 } from '../../styles/Layout.style';
 import history from '../../history';
+import FileUpload from './components/FileUpload/FileUpload';
 
 const FileListing = () => {
 	// const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
-	const [docSize, setDocSize] = useState(14);
+	const [docSize, setDocSize] = useState(0);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
 	// const isUserExist = useAppSelector((state) => state.global.user);
 	// useEffect(() => {
@@ -157,6 +158,8 @@ const FileListing = () => {
 								</div>
 							))}
 						</Row>
+
+						<FileUpload />
 						{/*---------------------- more Button ----------------*/}
 						{true && (
 							<div className="flex justify-center mb2">
@@ -194,7 +197,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
@@ -206,7 +209,7 @@ const FileListing = () => {
 
 					{/* right sider Over */}
 				</Row>
-			</MainContainer>
+			</MainContainer >
 		</>
 	);
 };
