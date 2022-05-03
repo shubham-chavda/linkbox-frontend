@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import { Config } from './api.config';
-import axios from './intercepter'
+import axios from './intercepter';
+
 // axios.defaults.withCredentials = true
 export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default {
@@ -15,7 +16,6 @@ export default {
 		} else {
 			throw new Error('BaseURL not defined');
 		}
-		console.log("accessToken-------->", accessToken);
 		const defaultConfig: AxiosRequestConfig = {
 			cancelToken,
 			headers: {
@@ -25,7 +25,6 @@ export default {
 				// 'Access-Control-Allow-Origin': baseUrl?.origin,
 				'Access-Control-Allow-Credentials': 'true',
 				// 'withCredentials':'true',
-
 			}
 		};
 
@@ -79,6 +78,8 @@ export default {
 					...defaultConfig,
 					params: queryParams
 				};
+
+				console.log("config --------->", config);
 
 				return axios.get(url, config).catch((error) => {
 					if (axios.isCancel(error)) {

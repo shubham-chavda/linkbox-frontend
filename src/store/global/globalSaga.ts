@@ -33,7 +33,6 @@ type LoginUserType = {
 function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 	const { payload } = action;
 	try {
-
 		yield put(toggleLoader(true));
 		const response = yield call(apis.user.login, payload);
 		console.log("🚀 ~ file: globalSaga.ts ~ line 40 ~ function*LoginFunc ~ response", response)
@@ -95,7 +94,7 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		if (response?.data?.data) {
 			yield put(setDocumentList(response?.data?.data));
 			notification.success({
-				message: 'Document Uploaded successsfully',
+				message: 'Documents list successsfully received',
 			});
 		}
 	} catch (error) {
