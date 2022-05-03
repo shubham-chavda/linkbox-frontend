@@ -30,6 +30,7 @@ import ReplyIcon from './icons/ReplyIcon.svg';
 import CursorTextCopyMove from './icons/CursorTextCopyMove.svg';
 import VoiceIcon from './icons/VoiceIcon.svg';
 import AttachmentIcon from './icons/AttachmentIcon.svg';
+import UploadDocumentIcon from './icons/UploadDocumentIcon.svg';
 
 // ------------------- images ----------------------------
 
@@ -72,6 +73,7 @@ export {
 	CursorTextCopyMove,
 	VoiceIcon,
 	AttachmentIcon,
+	UploadDocumentIcon,
 	// ------------------- images ----------------------------
 	SignInSVG,
 	DefaultPdf,

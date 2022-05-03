@@ -9,7 +9,8 @@ import {
 	DownloadButton,
 	FilterIcon,
 	HomeIcon,
-	PrintIcon
+	PrintIcon,
+	UploadDocumentIcon
 } from '../../assets';
 import { Button, Checkbox, Col, Input, Row, Tooltip } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
@@ -52,7 +53,7 @@ const FileListing = () => {
 
 	useEffect(() => {
 		const data = { pageNo, sortBy: SORT_BY.ASC }
-		dispatch(getDocumentList(data));
+		// dispatch(getDocumentList(data));
 	}, []);
 
 	const handleDocClick = (index: number) => {
@@ -82,6 +83,10 @@ const FileListing = () => {
 								prefix={<SearchOutlined />}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
+							<HeaderFileTab span={6} className="flex items-center">
+								<UploadDocumentIcon />
+								<FilterIcon alt="filter" className="icon16" />
+							</HeaderFileTab>
 						</HeaderFileTab>
 					</HeaderFileTab>
 
@@ -163,7 +168,7 @@ const FileListing = () => {
 							})}
 						</Row>
 
-						<FileUpload />
+						{!documentList.length ? <FileUpload /> : null}
 						{/*---------------------- more Button ----------------*/}
 						{showMoreButton && (
 							<div className="flex justify-center mb2">
