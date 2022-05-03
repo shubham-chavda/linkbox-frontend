@@ -7,7 +7,7 @@ export default {
 	init(opts: Config) {
 		let baseUrl: URL;
 		const token = window.localStorage.getItem('token');
-		const accessToken = token ? 'Bearer '+ token : '';
+		const accessToken = token ? 'Bearer ' + token : '';
 		const cancelToken = opts.CancelTokenSrc?.token;
 		// const header = ExtraHeaders || null;
 		if (Object.hasOwnProperty.call(opts, 'baseUrl')) {
@@ -15,16 +15,17 @@ export default {
 		} else {
 			throw new Error('BaseURL not defined');
 		}
+		console.log("accessToken-------->", accessToken);
 		const defaultConfig: AxiosRequestConfig = {
 			cancelToken,
 			headers: {
-				authorization:accessToken,
+				authorization: accessToken,
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 				// 'Access-Control-Allow-Origin': baseUrl?.origin,
 				'Access-Control-Allow-Credentials': 'true',
 				// 'withCredentials':'true',
-				
+
 			}
 		};
 
@@ -33,7 +34,8 @@ export default {
 				url: string,
 				method: Methods,
 				queryParams: unknown,
-				data: unknown,ExtraHeaders?:unknown
+				data: unknown,
+				contentType?: unknown
 			) {
 				if (!url) {
 					throw new Error('Request - URL not defined');
@@ -41,6 +43,10 @@ export default {
 
 				if (!queryParams) {
 					queryParams = {};
+				}
+
+				if (!contentType) {
+					contentType = "application/json"
 				}
 
 				if (!data) {
@@ -53,10 +59,8 @@ export default {
 					case 'GET':
 						return this.get(url, queryParams);
 
-					case 'POST': {
-
-						return this.post(url, queryParams, data,ExtraHeaders);
-					}
+					case 'POST':
+						return this.post(url, queryParams, data, contentType);
 
 					case 'PUT':
 						return this.put(url, queryParams, data);
@@ -84,13 +88,18 @@ export default {
 					}
 				});
 			},
-			post(url: string, queryParams: unknown, data: unknown,ExtraHeaders?:unknown) {
+			post(url: string, queryParams: unknown, data: unknown, contentType?: any) {
 				url = baseUrl + url;
 
 				const config: AxiosRequestConfig = {
 					...defaultConfig,
 					params: queryParams,
+					headers: {
+						...defaultConfig.headers,
+						'Content-Type': contentType ? contentType : "application/json",
+					}
 				};
+				console.log("data --------->", data);
 				return axios.post(url, data, config).catch((error) => {
 					if (axios.isCancel(error)) {
 						// console.log(error.message);

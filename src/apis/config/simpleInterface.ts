@@ -20,7 +20,8 @@ export interface ISimpleInterface {
 	create(
 		url: string,
 		data: unknown,
-		queryParams?: unknown
+		queryParams?: unknown,
+		contentType?: any
 	): Promise<void | AxiosResponse<unknown, unknown>>;
 
 	post(

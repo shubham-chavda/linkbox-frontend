@@ -1,7 +1,7 @@
 import axios, { CancelTokenSource } from 'axios';
 
 const { CancelToken } = axios;
-const { API_URL } = process.env;
+const { API_URL, DOC_URL } = process.env;
 
 export const CANCEL_SOURCE: CancelTokenSource = CancelToken.source();
 

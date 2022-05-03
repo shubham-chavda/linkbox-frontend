@@ -5,7 +5,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
 	DefaultPdf,
-	DefaultPdfGreen,
 	DeleteIcon,
 	DownloadButton,
 	FilterIcon,
@@ -28,22 +27,12 @@ import {
 	RightIconGroup
 } from '../../styles/Layout.style';
 import history from '../../history';
+import FileUpload from './components/FileUpload/FileUpload';
 
 const FileListing = () => {
-	// const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
-	console.log(
-		'🚀 ~ file: FileListing.tsx ~ line 35 ~ FileListing ~ document.cookie()',
-		document?.cookie
-	);
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
-	// const isUserExist = useAppSelector((state) => state.global.user);
-	// useEffect(() => {
-	// 	if (window.localStorage.getItem('token')) {
-	// 		if (!isUserExist) dispatch(getUserDetails());
-	// 	} else history.navigate?.('/login');
-	// }, []);
 
 	useEffect(() => {
 		const data = [];
@@ -161,6 +150,8 @@ const FileListing = () => {
 								</div>
 							))}
 						</Row>
+
+						<FileUpload />
 						{/*---------------------- more Button ----------------*/}
 						{true && (
 							<div className="flex justify-center mb2">
@@ -198,7 +189,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
@@ -210,7 +201,7 @@ const FileListing = () => {
 
 					{/* right sider Over */}
 				</Row>
-			</MainContainer>
+			</MainContainer >
 		</>
 	);
 };
