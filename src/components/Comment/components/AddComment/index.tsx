@@ -5,8 +5,7 @@ import CommentInputOptions from '../CommentInputOptions/CommentInputOptions';
 import { CommentInputDiv, InputBox } from './AddComment.style';
 
 import VoiceRecording from '../VoiceRecording';
-import EmojiPicker, { SKIN_TONE_NEUTRAL } from 'emoji-picker-react';
-import { Popover } from 'react-tiny-popover';
+import EmojiPickerComponent from '../../../EmojiPicker';
 interface IAddComment {
 	cancelReply: any;
 }
@@ -23,14 +22,6 @@ const AddComment: React.FC<IAddComment> = (props) => {
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
 
-	const [chosenEmoji, setChosenEmoji] = useState<IEmojiPicker>();
-
-	const onEmojiClick = (event: any, emojiObject: any) => {
-		setChosenEmoji(emojiObject);
-
-		setInputValue((prev) => prev + emojiObject.emoji);
-	};
-
 	return (
 		<Row className={`mb2 `} style={{ paddingLeft: '10px' }}>
 			<Col span={3}>
@@ -45,20 +36,10 @@ const AddComment: React.FC<IAddComment> = (props) => {
 						<div className="truncate">Heisenberg Martin</div>
 					</div>
 					<Col>
-						<Popover
-							isOpen={enableEmojiPicker}
-							positions={['bottom', 'top']}
-							onClickOutside={() => setEnableEmojiPicker(false)}
-							content={
-								<EmojiPicker
-									disableSkinTonePicker
-									onEmojiClick={(e, data) => onEmojiClick(e, data)}
-									disableAutoFocus
-									skinTone={SKIN_TONE_NEUTRAL}
-									groupNames={{ smileys_people: 'PEOPLE' }}
-									native
-								/>
-							}
+						<EmojiPickerComponent
+							enableEmojiPicker={enableEmojiPicker}
+							setEnableEmojiPicker={() => setEnableEmojiPicker(false)}
+							inputValue={(data: any) => setInputValue((prev) => prev + data)}
 						>
 							<CommentInputDiv className="my1 flex item-center">
 								<InputBox
@@ -76,7 +57,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 									}
 								/>
 							</CommentInputDiv>
-						</Popover>
+						</EmojiPickerComponent>
 
 						{enableRecording && <VoiceRecording />}
 					</Col>

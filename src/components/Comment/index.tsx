@@ -9,6 +9,7 @@ import {
 	ReplyIcon
 } from '../../assets';
 import { MemberCount } from '../../views/Home/Home.style';
+import EmojiPickerComponent from '../EmojiPicker';
 import {
 	CommentContainer,
 	CommentInputDiv,
@@ -18,10 +19,11 @@ import {
 } from './Comment.style';
 import AddComment from './components/AddComment';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
+import VoiceRecording from './components/VoiceRecording';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
-	const [isReply, setIsReply] = useState(true);
+	const [isReply, setIsReply] = useState(false);
 
 	return !isComment ? (
 		<div
@@ -63,8 +65,13 @@ export default function CommentSection() {
 }
 function Comments(props: any) {
 	const [isEdit, setIsEdit] = useState(-1);
-	const message = `We supply a series of design principles, practical patterns
-	and high quality design resources (Sketch and Axure).`;
+	const [inputValue, setInputValue] =
+		useState(`We supply a series of design principles, practical patterns
+	and high quality design resources (Sketch and Axure).`);
+	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
+
+	const [enableRecording, setEnableRecording] = useState(false);
+
 	return (
 		<CommentContainer>
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
@@ -90,19 +97,37 @@ function Comments(props: any) {
 
 							<Col>
 								{isEdit !== props.index ? (
-									<p className="font-12 ">{message}</p>
+									<p className="font-12 ">{inputValue}</p>
 								) : (
-									<CommentInputDiv className="my1 flex item-center">
-										<InputBox
-											className="font-12 "
-											rows={2}
-											style={{ width: '95%' }}
-											value={message}
-											placeholder="Write comment"
-										/>
+									<>
+										<EmojiPickerComponent
+											enableEmojiPicker={enableEmojiPicker}
+											setEnableEmojiPicker={() => setEnableEmojiPicker(false)}
+											inputValue={(data: any) =>
+												setInputValue((prev) => prev + data)
+											}
+										>
+											<CommentInputDiv className="my1 flex item-center">
+												<InputBox
+													className="font-12 "
+													rows={2}
+													style={{ width: '95%' }}
+													value={inputValue}
+													placeholder="Write comment"
+												/>
 
-										<CommentInputOptions />
-									</CommentInputDiv>
+												<CommentInputOptions
+													enableRecording={() =>
+														setEnableRecording((prev) => !prev)
+													}
+													enableEmojiPicker={() =>
+														setEnableEmojiPicker((prev) => !prev)
+													}
+												/>
+											</CommentInputDiv>
+										</EmojiPickerComponent>
+										{enableRecording && <VoiceRecording />}
+									</>
 								)}
 							</Col>
 							{isEdit !== props.index ? (

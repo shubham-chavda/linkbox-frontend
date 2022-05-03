@@ -20,7 +20,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
 	reducer,
-	middleware: [...getDefaultMiddleware({thunk:false}),sagaMiddleware,logger]
+	middleware: [...getDefaultMiddleware({thunk:false,serializableCheck:false}),sagaMiddleware,logger]
 })
 
 sagaMiddleware.run(rootSaga);
