@@ -6,6 +6,7 @@ import { CommentInputDiv, InputBox } from './AddComment.style';
 
 import VoiceRecording from '../VoiceRecording';
 import EmojiPickerComponent from '../../../EmojiPicker';
+import UploadImage from '../../../UploadImage';
 interface IAddComment {
 	cancelReply: any;
 }
@@ -21,6 +22,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
+	const [enableUploadImage, setEnableUploadImage] = React.useState(true);
 
 	return (
 		<Row className={`mb2 `} style={{ paddingLeft: '10px' }}>
@@ -45,7 +47,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 								<InputBox
 									value={inputValue}
 									className="font-12 "
-									style={{ width: '95%' }}
+									style={{ width: '100%' }}
 									onChange={(e) => setInputValue(e.target.value)}
 									placeholder="Write comment"
 								/>
@@ -55,10 +57,13 @@ const AddComment: React.FC<IAddComment> = (props) => {
 									enableEmojiPicker={() =>
 										setEnableEmojiPicker((prev) => !prev)
 									}
+									enableUploadImage={() =>
+										setEnableUploadImage((prev) => !prev)
+									}
 								/>
 							</CommentInputDiv>
 						</EmojiPickerComponent>
-
+						{enableUploadImage && <UploadImage />}
 						{enableRecording && <VoiceRecording />}
 					</Col>
 

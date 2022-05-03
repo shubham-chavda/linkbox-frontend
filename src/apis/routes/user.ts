@@ -4,7 +4,6 @@ const { API_URL } = process.env;
 export default (base: ISimpleInterface) => {
 	return {
 		async login(data: any) {
-			console.log("🚀 ~ file: user.ts ~ line 6 ~ login ~ API_URL",)
 			// return base.post('auth/login',data);
 
 			// https://b6b4-43-249-234-229.ngrok.io/v1/auth/login

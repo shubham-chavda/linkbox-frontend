@@ -1,4 +1,5 @@
 import { CaretRightOutlined, PauseOutlined } from '@ant-design/icons';
+import { Col } from 'antd';
 import React, { useState } from 'react';
 import { ReactMic } from 'react-mic';
 import useInterval from '../../../../hooks/useInterval';
@@ -23,7 +24,7 @@ const VoiceRecording = () => {
 		}
 
 		return (
-			<div className="font-12 pl1">
+			<div className="font-12 ">
 				{minutes.toString().padStart(2, '0')}:
 				{seconds.toString().padStart(2, '0')}
 			</div>
@@ -48,7 +49,10 @@ const VoiceRecording = () => {
 			) : (
 				<PauseOutlined onClick={() => setRecord(false)} />
 			)}
+			{/* <Col span={17}> */}
 			<ReactMic
+				// style={{ width: '60%' }}
+				// visualSetting="sinewave"
 				record={record}
 				width={150}
 				height={30}
@@ -59,6 +63,7 @@ const VoiceRecording = () => {
 				mimeType="audio/webm"
 				echoCancellation={true}
 			/>
+			{/* </Col> */}
 			{<Counter />}
 		</ControlsContainer>
 	);
