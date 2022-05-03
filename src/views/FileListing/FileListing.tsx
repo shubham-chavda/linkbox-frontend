@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { MemberCount, UploadButtonsWrap } from './FileListing.style';
+import { MemberCount } from './FileListing.style';
 import { SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
 	DefaultPdf,
-	DefaultPdfGreen,
 	DeleteIcon,
 	DownloadButton,
 	FilterIcon,
@@ -29,22 +28,11 @@ import {
 } from '../../styles/Layout.style';
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
-import axios from 'axios';
-
-const { DOC_URL } = process.env;
-
 
 const FileListing = () => {
-	// const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
 	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
-	// const isUserExist = useAppSelector((state) => state.global.user);
-	// useEffect(() => {
-	// 	if (window.localStorage.getItem('token')) {
-	// 		if (!isUserExist) dispatch(getUserDetails());
-	// 	} else history.navigate?.('/login');
-	// }, []);
 
 	useEffect(() => {
 		const data = [];

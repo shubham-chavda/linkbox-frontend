@@ -10,12 +10,12 @@ export default (base: ISimpleInterface) => {
 			// https://b6b4-43-249-234-229.ngrok.io/v1/auth/login
 			return await fetch(`${API_URL}auth/login`, {
 				method: 'POST',
-				mode: 'cors',
+				// mode: 'cors',
 				redirect: 'follow',
-				credentials: 'include', // Don't forget to specify this if you need cookies
+				// credentials: 'include', // Don't forget to specify this if you need cookies
 				headers: {
 					'Content-Type': 'application/json',
-					'Access-Control-Allow-Credentials': 'true',
+					// 'Access-Control-Allow-Credentials': 'true',
 				},
 				body: JSON.stringify(data)
 			}).then(res => res.json()).then(function (data) {

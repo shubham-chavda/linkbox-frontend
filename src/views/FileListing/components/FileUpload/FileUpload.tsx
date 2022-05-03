@@ -11,7 +11,6 @@ import {
   UploadFileBtn,
 } from "./FileUpload.styles";
 
-
 type FileUploadTypes = {
 }
 const KILO_BYTES_PER_BYTE = 1000;
