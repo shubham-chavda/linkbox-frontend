@@ -20,3 +20,8 @@ export const RightCollapsibleSider = styled(Col)`
 	transition: all 0.3s ease-in-out;
 	width:20.8%;
 `;
+export const MemberCount = styled.div`
+	font-weight: bold;
+    color:#C4CEDB;
+    font-size: 12px;
+`;

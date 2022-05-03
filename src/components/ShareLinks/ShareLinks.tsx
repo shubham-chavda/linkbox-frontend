@@ -1,7 +1,8 @@
 import { Button, Checkbox, Col, Row, Select } from 'antd';
 import React from 'react';
 import { InfoIcon, ShareLinkIcon } from '../../assets';
-import { GenreSelector, CopyButton, ShareCol } from './ShareLinks.style';
+import { ButtonFilled } from '../../styles/Layout.style';
+import { GenreSelector, ShareCol } from './ShareLinks.style';
 
 const ShareLinks = () => {
 	return (
@@ -39,7 +40,7 @@ const ShareLinks = () => {
 						<span className="p1 font-13">Get Sharable link</span>
 					</Col>
 
-					<CopyButton>copy</CopyButton>
+					<ButtonFilled>copy</ButtonFilled>
 				</ShareCol>
 			</Row>
 

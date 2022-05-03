@@ -1,4 +1,3 @@
-import { DownloadOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Comment, Input, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import {
@@ -9,15 +8,25 @@ import {
 	LocationIcon,
 	ReplyIcon
 } from '../../assets';
-import { CommentContainer, ReplyButton } from './Comment.style';
+import { MemberCount } from '../../views/Home/Home.style';
+import {
+	CommentContainer,
+	CommentInputDiv,
+	InputBox,
+	PostButton,
+	ReplyButton
+} from './Comment.style';
+import AddComment from './components/AddComment';
+import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
 
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
+	const [isReply, setIsReply] = useState(true);
 
 	return !isComment ? (
 		<div
-			style={{ height: '100%', color: '#AAAFB5' }}
-			className="flex items-center "
+			style={{ height: '93vh', color: '#AAAFB5' }}
+			className="flex items-center"
 		>
 			<Row className="flex justify-center items-center">
 				<Row className="fluid flex justify-center">
@@ -31,71 +40,121 @@ export default function CommentSection() {
 		</div>
 	) : (
 		<div style={{ height: '93vh', overflowX: 'hidden' }}>
-			<Comments key={11}>
+			<MemberCount className="ml2 mb1">28 members</MemberCount>
+			<Comments index={11} setIsReply={() => setIsReply((prev) => !prev)}>
 				<div className="nested ml3">
 					{[...Array(2)].map((_, index) => (
-						<Comments className="nested" key={index} />
+						<Comments
+							className="nested"
+							key={index}
+							index={index}
+							setIsReply={() => setIsReply((prev) => !prev)}
+						/>
 					))}
+					{isReply && <AddComment cancelReply={() => setIsReply(false)} />}
 				</div>
 			</Comments>
+			{/* <Comments
+				index={11}
+				setIsReply={() => setIsReply((prev) => !prev)}
+			></Comments> */}
 		</div>
 	);
 }
 function Comments(props: any) {
-	console.log('🚀 ~ file: index.tsx ~ line 45 ~ Comments ~ props', props);
 	const [isEdit, setIsEdit] = useState(-1);
+	const message = `We supply a series of design principles, practical patterns
+	and high quality design resources (Sketch and Axure).`;
 	return (
 		<CommentContainer>
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
 				<Row>
-					<Col span={19} className="truncate">
+					<Col span={3}>
 						<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
-						<span className="pl1">Heisenberg Martin</span>
 					</Col>
-					<Col span={4} className="flex justify-around items-center">
-						<DeleteIcon className="icon15" />
-						<EditIcon onClick={() => setIsEdit(props.key)} className="icon16" />
-					</Col>
-				</Row>
-				<Row>
-					{isEdit === props.key ? (
-						<p className="font-12 mr2" style={{ marginLeft: '40px' }}>
-							We supply a series of design principles, practical patterns and
-							high quality design resources (Sketch and Axure).
-						</p>
-					) : (
-						<Input placeholder="Write comment" />
-					)}
-				</Row>
-				<Row className="flex items-center font-12">
-					<Col span={3}></Col>
-					<Col span={13}>
-						<Row className="flex justify-around items-center">
+					<Col span={20} className="flex">
+						<Row className=" fluid flex  items-center">
+							<div
+								style={{ width: '75%', height: '35px' }}
+								className="flex items-center"
+							>
+								<div className="truncate">Heisenberg Martin</div>
+							</div>
+							<div
+								style={{ flex: 1 }}
+								className="flex justify-evenly items-center"
+							>
+								<DeleteIcon className="icon15" />
+								<EditIcon onClick={() => setIsEdit(props.index)} />
+							</div>
+
 							<Col>
-								<LocationComment className="icon12" />
-								<span className="ml1">15</span>
+								{isEdit !== props.index ? (
+									<p className="font-12 ">{message}</p>
+								) : (
+									<CommentInputDiv className="my1 flex item-center">
+										<InputBox
+											className="font-12 "
+											rows={2}
+											style={{ width: '95%' }}
+											value={message}
+											placeholder="Write comment"
+										/>
+
+										<CommentInputOptions />
+									</CommentInputDiv>
+								)}
 							</Col>
-							<Col>
-								<HeartIcon className="icon12" />
-								<span className="ml1">18</span>
-							</Col>
-							<Col>
-								<ReplyButton className="flex items-center px1">
-									<ReplyIcon
-										className="icon12"
-										style={{ marginRight: '5px' }}
-									/>
-									reply
-								</ReplyButton>
-							</Col>
+							{isEdit !== props.index ? (
+								<>
+									<Col span={16}>
+										<Row className="font-12 flex justify-around items-center">
+											<Col className="flex  items-center">
+												<LocationComment className="icon12" />
+												<span className="ml1  ">15</span>
+											</Col>
+											<Col className="flex  items-center">
+												<HeartIcon />
+												<span className="ml1">18</span>
+											</Col>
+											<Col>
+												<ReplyButton
+													onClick={props.setIsReply}
+													className="flex items-center px1"
+												>
+													<ReplyIcon
+														className="icon12"
+														style={{ marginRight: '5px' }}
+													/>
+													reply
+												</ReplyButton>
+											</Col>
+										</Row>
+									</Col>
+									<Col
+										span={7}
+										className="font-12 right-align"
+										style={{ color: '#C4CEDB' }}
+									>
+										18/01/2021
+									</Col>
+								</>
+							) : (
+								<div className="my1">
+									<Button
+										onClick={() => setIsEdit(-1)}
+										className="font-12 color-sl"
+										style={{ padding: '0px 25px' }}
+										shape="round"
+									>
+										Cancel
+									</Button>
+									<PostButton className="font-12  ml1 px3" shape="round">
+										Post
+									</PostButton>
+								</div>
+							)}
 						</Row>
-					</Col>
-					<Col
-						span={7}
-						className="font-12 right-align"
-						style={{ color: '#C4CEDB' }}
-					>
-						18/01/2021
 					</Col>
 				</Row>
 			</div>

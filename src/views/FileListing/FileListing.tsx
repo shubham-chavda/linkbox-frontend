@@ -37,7 +37,7 @@ const { DOC_URL } = process.env;
 const FileListing = () => {
 	// const dispatch = useAppDispatch();
 	const [docClicked, setDocClicked] = useState(0);
-	const [docSize, setDocSize] = useState(0);
+	const [docSize, setDocSize] = useState(14);
 	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
 	// const isUserExist = useAppSelector((state) => state.global.user);
 	// useEffect(() => {

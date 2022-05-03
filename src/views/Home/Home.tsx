@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import {
@@ -364,7 +365,7 @@ const Home = () => {
 
 					<Col span={5}>
 						<RightHeaderContainer>
-							<LeftIconGroup span={7}>
+							<LeftIconGroup span={7} className="pl2">
 								{!collapsed ? (
 									<ExpandIcon
 										onClick={() => closeRightSider()}
@@ -445,7 +446,9 @@ const Home = () => {
 								</Row>
 							</>
 						) : (
-							<Comment />
+							<div className="px1">
+								<Comment />
+							</div>
 						)}
 					</RightCollapsibleSider>
 					{/* right sider Over */}
