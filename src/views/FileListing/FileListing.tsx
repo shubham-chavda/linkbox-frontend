@@ -48,7 +48,7 @@ const FileListing = () => {
 
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
-	const [docInfo, setDocInfo] = useState<object[]>([]);
+	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
 		const data = { pageNo, sortBy: SORT_BY.ASC }
@@ -58,7 +58,7 @@ const FileListing = () => {
 	const handleDocClick = (index: number) => {
 		if (docClicked !== index) {
 			setDocClicked(index);
-			setDocInfo(documentList[index].name);
+			// setDocInfo(documentList[index].name);
 		} else history.navigate?.('/documents');
 	};
 
