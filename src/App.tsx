@@ -15,11 +15,11 @@ const App: React.FC = () => {
 
 	const isUserExist = useAppSelector((state) => state.global.user);
 
-	useEffect(() => {
-		if (window.localStorage.getItem('token')) {
-			if (!isUserExist) dispatch(getUserDetails());
-		} else history.navigate?.('/login');
-	}, []);
+	// useEffect(() => {
+	// 	if (window.localStorage.getItem('token')) {
+	// 		if (!isUserExist) dispatch(getUserDetails());
+	// 	} else history.navigate?.('/login');
+	// }, []);
 	return (
 		<BrowserRouter>
 			<AppNavigate />

@@ -9,8 +9,9 @@ interface CommentInputOptions {
 	enableEmojiPicker: any;
 }
 const CommentInputOptions = (props: any) => {
-	const { enableRecording, enableEmojiPicker } = props;
+	const { enableRecording, enableEmojiPicker, enableUploadImage } = props;
 	const [isPopUpVisible, setIsPopUpVisible] = React.useState(false);
+
 	const content = (
 		<MainContainer>
 			<span
@@ -22,7 +23,7 @@ const CommentInputOptions = (props: any) => {
 			>
 				<VoiceIcon className="icon16" color="white" />
 			</span>
-			<span className="nestedStyles">
+			<span className="nestedStyles" onClick={() => enableUploadImage()}>
 				<AttachmentIcon className="icon16" color="white" />
 			</span>
 			<SmileOutlined

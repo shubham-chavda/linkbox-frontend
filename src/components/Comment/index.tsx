@@ -111,7 +111,7 @@ function Comments(props: any) {
 												<InputBox
 													className="font-12 "
 													rows={2}
-													style={{ width: '95%' }}
+													style={{ width: '100%' }}
 													value={inputValue}
 													placeholder="Write comment"
 												/>
