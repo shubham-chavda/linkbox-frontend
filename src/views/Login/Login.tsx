@@ -10,6 +10,7 @@ import {
 import SignInForm from './components/SignInForm';
 import { SignInSVG } from '../../assets';
 import history from '../../history';
+
 function Login() {
 	// useEffect(() => {
 	// 	if (window.localStorage.getItem('token')) {

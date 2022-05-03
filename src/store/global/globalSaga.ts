@@ -3,7 +3,7 @@ import { takeLatest, all, call, put, StrictEffect } from 'redux-saga/effects';
 
 import apis from '../../apis/index';
 import history from '../../history';
-import { getUserDetails, setUserDetails, toggleLoader, logOut, logInUser, uploadDocument } from './globalReducer';
+import { getUserDetails, setUserDetails, toggleLoader, logOut, logInUser, uploadDocument, getDocumentList, setDocumentList } from './globalReducer';
 
 function* GetUser(): Generator<StrictEffect, void, any> {
 	try {
@@ -33,7 +33,6 @@ type LoginUserType = {
 function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 	const { payload } = action;
 	try {
-
 		yield put(toggleLoader(true));
 		const response = yield call(apis.user.login, payload);
 		console.log("🚀 ~ file: globalSaga.ts ~ line 40 ~ function*LoginFunc ~ response", response)
@@ -64,11 +63,45 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		yield put(toggleLoader(true));
 		const response = yield call(apis.documets.uploadDocument, payload);
 		console.log("response ------->", response)
-		// if (response?.user?.uuid) {
-		// 	window.localStorage.setItem('token', response?.token?.accessToken);
-		// 	yield put(setUserDetails(response?.user));
-		// 	history.navigate?.('/', { replace: true });
+		// if(response?.statusCode === 409) {
+		// 	notification.success({
+		// 		message: 'There is filename same ',
+		// 	});
 		// }
+		if (response?.data?.docUrl) {
+			// yield put(setUserDetails(response?.user));
+			notification.success({
+				message: 'Document Uploaded successsfully',
+			});
+		}
+	} catch (error) {
+		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
+		notification.error({
+			message: 'Something went wrong',
+			description: 'Please try again'
+		});
+		yield put(toggleLoader(false));
+	} finally {
+		yield put(toggleLoader(false));
+	}
+}
+
+type GetDocumentsListType = {
+	payload: { pageNo: number; sortBy: string };
+} & SagaType;
+
+function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEffect, void, any> {
+	const { payload } = action;
+	try {
+		yield put(toggleLoader(true));
+		const response = yield call(apis.documets.getDocumentsList, payload);
+		console.log("response ------->", response)
+		if (response?.data?.data) {
+			yield put(setDocumentList(response?.data?.data));
+			notification.success({
+				message: 'Documents list successsfully received',
+			});
+		}
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
 		notification.error({
@@ -91,6 +124,7 @@ export default function* globalWatcher(): Generator<StrictEffect, void, any> {
 		yield takeLatest(logInUser.type, LoginFunc),
 		yield takeLatest(getUserDetails.type, GetUser),
 		yield takeLatest(uploadDocument.type, UploadDocumentFunc),
+		yield takeLatest(getDocumentList.type, GetDocumentsListFunc),
 		yield takeLatest(logOut.type, LogOutUser),
 	]);
 }

@@ -28,31 +28,40 @@ import {
 } from '../../styles/Layout.style';
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { getDocumentList } from '../../store/global/globalReducer';
+import { useAppSelector } from '../../hooks/useAppSelector';
+
+export enum SORT_BY {
+	ASC = "ASC",
+	DESC = "DESC",
+};
 
 const FileListing = () => {
-	const [docClicked, setDocClicked] = useState(0);
-	const [docSize, setDocSize] = useState(14);
-	const [ownerInfo, setOwnerInfo] = useState<object[]>([]);
+	const dispatch = useAppDispatch();
+	const documentList = useAppSelector(
+		(RootState) => RootState.global.documentList
+	);
+	const showMoreButton = useAppSelector(
+		(RootState) => RootState.global.showMoreDocs
+	);
+
+	const [docClicked, setDocClicked] = useState(1);
+	const [pageNo, setPageNo] = useState<number>(1);
+	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
-		const data = [];
-		for (let i = 0; i < docSize; i++) {
-			const ownerdata = {
-				key: i,
-				name: `jacob_jones ${i}`,
-				fileName: `Gmat Official Guide 2019 ${i}`,
-				description:
-					'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et'
-			};
-			data.push(ownerdata);
-		}
-		setOwnerInfo(data);
-	}, [docSize]);
+		const data = { pageNo, sortBy: SORT_BY.ASC }
+		dispatch(getDocumentList(data));
+	}, []);
+
 	const handleDocClick = (index: number) => {
 		if (docClicked !== index) {
 			setDocClicked(index);
+			// setDocInfo(documentList[index].name);
 		} else history.navigate?.('/documents');
 	};
+
 	return (
 		<>
 			<MainContainer>
@@ -115,50 +124,53 @@ const FileListing = () => {
 							Personal Documents
 						</p>
 						<Row>
-							{[...Array(docSize)].map((_, index) => (
-								<div
-									className={`${docClicked !== index ? 'hover-blue' : ''}`}
-									key={index}
-									style={{
-										width: '160px'
-									}}
-									onClick={() => handleDocClick(index)}
-								>
-									<DefaultPdf
-										stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
-										width="138px"
-										height="158px"
-										color={docClicked === index ? '#25CA69' : '#1379FF'}
-									/>
-									<Tooltip placement="top" title={`${index}.pdf`}>
-										<p
-											style={{
-												color:
-													docClicked === index ? '#25CA69' : 'currentColor',
-												width: '80%',
-												overflow: 'hidden',
-												textOverflow: 'ellipsis',
-												display: '-webkit-box',
-												WebkitLineClamp: 2,
-												WebkitBoxOrient: 'vertical'
-											}}
-											className=" pl2 font-12"
-										>
-											{index} Gmat official Guide 2019.pdf
-										</p>
-									</Tooltip>
-								</div>
-							))}
+							{documentList.map((document: any, index: number) => {
+								console.log("document ------->", document);
+								return (
+									<div
+										className={`${docClicked !== index ? 'hover-blue' : ''}`}
+										key={index}
+										style={{
+											width: '160px'
+										}}
+										onClick={() => handleDocClick(index)}
+									>
+										<DefaultPdf
+											stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
+											width="138px"
+											height="158px"
+											color={docClicked === index ? '#25CA69' : '#1379FF'}
+										/>
+										<Tooltip placement="top" title={`${document.name || "---"}.pdf`}>
+											<p
+												style={{
+													color:
+														docClicked === index ? '#25CA69' : 'currentColor',
+													width: '80%',
+													overflow: 'hidden',
+													textOverflow: 'ellipsis',
+													display: '-webkit-box',
+													WebkitLineClamp: 2,
+													WebkitBoxOrient: 'vertical'
+												}}
+												className=" pl2 font-12"
+											>
+												{document.name || "---"}
+											</p>
+										</Tooltip>
+									</div>
+								)
+							})}
 						</Row>
 
 						<FileUpload />
 						{/*---------------------- more Button ----------------*/}
-						{true && (
+						{showMoreButton && (
 							<div className="flex justify-center mb2">
 								<Button
-									onClick={() => setDocSize((prev) => prev + 14)}
-									className="color-sl"
 									shape="round"
+									className="color-sl"
+									onClick={() => setPageNo(pageNo + 1)}
 								>
 									More
 								</Button>
@@ -174,7 +186,7 @@ const FileListing = () => {
 						<Row>
 							<OwnerInfoContainer>
 								<OwnerInfo
-									ownerData={ownerInfo[docClicked]}
+									ownerData={documentList[docClicked]}
 									fileListing={true}
 								/>
 							</OwnerInfoContainer>

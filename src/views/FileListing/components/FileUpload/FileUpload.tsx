@@ -41,11 +41,10 @@ const FileUpload = ({ }: FileUploadTypes) => {
 
   const callUpdateFilesCb = (files: any) => {
     const filesAsArray = convertNestedObjectToArray(files);
-    console.log("filesAsArray -------->", filesAsArray);
-    dispatch(uploadDocument({
-      name: filesAsArray[0].name,
-      docfile: filesAsArray[0]
-    }));
+    let formData = new FormData();
+    formData.append('name', filesAsArray[0].name);
+    formData.append('docfile', filesAsArray[0]);
+    dispatch(uploadDocument(formData));
   };
 
   const handleNewFileUpload = (e: any) => {
