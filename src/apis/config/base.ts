@@ -99,7 +99,6 @@ export default {
 						'Content-Type': contentType ? contentType : "application/json",
 					}
 				};
-				console.log("data --------->", data);
 				return axios.post(url, data, config).catch((error) => {
 					if (axios.isCancel(error)) {
 						// console.log(error.message);
