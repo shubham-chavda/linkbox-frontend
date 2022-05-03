@@ -1,6 +1,8 @@
 import { Button, Row } from "antd";
 import React, { useRef, useState } from "react";
 import { DefaultPdf } from "../../../../assets";
+import { useAppDispatch } from "../../../../hooks/useAppDispatch";
+import { uploadDocument } from "../../../../store/global/globalReducer";
 import { UploadButtonsWrap } from "../../FileListing.style";
 import {
   FileUploadContainer,
@@ -21,6 +23,7 @@ const convertNestedObjectToArray = (nestedObj: any) =>
 const convertBytesToKB = (bytes: any) => Math.round(bytes / KILO_BYTES_PER_BYTE);
 
 const FileUpload = ({ }: FileUploadTypes) => {
+  const dispatch = useAppDispatch();
   const fileInputField = useRef<any>(null);
   const [files, setFiles] = useState<any>({});
 
@@ -40,7 +43,10 @@ const FileUpload = ({ }: FileUploadTypes) => {
   const callUpdateFilesCb = (files: any) => {
     const filesAsArray = convertNestedObjectToArray(files);
     console.log("filesAsArray -------->", filesAsArray);
-
+    dispatch(uploadDocument({
+      name: filesAsArray[0].name,
+      docfile: filesAsArray[0]
+    }));
   };
 
   const handleNewFileUpload = (e: any) => {

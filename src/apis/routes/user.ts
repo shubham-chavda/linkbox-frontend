@@ -1,5 +1,6 @@
 import { ISimpleInterface } from '../config/simpleInterface';
 const { API_URL } = process.env;
+
 export default (base: ISimpleInterface) => {
 	return {
 		async login(data: any) {
@@ -20,7 +21,6 @@ export default (base: ISimpleInterface) => {
 			}).then(res => res.json()).then(function (data) {
 				return data
 			});
-
 		},
 		getUserData() {
 			return base.detail('auth/me');

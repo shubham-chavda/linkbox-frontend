@@ -24,6 +24,7 @@ export const globalReducer = createSlice({
     toggleLoader(state, action) {
       state.globalLoading = action.payload;
     },
+    uploadDocument(state, action) { },
     setUserDetails(state, action) {
       state.user = action.payload;
     },
@@ -32,6 +33,6 @@ export const globalReducer = createSlice({
   }
 });
 
-export const { getUserDetails, toggleLoader, setUserDetails, logOut, logInUser } = globalReducer.actions
+export const { getUserDetails, toggleLoader, setUserDetails, logOut, logInUser, uploadDocument } = globalReducer.actions
 
 export default globalReducer.reducer

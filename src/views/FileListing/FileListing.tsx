@@ -29,6 +29,10 @@ import {
 } from '../../styles/Layout.style';
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
+import axios from 'axios';
+
+const { DOC_URL } = process.env;
+
 
 const FileListing = () => {
 	// const dispatch = useAppDispatch();
