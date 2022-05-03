@@ -1,7 +1,7 @@
 import { DEFAULT_API_CONFIG } from './config/api.config';
 import SimpleInterface from './config/simpleInterface';
 import user from './routes/user';
-import documets from './routes/documets';
+import documents from './routes/documents';
 import { DEFAULT_DOC_API_CONFIG } from './config/doc.config';
 
 function init() {
@@ -10,18 +10,9 @@ function init() {
 
 	return {
 		user: user(client),
-		documets: documets(docClient),
+		documents: documents(docClient),
 	};
 }
-const apis = init();
-export default apis;
+// const apis = init();
+export default init;
 
-// export default {
-// 	init() {
-// 		const client = SimpleInterface.init(DEFAULT_API_CONFIG);
-
-// 		return {
-// 			user: user(client)
-// 		};
-// 	}
-// };

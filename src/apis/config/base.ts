@@ -6,6 +6,7 @@ import axios from './intercepter';
 export type Methods = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export default {
 	init(opts: Config) {
+
 		let baseUrl: URL;
 		const token = window.localStorage.getItem('token');
 		const accessToken = token ? 'Bearer ' + token : '';
