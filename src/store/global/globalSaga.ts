@@ -63,6 +63,11 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		yield put(toggleLoader(true));
 		const response = yield call(apis.documets.uploadDocument, payload);
 		console.log("response ------->", response)
+		// if(response?.statusCode === 409) {
+		// 	notification.success({
+		// 		message: 'There is filename same ',
+		// 	});
+		// }
 		if (response?.data?.docUrl) {
 			// yield put(setUserDetails(response?.user));
 			notification.success({

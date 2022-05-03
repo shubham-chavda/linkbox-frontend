@@ -141,7 +141,7 @@ const FileListing = () => {
 											height="158px"
 											color={docClicked === index ? '#25CA69' : '#1379FF'}
 										/>
-										<Tooltip placement="top" title={`${index}.pdf`}>
+										<Tooltip placement="top" title={`${document.name || "---"}.pdf`}>
 											<p
 												style={{
 													color:
