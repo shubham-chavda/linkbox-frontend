@@ -1,13 +1,13 @@
-import { Button, Row } from "antd";
+import { Button, notification, Row, Upload } from "antd";
 import React, { useRef, useState } from "react";
 import { DefaultPdf } from "../../../../assets";
 import { useAppDispatch } from "../../../../hooks/useAppDispatch";
 import { uploadDocument } from "../../../../store/global/globalReducer";
 import { UploadButtonsWrap } from "../../FileListing.style";
-import {
-  FileUploadContainer,
-  FormField,
-} from "./FileUpload.styles";
+import { FileUploadContainer, SubTitleText, TitleText } from "./FileUpload.styles";
+
+const { Dragger } = Upload;
+const { DOC_URL } = process.env;
 
 type FileUploadTypes = {
 }
@@ -22,6 +22,8 @@ const convertBytesToKB = (bytes: any) => Math.round(bytes / KILO_BYTES_PER_BYTE)
 
 const FileUpload = ({ }: FileUploadTypes) => {
   const dispatch = useAppDispatch();
+  const token = window.localStorage.getItem('token');
+
   const fileInputField = useRef<any>(null);
   const [files, setFiles] = useState<any>({});
 
@@ -61,8 +63,38 @@ const FileUpload = ({ }: FileUploadTypes) => {
     callUpdateFilesCb({ ...files });
   };
 
+
+  const onUploadDocument = {
+    name: 'file',
+    action: `${DOC_URL}document/create`,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      authorization: token ? 'Bearer ' + token : '',
+    },
+    beforeUpload: (file: any) => {
+      const isPDF = file.type === 'application/pdf';
+      if (!isPDF) {
+        notification.error({
+          message: `${file.name} is not a pdf file`
+        })
+      }
+      return isPDF || Upload.LIST_IGNORE;
+    },
+    onChange(info: any) {
+      console.log("info.file -------->", info);
+      if (info.file.status === 'done') {
+        notification.success({
+          message: `${info.file.name} file uploaded successfully`
+        })
+      }
+    },
+    onDrop(e: any) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
   return (
-    <>
+    <Dragger {...onUploadDocument}>
       <FileUploadContainer>
         <Row style={{ flex: 1, justifyContent: "center" }}>
           <div
@@ -74,6 +106,10 @@ const FileUpload = ({ }: FileUploadTypes) => {
               height="158px"
               color={'#C4CEDB'}
             />
+            <TitleText>Start uploading documents...</TitleText>
+            <SubTitleText>
+              Upload documents from your computer or copy from a store
+            </SubTitleText>
             <UploadButtonsWrap>
               <Button
                 onClick={() => { }}
@@ -95,15 +131,15 @@ const FileUpload = ({ }: FileUploadTypes) => {
             </UploadButtonsWrap>
           </div>
         </Row>
-        <FormField
+        {/* <FormField
           type="file"
           ref={fileInputField}
           onChange={handleNewFileUpload}
           title=""
           value=""
-        />
+        /> */}
       </FileUploadContainer>
-    </>
+    </Dragger>
   );
 };
 

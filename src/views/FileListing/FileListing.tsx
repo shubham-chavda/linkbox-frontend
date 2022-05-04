@@ -32,7 +32,7 @@ import {
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { getDocumentList } from '../../store/global/globalReducer';
+import { getDocumentList, uploadDocument } from '../../store/global/globalReducer';
 import { useAppSelector } from '../../hooks/useAppSelector';
 
 const { DOC_URL } = process.env;
@@ -45,6 +45,9 @@ export enum SORT_BY {
 const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
+
+	let formData = new FormData();
+
 	const documentList = useAppSelector(
 		(RootState) => RootState.global.documentList
 	);
@@ -59,7 +62,7 @@ const FileListing = () => {
 
 	useEffect(() => {
 		const data = { pageNo, sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC }
-		// dispatch(getDocumentList(data));
+		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number) => {
@@ -76,6 +79,13 @@ const FileListing = () => {
 			'Content-Type': 'multipart/form-data',
 			authorization: token ? 'Bearer ' + token : '',
 		},
+		customRequest: ({ file, onSuccess }: any) => {
+			console.log("file ------->", file);
+			let formData = new FormData();
+			formData.append('name', file.name);
+			formData.append('docfile', file);
+			dispatch(uploadDocument(formData));
+		},
 		beforeUpload: (file: any) => {
 			const isPDF = file.type === 'application/pdf';
 			if (!isPDF) {
@@ -90,6 +100,10 @@ const FileListing = () => {
 			if (info.file.status === 'done') {
 				notification.success({
 					message: `${info.file.name} file uploaded successfully`
+				})
+			} else if (info.file.status === 'error') {
+				notification.error({
+					message: `${info.file.response.message || "--"} failed to upload file.`
 				})
 			}
 		},
@@ -116,7 +130,11 @@ const FileListing = () => {
 							/>
 							<FilterIcon alt="filter" className="icon16" />
 							<HeaderFileTab className="flex items-center">
-								<Upload {...onUploadDocument} showUploadList={false}>
+								<Upload
+									{...onUploadDocument}
+									showUploadList={false}
+								// customRequest={customRequestUploadDoc}
+								>
 									<Button className="ml1 color-sl" type="link">
 										<UploadDocumentIcon style={{ marginRight: "20px" }} />
 										Upload document
