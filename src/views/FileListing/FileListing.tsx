@@ -42,10 +42,7 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import {
-	getDocumentList,
-	uploadDocument
-} from '../../store/Documents/DocumentsReducer';
+import { getDocumentList, setSelectedDocuments, uploadDocument } from '../../store/Documents/DocumentsReducer';
 
 const { DOC_URL } = process.env;
 
@@ -57,8 +54,6 @@ export enum SORT_BY {
 const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
-
-	const formData = new FormData();
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -81,10 +76,13 @@ const FileListing = () => {
 	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number) => {
+		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
 			setDocClicked(index);
 			// setDocInfo(documentList[index].name);
-		} else history.navigate?.('/documents');
+		} else {
+			history.navigate?.('/documents');
+		}
 	};
 
 	const onUploadDocument = {
@@ -118,9 +116,8 @@ const FileListing = () => {
 				});
 			} else if (info.file.status === 'error') {
 				notification.error({
-					message: `${
-						info.file.response.message || '--'
-					} failed to upload file.`
+					message: `${info.file.response.message || '--'
+						} failed to upload file.`
 				});
 			}
 		}
@@ -150,7 +147,6 @@ const FileListing = () => {
 								<Upload
 									{...onUploadDocument}
 									showUploadList={false}
-									// customRequest={customRequestUploadDoc}
 								>
 									<Button className="ml1 color-sl" type="link">
 										<CloudUploadOutlined
@@ -171,9 +167,8 @@ const FileListing = () => {
 									<DropDownIcon
 										style={{
 											marginLeft: '20px',
-											transform: `rotate(${
-												assendingOrder ? '180deg' : '0deg'
-											} )`
+											transform: `rotate(${assendingOrder ? '180deg' : '0deg'
+												} )`
 										}}
 									/>
 								</Button>
@@ -228,14 +223,10 @@ const FileListing = () => {
 										console.log('document ------->', document);
 										return (
 											<div
-												className={`${
-													docClicked !== index ? 'hover-blue' : ''
-												}`}
 												key={index}
-												style={{
-													width: '160px'
-												}}
+												style={{ width: '160px' }}
 												onClick={() => handleDocClick(index)}
+												className={`${docClicked !== index ? 'hover-blue' : ''}`}
 											>
 												<DefaultPdf
 													stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
@@ -249,16 +240,9 @@ const FileListing = () => {
 												>
 													<p
 														style={{
-															color:
-																docClicked === index
-																	? '#25CA69'
-																	: 'currentColor',
 															width: '80%',
-															// overflow: 'hidden',
-															// textOverflow: 'ellipsis',
-															// display: '-webkit-box',
-															WebkitLineClamp: 2
-															// WebkitBoxOrient: 'vertical'
+															WebkitLineClamp: 2,
+															color: docClicked === index ? '#25CA69' : 'currentColor',
 														}}
 														className="truncate pl2 font-12"
 													>
@@ -309,7 +293,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

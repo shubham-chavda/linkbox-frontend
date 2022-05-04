@@ -41,6 +41,9 @@ import {
 } from '../../styles/Layout.style';
 import { ExpandAltOutlined } from '@ant-design/icons';
 import Comment from '../../components/Comment';
+import { useAppSelector } from '../../hooks/useAppSelector';
+const { DOC_URL } = process.env;
+
 declare global {
 	interface Window {
 		Core: any;
@@ -48,6 +51,12 @@ declare global {
 }
 
 const Home = () => {
+	const documentList = useAppSelector(
+		(RootState) => RootState.documents.documentList
+	);
+	const selectedDocument = useAppSelector(
+		(RootState) => RootState.documents.selectedDocuments
+	);
 	const [rightSiderClicks, setRightSiderClicks] = useState('comment');
 	const viewer: any = useRef(null);
 	const scrollView = useRef(null);
@@ -57,34 +66,28 @@ const Home = () => {
 	const [activeKey, setActiveKey] = useState('1');
 	const [collapsed, setCollapsed] = useState(false);
 
-	const searchContainerRef = useRef(null);
-
 	const [documentViewer, setDocumentViewer] = useState<any>(null);
 	const [annotationManager, setAnnotationManager] = useState<any>(null);
-	const [searchContainerOpen, setSearchContainerOpen] = useState(false);
 	const [annotations, setAnnotations] = useState<any>(null);
-
-	const [searchTextMode, setSearchTextMode] = useState<any>(null);
 
 	const [searchResults, setSearchResults] = useState<any>([]);
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
-	const [notes, setNotes] = useState<any>([]);
 
-	const initialPanes: initPanel = [
+	let initialPanes: initPanel = [
 		{
-			title: 'Gmat Official Guide 2020 ',
+			title: selectedDocument.length ? selectedDocument[0].name : "PdfTron default",
 			content: 'Content of Tab 1',
 			key: '1'
 		},
-		{
-			title: 'Gmat Official Guide 2021 new shubham',
-			content: 'Content of Tab 2',
-			key: '2'
-		},
-		{ title: 'Gmat Official Guide 2019', content: 'Content of Tab 3', key: '3' }
+		// {
+		// 	title: 'Gmat Official Guide 2021 new shubham',
+		// 	content: 'Content of Tab 2',
+		// 	key: '2'
+		// },
+		// { title: 'Gmat Official Guide 2019', content: 'Content of Tab 3', key: '3' }
 	];
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
@@ -120,12 +123,6 @@ const Home = () => {
 			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-			// setMaxCount(documentViewer.getPageCount());
-
-			// const contextMenuItems = instance.UI.contextMenuPopup.getItems();
-
-			// const textMenuItems = instance.UI.textPopup.getItems();
-			// console.log("contextMenuItems -------->", textMenuItems);
 
 			instance.UI.textPopup.update([
 				{
@@ -147,44 +144,6 @@ const Home = () => {
 					img: '/Icons/userStarIcon.svg'
 				}
 			]);
-
-			// instance.UI.textPopup.update([
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: 'https://www.pdftron.com/favicon-32x32.png',
-			// 		// onClick: instance.downloadPdf,
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: 'https://www.pdftron.com/favicon-32x32.png',
-			// 		// onClick: instance.print,
-			// 	},
-			// ]);
-
-			// const _setNotes = () => {
-			// 	console.log(":_setNotes ---------->")
-			// 	setNotes(
-			// 		annotationManager
-			// 			.getAnnotationsList().filter(annot => annot.Listable && !annot.isReply() && !annot.Hidden && !annot.isGrouped() && annot.ToolName !== window.Core.Tools.ToolNames.CROP && !annot.isContentEditPlaceholder()),
-			// 	);
-			// };
-
-			// annotationManager.addEventListener('annotationChanged', _setNotes);
-			// annotationManager.addEventListener('annotationHidden', _setNotes);
-			// annotationManager.addEventListener('updateAnnotationPermission', _setNotes);
-
-			// _setNotes();
-
-			// documentViewer.addEventListener('documentLoaded', () => {
-			// 	documentViewer.disableViewportRenderMode();
-			// 	// documentViewer.loadDocument(documentPath);
-			// });
-
-			// return () => {
-			// 	annotationManager.removeEventListener('annotationChanged', _setNotes);
-			// 	annotationManager.removeEventListener('annotationHidden', _setNotes);
-			// 	annotationManager.removeEventListener('updateAnnotationPermission', _setNotes);
-			// };
 		});
 	};
 
@@ -297,7 +256,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -309,10 +268,22 @@ const Home = () => {
 		}
 	};
 	useEffect(() => {
-		loadPdfDocumentByPath(
-			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-		);
-	}, []);
+		console.log("selectedDocument ------->", selectedDocument);
+		if (selectedDocument.length) {
+			console.log("selectedDocument[0].docUrl ------>", selectedDocument);
+			loadPdfDocumentByPath(
+				`${DOC_URL}${selectedDocument[0].docUrl}`
+				//  : 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+			);
+			// initialPanes = [
+			// 	{
+			// 		title: selectedDocument[0].name,
+			// 		content: 'Content of Tab 1',
+			// 		key: '1'
+			// 	},
+			// ]
+		}
+	}, [selectedDocument]);
 
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);

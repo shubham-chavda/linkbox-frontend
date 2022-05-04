@@ -5,15 +5,15 @@ import { Immutable } from "immer"
 // Define a type for the slice state
 interface IGlobalState {
   documentList: any[];
-  selectedDocumentInfo: any;
   showMoreDocs: boolean;
+  selectedDocuments: any[];
 }
 
 // Define the initial state using that type
 export const initialState: Immutable<IGlobalState> = {
   documentList: [],
   showMoreDocs: false,
-  selectedDocumentInfo: "",
+  selectedDocuments: [],
 };
 
 export const DocumentsReducer = createSlice({
@@ -32,7 +32,10 @@ export const DocumentsReducer = createSlice({
       }
     },
     setDocumentInfo(state, action) {
-      // document/info
+    },
+    setSelectedDocuments(state, action) {
+      console.log("action.payload ------->", action.payload);
+      state.selectedDocuments = [action.payload];
     },
   }
 });
@@ -42,6 +45,7 @@ export const {
   getDocumentList,
   setDocumentList,
   setDocumentInfo,
+  setSelectedDocuments,
 } = DocumentsReducer.actions;
 
 export default DocumentsReducer.reducer
