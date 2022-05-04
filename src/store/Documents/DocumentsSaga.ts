@@ -1,7 +1,7 @@
 import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
-import {  toggleLoader } from "../global/globalReducer";
+import { toggleLoader } from "../global/globalReducer";
 import { getDocumentList, setDocumentList, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
@@ -13,7 +13,7 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 	try {
 		const apis = init();
 		yield put(toggleLoader(true));
-		const response = yield call(apis.documents.getDocumentsList,payload);
+		const response = yield call(apis.documents.getDocumentsList, payload);
 		console.log("response ------->", response)
 		if (response?.data?.data) {
 			yield put(setDocumentList(response?.data?.data));
@@ -49,11 +49,14 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		// 		message: 'There is filename same ',
 		// 	});
 		// }
-		if (response?.data?.docUrl) {
-			// yield put(setUserDetails(response?.user));
-			notification.success({
-				message: 'Document Uploaded successsfully',
-			});
+		if (response?.status === 200) {
+			yield put(getDocumentList({ pageNo: 1, sortBy: "ASC" }));
+			if (response?.data?.docUrl) {
+				// yield put(setUserDetails(response?.user));
+				notification.success({
+					message: 'Document Uploaded successsfully',
+				});
+			}
 		}
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
@@ -68,9 +71,7 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 }
 export default function* DocumentsWatcher(): Generator<StrictEffect, void, any> {
 	yield all([
-	
 		yield takeLatest(uploadDocument.type, UploadDocumentFunc),
 		yield takeLatest(getDocumentList.type, GetDocumentsListFunc),
-		
 	]);
 }
