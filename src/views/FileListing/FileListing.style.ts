@@ -6,8 +6,3 @@ export const MemberCount = styled.div`
     color:#C4CEDB;
 `;
 
-export const UploadButtonsWrap = styled.div`
-	flexDirection: "row";
- 	display: "flex";
-  justifyContent: "space-around";
-`

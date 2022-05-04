@@ -10,13 +10,7 @@ const DeleteModal: React.FC<IDeleteModal> = (props) => {
 
 	return (
 		<MainContainer className={` ${isDelete && 'opened'}`} aria-hidden="true">
-			<ModalDialog className="modal-dialog">
-				<div className="modal-header">
-					<h2>Please Login</h2>
-					<a href="#" className="btn-close closemodale" aria-hidden="true">
-						&times;
-					</a>
-				</div>
+			{/* <ModalDialog className="modal-dialog">
 				<div>
 					Are you sure you want to delete comment 17?
 					<div>
@@ -24,7 +18,7 @@ const DeleteModal: React.FC<IDeleteModal> = (props) => {
 						<StyledButton className="btn">delete</StyledButton>
 					</div>
 				</div>
-			</ModalDialog>
+			</ModalDialog> */}
 		</MainContainer>
 	);
 };

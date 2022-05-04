@@ -24,7 +24,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						size={35}
 						style={{ border: '1px solid gray' }}
 					/>
-					<Name>{ownerData?.name || 'Robert__fox_'}</Name>
+					<Name>{'Robert__fox_'}</Name>
 				</Col>
 
 				<Col span={6}>
@@ -36,7 +36,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				</Col>
 			</Row>
 			<Row className="mt2">
-				<Title>{ownerData?.fileName || 'Gmat Official Guide 2019'}</Title>
+				<Title>{ownerData?.name || 'Gmat Official Guide 2019'}</Title>
 			</Row>
 			<Row>
 				<p className="font-12">

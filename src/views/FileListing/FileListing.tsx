@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import { MemberCount } from './FileListing.style';
-import { SearchOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, SearchOutlined } from '@ant-design/icons';
 import {
 	DefaultMap,
 	DefaultPdf,
@@ -14,7 +14,16 @@ import {
 	PrintIcon,
 	UploadDocumentIcon
 } from '../../assets';
-import { Button, Checkbox, Col, Input, notification, Row, Tooltip, Upload } from 'antd';
+import {
+	Button,
+	Checkbox,
+	Col,
+	Input,
+	notification,
+	Row,
+	Tooltip,
+	Upload
+} from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../../components/ShareLinks/ShareLinks';
 import {
@@ -33,7 +42,10 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentList, uploadDocument } from '../../store/Documents/DocumentsReducer';
+import {
+	getDocumentList,
+	uploadDocument
+} from '../../store/Documents/DocumentsReducer';
 
 const { DOC_URL } = process.env;
 
@@ -46,7 +58,7 @@ const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
 
-	let formData = new FormData();
+	const formData = new FormData();
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -61,7 +73,10 @@ const FileListing = () => {
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
-		const data = { pageNo, sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC }
+		const data = {
+			pageNo,
+			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC
+		};
 		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo]);
 
@@ -77,11 +92,11 @@ const FileListing = () => {
 		action: `${DOC_URL}document/create`,
 		headers: {
 			'Content-Type': 'multipart/form-data',
-			authorization: token ? 'Bearer ' + token : '',
+			authorization: token ? 'Bearer ' + token : ''
 		},
 		customRequest: ({ file, onSuccess }: any) => {
-			console.log("file ------->", file);
-			let formData = new FormData();
+			console.log('file ------->', file);
+			const formData = new FormData();
 			formData.append('name', file.name);
 			formData.append('docfile', file);
 			dispatch(uploadDocument(formData));
@@ -91,22 +106,24 @@ const FileListing = () => {
 			if (!isPDF) {
 				notification.error({
 					message: `${file.name} is not a pdf file`
-				})
+				});
 			}
 			return isPDF || Upload.LIST_IGNORE;
 		},
 		onChange(info: any) {
-			console.log("info.file -------->", info);
+			console.log('info.file -------->', info);
 			if (info.file.status === 'done') {
 				notification.success({
 					message: `${info.file.name} file uploaded successfully`
-				})
+				});
 			} else if (info.file.status === 'error') {
 				notification.error({
-					message: `${info.file.response.message || "--"} failed to upload file.`
-				})
+					message: `${
+						info.file.response.message || '--'
+					} failed to upload file.`
+				});
 			}
-		},
+		}
 	};
 
 	return (
@@ -133,10 +150,12 @@ const FileListing = () => {
 								<Upload
 									{...onUploadDocument}
 									showUploadList={false}
-								// customRequest={customRequestUploadDoc}
+									// customRequest={customRequestUploadDoc}
 								>
 									<Button className="ml1 color-sl" type="link">
-										<UploadDocumentIcon style={{ marginRight: "20px" }} />
+										<CloudUploadOutlined
+											style={{ fontSize: '16px', color: 'black' }}
+										/>
 										Upload document
 									</Button>
 								</Upload>
@@ -147,12 +166,14 @@ const FileListing = () => {
 									type="link"
 									onClick={() => setAssendingOrder(!assendingOrder)}
 								>
-									<FilterDocIcon style={{ marginRight: "20px" }} />
+									<FilterDocIcon style={{ marginRight: '20px' }} />
 									Recently added
 									<DropDownIcon
 										style={{
-											marginLeft: "20px",
-											transform: `rotate(${assendingOrder ? '180deg' : '0deg'} )`
+											marginLeft: '20px',
+											transform: `rotate(${
+												assendingOrder ? '180deg' : '0deg'
+											} )`
 										}}
 									/>
 								</Button>
@@ -195,53 +216,62 @@ const FileListing = () => {
 						className="overflow-auto"
 						style={{ height: 'calc(100vh - 40px)' }}
 					>
-						<p className="ml1" style={{ color: '#C5C9CE' }}>
-							Personal Documents
-						</p>
-						<Row>
-							{documentList.map((document: any, index: number) => {
-								console.log('document ------->', document);
-								return (
-									<div
-										className={`${docClicked !== index ? 'hover-blue' : ''}`}
-										key={index}
-										style={{
-											width: '160px'
-										}}
-										onClick={() => handleDocClick(index)}
-									>
-										<DefaultPdf
-											stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
-											width="138px"
-											height="158px"
-											color={docClicked === index ? '#25CA69' : '#1379FF'}
-										/>
-										<Tooltip
-											placement="top"
-											title={`${document.name || '---'}.pdf`}
-										>
-											<p
+						{!documentList.length ? (
+							<FileUpload />
+						) : (
+							<>
+								<p className="ml1" style={{ color: '#C5C9CE' }}>
+									Personal Documents
+								</p>
+								<Row>
+									{documentList.map((document: any, index: number) => {
+										console.log('document ------->', document);
+										return (
+											<div
+												className={`${
+													docClicked !== index ? 'hover-blue' : ''
+												}`}
+												key={index}
 												style={{
-													color:
-														docClicked === index ? '#25CA69' : 'currentColor',
-													width: '80%',
-													// overflow: 'hidden',
-													// textOverflow: 'ellipsis',
-													// display: '-webkit-box',
-													WebkitLineClamp: 2
-													// WebkitBoxOrient: 'vertical'
+													width: '160px'
 												}}
-												className="truncate pl2 font-12"
+												onClick={() => handleDocClick(index)}
 											>
-												{document.name || '---'}
-											</p>
-										</Tooltip>
-									</div>
-								);
-							})}
-						</Row>
+												<DefaultPdf
+													stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
+													width="138px"
+													height="158px"
+													color={docClicked === index ? '#25CA69' : '#1379FF'}
+												/>
+												<Tooltip
+													placement="top"
+													title={`${document.name || '---'}.pdf`}
+												>
+													<p
+														style={{
+															color:
+																docClicked === index
+																	? '#25CA69'
+																	: 'currentColor',
+															width: '80%',
+															// overflow: 'hidden',
+															// textOverflow: 'ellipsis',
+															// display: '-webkit-box',
+															WebkitLineClamp: 2
+															// WebkitBoxOrient: 'vertical'
+														}}
+														className="truncate pl2 font-12"
+													>
+														{document.name || '---'}
+													</p>
+												</Tooltip>
+											</div>
+										);
+									})}
+								</Row>
+							</>
+						)}
 
-						{!documentList.length ? <FileUpload /> : null}
 						{/*---------------------- more Button ----------------*/}
 						{showMoreButton && (
 							<div className="flex justify-center mb2">
@@ -279,7 +309,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

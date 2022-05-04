@@ -23,10 +23,10 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		}
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
-		notification.error({
-			message: 'Something went wrong',
-			description: 'Documents list was not received'
-		});
+		// notification.error({
+		// 	message: 'Something went wrong',
+		// 	description: 'Documents list was not received'
+		// });
 		yield put(toggleLoader(false));
 	} finally {
 		yield put(toggleLoader(false));

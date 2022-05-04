@@ -5,7 +5,7 @@ export const MainContainer = styled.div`
     &&:before {
         content: "";
         display: none;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.5);
         position: absolute;
         top: 0;
         left: 0;
@@ -13,14 +13,14 @@ export const MainContainer = styled.div`
         bottom: 0;
         z-index: 10;
   }
-  &&.opened:before {
+  /* &&.opened:before {
     display: block;
-  }
+  } */
   &&.opened .modal-dialog {
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     transform: translate(0, 0);
-    top: 20%;
+    top: 10%;
   }
 `;
 export const ModalDialog = styled.div`
@@ -35,10 +35,11 @@ export const ModalDialog = styled.div`
     top: -100%; */
     z-index: 11;
     width: 90%;
-    box-shadow:0 5px 10px rgba(0,0,0,0.3);
-    -webkit-transform: translate(0, -500%);
-    -ms-transform: translate(0, -500%);
-    transform: translate(0, -500%);
+   box-shadow:0 5px 10px rgba(0,0,0,0.3);
+     /* -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0); */
+    top: 10%;
     -webkit-transition: -webkit-transform 0.3s ease-out;
     -moz-transition: -moz-transform 0.3s ease-out;
     -o-transition: -o-transform 0.3s ease-out;
@@ -60,7 +61,7 @@ export const StyledButton = styled.button`
     min-width: 60px;
     position: relative;
     transition: color .1s ease;
-    && :hover {
+    &&:hover {
     background: #357ebd;
   }
 `;
