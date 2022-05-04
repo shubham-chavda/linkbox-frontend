@@ -7,12 +7,11 @@ import { UploadButtonsWrap } from "../../FileListing.style";
 import {
   FileUploadContainer,
   FormField,
-  DragDropText,
-  UploadFileBtn,
 } from "./FileUpload.styles";
 
 type FileUploadTypes = {
 }
+
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
 

@@ -7,12 +7,14 @@ import {
 	DefaultPdf,
 	DeleteIcon,
 	DownloadButton,
+	DropDownIcon,
+	FilterDocIcon,
 	FilterIcon,
 	HomeIcon,
 	PrintIcon,
 	UploadDocumentIcon
 } from '../../assets';
-import { Button, Checkbox, Col, Input, Row, Tooltip } from 'antd';
+import { Button, Checkbox, Col, Input, notification, Row, Tooltip, Upload } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../../components/ShareLinks/ShareLinks';
 import {
@@ -33,6 +35,8 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { getDocumentList } from '../../store/global/globalReducer';
 import { useAppSelector } from '../../hooks/useAppSelector';
 
+const { DOC_URL } = process.env;
+
 export enum SORT_BY {
 	ASC = "ASC",
 	DESC = "DESC",
@@ -40,6 +44,7 @@ export enum SORT_BY {
 
 const FileListing = () => {
 	const dispatch = useAppDispatch();
+	const token = window.localStorage.getItem('token');
 	const documentList = useAppSelector(
 		(RootState) => RootState.global.documentList
 	);
@@ -49,18 +54,45 @@ const FileListing = () => {
 
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
+	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
-		const data = { pageNo, sortBy: SORT_BY.ASC }
+		const data = { pageNo, sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC }
 		// dispatch(getDocumentList(data));
-	}, []);
+	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number) => {
 		if (docClicked !== index) {
 			setDocClicked(index);
 			// setDocInfo(documentList[index].name);
 		} else history.navigate?.('/documents');
+	};
+
+	const onUploadDocument = {
+		name: 'file',
+		action: `${DOC_URL}document/create`,
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			authorization: token ? 'Bearer ' + token : '',
+		},
+		beforeUpload: (file: any) => {
+			const isPDF = file.type === 'application/pdf';
+			if (!isPDF) {
+				notification.error({
+					message: `${file.name} is not a pdf file`
+				})
+			}
+			return isPDF || Upload.LIST_IGNORE;
+		},
+		onChange(info: any) {
+			console.log("info.file -------->", info);
+			if (info.file.status === 'done') {
+				notification.success({
+					message: `${info.file.name} file uploaded successfully`
+				})
+			}
+		},
 	};
 
 	return (
@@ -75,7 +107,7 @@ const FileListing = () => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<HeaderFileTab span={6} className="flex items-center">
+						<HeaderFileTab className="flex items-center">
 							<Input
 								bordered={false}
 								style={{ width: 250 }}
@@ -83,9 +115,30 @@ const FileListing = () => {
 								prefix={<SearchOutlined />}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
-							<HeaderFileTab span={6} className="flex items-center">
-								<UploadDocumentIcon />
-								<FilterIcon alt="filter" className="icon16" />
+							<HeaderFileTab className="flex items-center">
+								<Upload {...onUploadDocument} showUploadList={false}>
+									<Button className="ml1 color-sl" type="link">
+										<UploadDocumentIcon style={{ marginRight: "20px" }} />
+										Upload document
+									</Button>
+								</Upload>
+							</HeaderFileTab>
+							<HeaderFileTab className="flex items-center">
+								<Button
+									className="ml1 color-sl"
+									type="link"
+									onClick={() => setAssendingOrder(!assendingOrder)}
+								>
+									<FilterDocIcon
+										style={{ marginRight: "20px" }} />
+									Recently added
+									<DropDownIcon
+										style={{
+											marginLeft: "20px",
+											transform: `rotate(${assendingOrder ? '180deg' : '0deg'} )`
+										}}
+									/>
+								</Button>
 							</HeaderFileTab>
 						</HeaderFileTab>
 					</HeaderFileTab>
@@ -191,8 +244,8 @@ const FileListing = () => {
 						<Row>
 							<OwnerInfoContainer>
 								<OwnerInfo
-									ownerData={documentList[docClicked]}
 									fileListing={true}
+									ownerData={documentList[docClicked]}
 								/>
 							</OwnerInfoContainer>
 						</Row>
