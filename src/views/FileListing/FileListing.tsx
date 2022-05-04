@@ -129,8 +129,7 @@ const FileListing = () => {
 									type="link"
 									onClick={() => setAssendingOrder(!assendingOrder)}
 								>
-									<FilterDocIcon
-										style={{ marginRight: "20px" }} />
+									<FilterDocIcon style={{ marginRight: "20px" }} />
 									Recently added
 									<DropDownIcon
 										style={{
