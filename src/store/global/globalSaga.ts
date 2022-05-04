@@ -8,7 +8,7 @@ import { getUserDetails, setUserDetails, toggleLoader, logOut, logInUser } from 
 
 function* GetUser(): Generator<StrictEffect, void, any> {
 	try {
-		const apis =  init();
+		const apis = init();
 		// if (!window.localStorage.refreshToken) {
 		// 	// throw Error('refreshToken not Found');
 		// } else
@@ -37,7 +37,7 @@ function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 	try {
 		const apis = init();
 		yield put(toggleLoader(true));
-		const response = yield call(apis.user.login,payload);
+		const response = yield call(apis.user.login, payload);
 		console.log("🚀 ~ file: globalSaga.ts ~ line 40 ~ function*LoginFunc ~ response", response)
 		if (response?.user?.uuid) {
 			window.localStorage.setItem('token', response?.token?.accessToken);

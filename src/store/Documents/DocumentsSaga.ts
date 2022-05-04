@@ -42,7 +42,7 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 	try {
 		const apis = init();
 		yield put(toggleLoader(true));
-		const response = yield call(apis.documents.uploadDocument,payload);
+		const response = yield call(apis.documents.uploadDocument, payload);
 		console.log("response ------->", response)
 		// if(response?.statusCode === 409) {
 		// 	notification.success({
@@ -57,16 +57,15 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		}
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
-		// notification.error({
-		// 	message: 'Something went wrong',
-		// 	description: 'Please try again'
-		// });
+		notification.error({
+			message: 'Something went wrong',
+			description: 'Please try again'
+		});
 		yield put(toggleLoader(false));
 	} finally {
 		yield put(toggleLoader(false));
 	}
 }
-
 export default function* DocumentsWatcher(): Generator<StrictEffect, void, any> {
 	yield all([
 	

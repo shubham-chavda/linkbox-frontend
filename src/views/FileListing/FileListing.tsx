@@ -7,11 +7,14 @@ import {
 	DefaultPdf,
 	DeleteIcon,
 	DownloadButton,
+	DropDownIcon,
+	FilterDocIcon,
 	FilterIcon,
 	HomeIcon,
-	PrintIcon
+	PrintIcon,
+	UploadDocumentIcon
 } from '../../assets';
-import { Button, Checkbox, Col, Input, Row, Tooltip } from 'antd';
+import { Button, Checkbox, Col, Input, notification, Row, Tooltip, Upload } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../../components/ShareLinks/ShareLinks';
 import {
@@ -29,8 +32,14 @@ import {
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+<<<<<<< HEAD
+=======
+import { getDocumentList, uploadDocument } from '../../store/global/globalReducer';
+>>>>>>> 0a53b43fcd670299e557267bdefe8aaba3b13bbd
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { getDocumentList } from '../../store/Documents/DocumentsReducer';
+
+const { DOC_URL } = process.env;
 
 export enum SORT_BY {
 	ASC = 'ASC',
@@ -39,6 +48,10 @@ export enum SORT_BY {
 
 const FileListing = () => {
 	const dispatch = useAppDispatch();
+	const token = window.localStorage.getItem('token');
+
+	let formData = new FormData();
+
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
 	);
@@ -48,18 +61,60 @@ const FileListing = () => {
 
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
+	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
+<<<<<<< HEAD
 		const data = { pageNo, sortBy: SORT_BY.ASC };
+=======
+		const data = { pageNo, sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC }
+>>>>>>> 0a53b43fcd670299e557267bdefe8aaba3b13bbd
 		dispatch(getDocumentList(data));
-	}, []);
+	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number) => {
 		if (docClicked !== index) {
 			setDocClicked(index);
 			// setDocInfo(documentList[index].name);
 		} else history.navigate?.('/documents');
+	};
+
+	const onUploadDocument = {
+		name: 'file',
+		action: `${DOC_URL}document/create`,
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			authorization: token ? 'Bearer ' + token : '',
+		},
+		customRequest: ({ file, onSuccess }: any) => {
+			console.log("file ------->", file);
+			let formData = new FormData();
+			formData.append('name', file.name);
+			formData.append('docfile', file);
+			dispatch(uploadDocument(formData));
+		},
+		beforeUpload: (file: any) => {
+			const isPDF = file.type === 'application/pdf';
+			if (!isPDF) {
+				notification.error({
+					message: `${file.name} is not a pdf file`
+				})
+			}
+			return isPDF || Upload.LIST_IGNORE;
+		},
+		onChange(info: any) {
+			console.log("info.file -------->", info);
+			if (info.file.status === 'done') {
+				notification.success({
+					message: `${info.file.name} file uploaded successfully`
+				})
+			} else if (info.file.status === 'error') {
+				notification.error({
+					message: `${info.file.response.message || "--"} failed to upload file.`
+				})
+			}
+		},
 	};
 
 	return (
@@ -74,7 +129,7 @@ const FileListing = () => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<HeaderFileTab span={6} className="flex items-center">
+						<HeaderFileTab className="flex items-center">
 							<Input
 								bordered={false}
 								style={{ width: 250 }}
@@ -82,6 +137,34 @@ const FileListing = () => {
 								prefix={<SearchOutlined />}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
+							<HeaderFileTab className="flex items-center">
+								<Upload
+									{...onUploadDocument}
+									showUploadList={false}
+								// customRequest={customRequestUploadDoc}
+								>
+									<Button className="ml1 color-sl" type="link">
+										<UploadDocumentIcon style={{ marginRight: "20px" }} />
+										Upload document
+									</Button>
+								</Upload>
+							</HeaderFileTab>
+							<HeaderFileTab className="flex items-center">
+								<Button
+									className="ml1 color-sl"
+									type="link"
+									onClick={() => setAssendingOrder(!assendingOrder)}
+								>
+									<FilterDocIcon style={{ marginRight: "20px" }} />
+									Recently added
+									<DropDownIcon
+										style={{
+											marginLeft: "20px",
+											transform: `rotate(${assendingOrder ? '180deg' : '0deg'} )`
+										}}
+									/>
+								</Button>
+							</HeaderFileTab>
 						</HeaderFileTab>
 					</HeaderFileTab>
 
@@ -166,7 +249,7 @@ const FileListing = () => {
 							})}
 						</Row>
 
-						<FileUpload />
+						{!documentList.length ? <FileUpload /> : null}
 						{/*---------------------- more Button ----------------*/}
 						{showMoreButton && (
 							<div className="flex justify-center mb2">
@@ -189,8 +272,8 @@ const FileListing = () => {
 						<Row>
 							<OwnerInfoContainer>
 								<OwnerInfo
-									ownerData={documentList[docClicked]}
 									fileListing={true}
+									ownerData={documentList[docClicked]}
 								/>
 							</OwnerInfoContainer>
 						</Row>
