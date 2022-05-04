@@ -225,11 +225,7 @@ const FileListing = () => {
 													color:
 														docClicked === index ? '#25CA69' : 'currentColor',
 													width: '80%',
-													// overflow: 'hidden',
-													// textOverflow: 'ellipsis',
-													// display: '-webkit-box',
 													WebkitLineClamp: 2
-													// WebkitBoxOrient: 'vertical'
 												}}
 												className="truncate pl2 font-12"
 											>
