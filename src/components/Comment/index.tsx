@@ -11,6 +11,7 @@ import {
 import { MemberCount } from '../../views/Home/Home.style';
 import DeleteModal from '../DeleteModal';
 import EmojiPickerComponent from '../EmojiPicker';
+import UploadImage from '../UploadImage';
 import {
 	CommentContainer,
 	CommentInputDiv,
@@ -25,7 +26,7 @@ import VoiceRecording from './components/VoiceRecording';
 export default function CommentSection() {
 	const [isComment, setIsComment] = useState(true);
 	const [isReply, setIsReply] = useState(false);
-
+	const [isDelete, setIsDelete] = useState(false);
 	return !isComment ? (
 		<div
 			style={{ height: '93vh', color: '#AAAFB5' }}
@@ -46,8 +47,13 @@ export default function CommentSection() {
 			style={{ height: '93vh', overflowX: 'hidden' }}
 			className="hide-scrollbar"
 		>
+			<DeleteModal isDelete={isDelete} setIsDelete={() => setIsDelete(false)} />
 			<MemberCount className="ml2 mb1">28 members</MemberCount>
-			<Comments index={11} setIsReply={() => setIsReply((prev) => !prev)}>
+			<Comments
+				index={11}
+				setIsReply={() => setIsReply((prev) => !prev)}
+				isDelete={() => setIsDelete(true)}
+			>
 				<div className="nested ml3">
 					{[...Array(2)].map((_, index) => (
 						<Comments
@@ -55,6 +61,7 @@ export default function CommentSection() {
 							key={index}
 							index={index}
 							setIsReply={() => setIsReply((prev) => !prev)}
+							isDelete={() => setIsDelete(true)}
 						/>
 					))}
 					{isReply && <AddComment cancelReply={() => setIsReply(false)} />}
@@ -68,18 +75,19 @@ export default function CommentSection() {
 	);
 }
 function Comments(props: any) {
+	const { isDelete, setIsReply } = props;
 	const [isEdit, setIsEdit] = useState(-1);
 	const [inputValue, setInputValue] =
 		useState(`We supply a series of design principles, practical patterns
 	and high quality design resources (Sketch and Axure).`);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
-	const [isDelete, setIsDelete] = useState(false);
+
 	const [enableRecording, setEnableRecording] = useState(false);
+	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
 
 	return (
 		<CommentContainer>
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
-				<DeleteModal isDelete={isDelete} />
 				<Row>
 					<Col span={3}>
 						<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
@@ -96,10 +104,7 @@ function Comments(props: any) {
 								style={{ flex: 1 }}
 								className="flex justify-evenly items-center"
 							>
-								<DeleteIcon
-									onClick={() => setIsDelete(true)}
-									className="icon15"
-								/>
+								<DeleteIcon onClick={isDelete} className="icon15" />
 								<EditIcon onClick={() => setIsEdit(props.index)} />
 							</div>
 
@@ -131,9 +136,13 @@ function Comments(props: any) {
 													enableEmojiPicker={() =>
 														setEnableEmojiPicker((prev) => !prev)
 													}
+													enableUploadImage={() =>
+														setEnableUploadImage((prev) => !prev)
+													}
 												/>
 											</CommentInputDiv>
 										</EmojiPickerComponent>
+										{enableUploadImage && <UploadImage />}
 										{enableRecording && <VoiceRecording />}
 									</>
 								)}
@@ -152,7 +161,7 @@ function Comments(props: any) {
 											</Col>
 											<Col>
 												<ReplyButton
-													onClick={props.setIsReply}
+													onClick={setIsReply}
 													className="flex items-center px1"
 												>
 													<ReplyIcon

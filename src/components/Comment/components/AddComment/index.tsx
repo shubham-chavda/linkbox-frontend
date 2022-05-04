@@ -22,7 +22,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
-	const [enableUploadImage, setEnableUploadImage] = React.useState(true);
+	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
 
 	return (
 		<Row className={`mb2 `} style={{ paddingLeft: '10px' }}>

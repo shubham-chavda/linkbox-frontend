@@ -7,7 +7,6 @@ import { uploadDocument } from '../../../../store/Documents/DocumentsReducer';
 import { ButtonFilled } from '../../../../styles/Layout.style';
 import { DraggerContainer, FileUploadContainer } from './FileUpload.styles';
 
-const { Dragger } = Upload;
 const { DOC_URL } = process.env;
 
 type FileUploadTypes = {};
@@ -95,7 +94,7 @@ const FileUpload = ({}: FileUploadTypes) => {
 	};
 
 	return (
-		<DraggerContainer {...onUploadDocument}>
+		<DraggerContainer {...onUploadDocument} multiple={true} accept=".pdf">
 			<div className="flex  justify-center">
 				<div
 					className="flex items-center flex-column"

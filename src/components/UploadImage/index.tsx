@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload } from 'antd';
+import { Modal } from 'antd';
 import React, { useState } from 'react';
 import getBase64 from '../../helper/getBase64';
 import { StyledUpload } from './UploadImage.style';
@@ -45,7 +45,7 @@ const UploadImage = () => {
 				accept="image/png, image/jpeg, image/jpg, image/svg"
 				listType="picture-card"
 				// fileList={fileList}
-
+				multiple={true}
 				onPreview={handlePreview}
 				onChange={handleChange}
 			>
