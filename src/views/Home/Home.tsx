@@ -92,7 +92,7 @@ const Home = () => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: 'https://lbweb.dev.brainvire.net/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
