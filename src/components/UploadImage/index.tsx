@@ -8,26 +8,7 @@ const UploadImage = () => {
 	const [previewVisible, setPreviewVisible] = useState(false);
 	const [previewImage, setPreviewImage] = useState('');
 	const [previewTitle, setPreviewTitle] = useState('');
-	const [fileList, setFileList] = useState([
-		{
-			uid: '-1',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-		},
-		{
-			uid: '-2',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-		},
-		{
-			uid: '-3',
-			name: 'image.png',
-			status: 'done',
-			url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-		}
-	]);
+	const [fileList, setFileList] = useState([]);
 	// here we need to set status OK because we are only storing file.
 	const customeSetStatus = ({ file, onSuccess }: any) => {
 		console.log(

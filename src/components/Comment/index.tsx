@@ -9,6 +9,7 @@ import {
 	ReplyIcon
 } from '../../assets';
 import { MemberCount } from '../../views/Home/Home.style';
+import DeleteModal from '../DeleteModal';
 import EmojiPickerComponent from '../EmojiPicker';
 import {
 	CommentContainer,
@@ -41,7 +42,10 @@ export default function CommentSection() {
 			</Row>
 		</div>
 	) : (
-		<div style={{ height: '93vh', overflowX: 'hidden' }}>
+		<div
+			style={{ height: '93vh', overflowX: 'hidden' }}
+			className="hide-scrollbar"
+		>
 			<MemberCount className="ml2 mb1">28 members</MemberCount>
 			<Comments index={11} setIsReply={() => setIsReply((prev) => !prev)}>
 				<div className="nested ml3">
@@ -69,12 +73,13 @@ function Comments(props: any) {
 		useState(`We supply a series of design principles, practical patterns
 	and high quality design resources (Sketch and Axure).`);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
-
+	const [isDelete, setIsDelete] = useState(false);
 	const [enableRecording, setEnableRecording] = useState(false);
 
 	return (
 		<CommentContainer>
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
+				<DeleteModal isDelete={isDelete} />
 				<Row>
 					<Col span={3}>
 						<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
@@ -91,7 +96,10 @@ function Comments(props: any) {
 								style={{ flex: 1 }}
 								className="flex justify-evenly items-center"
 							>
-								<DeleteIcon className="icon15" />
+								<DeleteIcon
+									onClick={() => setIsDelete(true)}
+									className="icon15"
+								/>
 								<EditIcon onClick={() => setIsEdit(props.index)} />
 							</div>
 
@@ -109,7 +117,7 @@ function Comments(props: any) {
 										>
 											<CommentInputDiv className="my1 flex item-center">
 												<InputBox
-													className="font-12 "
+													className="font-12 hide-scrollbar"
 													rows={2}
 													style={{ width: '100%' }}
 													value={inputValue}

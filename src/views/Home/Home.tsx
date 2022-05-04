@@ -92,7 +92,12 @@ const Home = () => {
 				path: '/webviewer/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
-				disabledElements: ['header', 'toolsHeader', 'searchPanel', "contextMenuPopup"],
+				disabledElements: [
+					'header',
+					'toolsHeader',
+					'searchPanel',
+					'contextMenuPopup'
+				],
 				css: '/test.css'
 			},
 			viewer.current
@@ -125,23 +130,22 @@ const Home = () => {
 			instance.UI.textPopup.update([
 				{
 					type: 'actionButton',
-					img: "/Icons/copyIcon.svg",
+					img: '/Icons/copyIcon.svg',
 					onClick: instance.UI.Feature.Copy
 				},
 				{
 					type: 'actionButton',
-					img: "/Icons/chatIcon.svg",
+					img: '/Icons/chatIcon.svg',
 					onClick: instance.UI.Feature.NotesPanel
 				},
 				{
 					type: 'actionButton',
-					img: "/Icons/bookmarkIcon.svg",
+					img: '/Icons/bookmarkIcon.svg'
 				},
 				{
 					type: 'actionButton',
-					img: "/Icons/userStarIcon.svg",
+					img: '/Icons/userStarIcon.svg'
 				}
-
 			]);
 
 			// instance.UI.textPopup.update([
@@ -156,7 +160,6 @@ const Home = () => {
 			// 		// onClick: instance.print,
 			// 	},
 			// ]);
-
 
 			// const _setNotes = () => {
 			// 	console.log(":_setNotes ---------->")
@@ -182,7 +185,6 @@ const Home = () => {
 			// 	annotationManager.removeEventListener('annotationHidden', _setNotes);
 			// 	annotationManager.removeEventListener('updateAnnotationPermission', _setNotes);
 			// };
-
 		});
 	};
 
@@ -295,7 +297,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -446,7 +448,7 @@ const Home = () => {
 								</Row>
 							</>
 						) : (
-							<div className="px1">
+							<div className="px1 ">
 								<Comment />
 							</div>
 						)}

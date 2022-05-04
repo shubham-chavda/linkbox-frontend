@@ -7,18 +7,12 @@ import { Immutable, produce } from "immer"
 interface IGlobalState {
   user: IUser | null;
   globalLoading: boolean;
-  documentList: any[];
-  selectedDocumentInfo: any;
-  showMoreDocs: boolean;
 }
 
 // Define the initial state using that type
 export const initialState: Immutable<IGlobalState> = {
   user: null,
   globalLoading: false,
-  documentList: [],
-  showMoreDocs: false,
-  selectedDocumentInfo: "",
 };
 
 export const globalReducer = createSlice({
@@ -33,19 +27,6 @@ export const globalReducer = createSlice({
     setUserDetails(state, action) {
       state.user = action.payload;
     },
-    uploadDocument(state, action) { },
-    getDocumentList(state, action) { },
-    setDocumentList(state, action) {
-      state.documentList = action.payload;
-      if (action.payload.length === 10) {
-        state.showMoreDocs = true;
-      } else {
-        state.showMoreDocs = false;
-      }
-    },
-    setDocumentInfo(state, action) {
-      // document/info
-    },
     logOut() { },
     logInUser(state, action) { }
   }
@@ -57,10 +38,6 @@ export const {
   setUserDetails,
   logOut,
   logInUser,
-  uploadDocument,
-  getDocumentList,
-  setDocumentList,
-  setDocumentInfo,
 } = globalReducer.actions
 
 export default globalReducer.reducer

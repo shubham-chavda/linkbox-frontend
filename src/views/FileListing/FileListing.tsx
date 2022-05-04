@@ -29,21 +29,21 @@ import {
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { getDocumentList } from '../../store/global/globalReducer';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { getDocumentList } from '../../store/Documents/DocumentsReducer';
 
 export enum SORT_BY {
-	ASC = "ASC",
-	DESC = "DESC",
-};
+	ASC = 'ASC',
+	DESC = 'DESC'
+}
 
 const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const documentList = useAppSelector(
-		(RootState) => RootState.global.documentList
+		(RootState) => RootState.documents.documentList
 	);
 	const showMoreButton = useAppSelector(
-		(RootState) => RootState.global.showMoreDocs
+		(RootState) => RootState.documents.showMoreDocs
 	);
 
 	const [docClicked, setDocClicked] = useState(1);
@@ -51,7 +51,7 @@ const FileListing = () => {
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
-		const data = { pageNo, sortBy: SORT_BY.ASC }
+		const data = { pageNo, sortBy: SORT_BY.ASC };
 		dispatch(getDocumentList(data));
 	}, []);
 
@@ -125,7 +125,7 @@ const FileListing = () => {
 						</p>
 						<Row>
 							{documentList.map((document: any, index: number) => {
-								console.log("document ------->", document);
+								console.log('document ------->', document);
 								return (
 									<div
 										className={`${docClicked !== index ? 'hover-blue' : ''}`}
@@ -141,25 +141,28 @@ const FileListing = () => {
 											height="158px"
 											color={docClicked === index ? '#25CA69' : '#1379FF'}
 										/>
-										<Tooltip placement="top" title={`${document.name || "---"}.pdf`}>
+										<Tooltip
+											placement="top"
+											title={`${document.name || '---'}.pdf`}
+										>
 											<p
 												style={{
 													color:
 														docClicked === index ? '#25CA69' : 'currentColor',
 													width: '80%',
-													overflow: 'hidden',
-													textOverflow: 'ellipsis',
-													display: '-webkit-box',
-													WebkitLineClamp: 2,
-													WebkitBoxOrient: 'vertical'
+													// overflow: 'hidden',
+													// textOverflow: 'ellipsis',
+													// display: '-webkit-box',
+													WebkitLineClamp: 2
+													// WebkitBoxOrient: 'vertical'
 												}}
-												className=" pl2 font-12"
+												className="truncate pl2 font-12"
 											>
-												{document.name || "---"}
+												{document.name || '---'}
 											</p>
 										</Tooltip>
 									</div>
-								)
+								);
 							})}
 						</Row>
 
@@ -201,7 +204,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
@@ -213,7 +216,7 @@ const FileListing = () => {
 
 					{/* right sider Over */}
 				</Row>
-			</MainContainer >
+			</MainContainer>
 		</>
 	);
 };

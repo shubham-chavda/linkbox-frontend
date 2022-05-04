@@ -46,7 +46,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 							<CommentInputDiv className="my1 flex item-center">
 								<InputBox
 									value={inputValue}
-									className="font-12 "
+									className="font-12 hide-scrollbar"
 									style={{ width: '100%' }}
 									onChange={(e) => setInputValue(e.target.value)}
 									placeholder="Write comment"

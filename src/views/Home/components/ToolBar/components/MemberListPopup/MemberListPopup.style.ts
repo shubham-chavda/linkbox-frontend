@@ -5,16 +5,7 @@ export const ListingContainer = styled.div`
     height: 450px;
     overflow: auto;
 
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    &&::-webkit-scrollbar {
-     display: none;
-    }
-
-    /* Hide scrollbar for IE, Edge and Firefox */
-    && {
-        -ms-overflow-style: none;  /* IE and Edge */
-        scrollbar-width: none;  /* Firefox */
-    }
+  
 `
 
 export const SubContainer = styled(Row)`
