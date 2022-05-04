@@ -33,7 +33,7 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentList, uploadDocument } from '../../store/Documents/DocumentsReducer';
+import { getDocumentList, setSelectedDocuments, uploadDocument } from '../../store/Documents/DocumentsReducer';
 
 const { DOC_URL } = process.env;
 
@@ -45,8 +45,6 @@ export enum SORT_BY {
 const FileListing = () => {
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
-
-	let formData = new FormData();
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -66,10 +64,13 @@ const FileListing = () => {
 	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number) => {
+		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
 			setDocClicked(index);
 			// setDocInfo(documentList[index].name);
-		} else history.navigate?.('/documents');
+		} else {
+			history.navigate?.('/documents');
+		}
 	};
 
 	const onUploadDocument = {
@@ -133,7 +134,6 @@ const FileListing = () => {
 								<Upload
 									{...onUploadDocument}
 									showUploadList={false}
-								// customRequest={customRequestUploadDoc}
 								>
 									<Button className="ml1 color-sl" type="link">
 										<UploadDocumentIcon style={{ marginRight: "20px" }} />
