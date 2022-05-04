@@ -56,12 +56,11 @@ function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 	}
 }
 
-
-
 function LogOutUser(): void {
 	window.localStorage.clear();
 	window.location.reload();
 }
+
 export default function* globalWatcher(): Generator<StrictEffect, void, any> {
 	yield all([
 		yield takeLatest(logInUser.type, LoginFunc),

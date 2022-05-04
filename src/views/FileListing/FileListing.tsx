@@ -32,12 +32,8 @@ import {
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-<<<<<<< HEAD
-=======
-import { getDocumentList, uploadDocument } from '../../store/global/globalReducer';
->>>>>>> 0a53b43fcd670299e557267bdefe8aaba3b13bbd
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentList } from '../../store/Documents/DocumentsReducer';
+import { getDocumentList, uploadDocument } from '../../store/Documents/DocumentsReducer';
 
 const { DOC_URL } = process.env;
 
@@ -65,11 +61,7 @@ const FileListing = () => {
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
-<<<<<<< HEAD
-		const data = { pageNo, sortBy: SORT_BY.ASC };
-=======
 		const data = { pageNo, sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC }
->>>>>>> 0a53b43fcd670299e557267bdefe8aaba3b13bbd
 		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo]);
 
@@ -287,7 +279,7 @@ const FileListing = () => {
 							<Checkbox
 								className="py1 font-12 color-sl"
 								style={{ width: '90%' }}
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createSlice } from '@reduxjs/toolkit'
-import { IUser } from '../../types/User.interface';
-import { Immutable, produce } from "immer"
+import { Immutable } from "immer"
 
 // Define a type for the slice state
 interface IGlobalState {
@@ -12,7 +11,6 @@ interface IGlobalState {
 
 // Define the initial state using that type
 export const initialState: Immutable<IGlobalState> = {
-
   documentList: [],
   showMoreDocs: false,
   selectedDocumentInfo: "",
@@ -23,7 +21,6 @@ export const DocumentsReducer = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-   
     uploadDocument(state, action) { },
     getDocumentList(state, action) { },
     setDocumentList(state, action) {
@@ -37,16 +34,14 @@ export const DocumentsReducer = createSlice({
     setDocumentInfo(state, action) {
       // document/info
     },
-   
   }
 });
 
 export const {
-
   uploadDocument,
   getDocumentList,
   setDocumentList,
   setDocumentInfo,
-} = DocumentsReducer.actions
+} = DocumentsReducer.actions;
 
 export default DocumentsReducer.reducer
