@@ -116,8 +116,7 @@ const FileListing = () => {
 				});
 			} else if (info.file.status === 'error') {
 				notification.error({
-					message: `${info.file.response.message || '--'
-						} failed to upload file.`
+					message: `${info.file.response.message || '--'} failed to upload file.`
 				});
 			}
 		}
