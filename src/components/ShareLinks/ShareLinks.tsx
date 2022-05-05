@@ -46,22 +46,22 @@ const ShareLinks = () => {
 
 			<Col span={24} className="flex justify-center flex-column  my1 ">
 				<Checkbox
-					className="p1 font-12 color-sl"
+					className="p1 font-12 color-light-gray"
 					// onChange={onChange}
 				>
 					Deactivate Shareable link
 				</Checkbox>
 				<Button
-					className="color-sl"
+					className="color-light-gray border-light-gray"
 					shape="round"
-					style={{ width: '100%', borderColor: '#686087' }}
+					style={{ width: '100%' }}
 					type="ghost"
 				>
 					Share with friends
 				</Button>
 			</Col>
 			<Checkbox
-				className="pt1 pl1 font-12 color-sl"
+				className="pt1 pl1 font-12 color-light-gray"
 				// onChange={onChange}
 			>
 				Notification

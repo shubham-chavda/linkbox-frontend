@@ -43,7 +43,10 @@ const MemberListPopup: React.FC = () => {
 							placeholder="Search"
 							prefix={<SearchOutlined />}
 						/>
-						<ListingContainer className="hide-scrollbar">
+						<ListingContainer
+							className="hide-scrollbar"
+							style={{ scrollBehavior: 'smooth' }}
+						>
 							{MemberList.map((data) => {
 								return (
 									<SubContainer key={data.key} className="flex items-center m1">

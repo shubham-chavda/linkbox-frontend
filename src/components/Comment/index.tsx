@@ -28,10 +28,7 @@ export default function CommentSection() {
 	const [isReply, setIsReply] = useState(false);
 	const [isDelete, setIsDelete] = useState(false);
 	return !isComment ? (
-		<div
-			style={{ height: '93vh', color: '#AAAFB5' }}
-			className="flex items-center"
-		>
+		<div style={{ height: '93vh' }} className="flex items-center color-sl-gray">
 			<Row className="flex justify-center items-center">
 				<Row className="fluid flex justify-center">
 					<LocationIcon className="icon22" />
@@ -185,7 +182,7 @@ function Comments(props: any) {
 								<div className="my1">
 									<Button
 										onClick={() => setIsEdit(-1)}
-										className="font-12 color-sl"
+										className="font-12 color-light-gray"
 										style={{ padding: '0px 25px' }}
 										shape="round"
 									>

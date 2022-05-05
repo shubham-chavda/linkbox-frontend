@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import { MemberCount } from './FileListing.style';
-import { CloudUploadOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+	CloudUploadOutlined,
+	FolderOutlined,
+	SearchOutlined
+} from '@ant-design/icons';
 import {
 	DefaultMap,
 	DefaultPdf,
@@ -11,8 +15,7 @@ import {
 	FilterDocIcon,
 	FilterIcon,
 	HomeIcon,
-	PrintIcon,
-	UploadDocumentIcon
+	PrintIcon
 } from '../../assets';
 import {
 	Button,
@@ -42,7 +45,13 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentList, setSelectedDocuments, uploadDocument } from '../../store/Documents/DocumentsReducer';
+import {
+	getDocumentList,
+	setSelectedDocuments,
+	uploadDocument
+} from '../../store/Documents/DocumentsReducer';
+import UploadFileModal from './components/UploadFileModal';
+import CreateFolderModal from './components/CreateFolderModal';
 
 const { DOC_URL } = process.env;
 
@@ -53,7 +62,6 @@ export enum SORT_BY {
 
 const FileListing = () => {
 	const dispatch = useAppDispatch();
-	const token = window.localStorage.getItem('token');
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -65,6 +73,8 @@ const FileListing = () => {
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
+	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
@@ -75,51 +85,18 @@ const FileListing = () => {
 		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo]);
 
-	const handleDocClick = (index: number) => {
+	const handleDocClick = (index: number, isFolder: boolean) => {
 		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
 			setDocClicked(index);
 			// setDocInfo(documentList[index].name);
 		} else {
-			history.navigate?.('/documents');
-		}
-	};
-
-	const onUploadDocument = {
-		name: 'file',
-		action: `${DOC_URL}document/create`,
-		headers: {
-			'Content-Type': 'multipart/form-data',
-			authorization: token ? 'Bearer ' + token : ''
-		},
-		customRequest: ({ file, onSuccess }: any) => {
-			console.log('file ------->', file);
-			const formData = new FormData();
-			formData.append('name', file.name);
-			formData.append('docfile', file);
-			dispatch(uploadDocument(formData));
-		},
-		beforeUpload: (file: any) => {
-			const isPDF = file.type === 'application/pdf';
-			if (!isPDF) {
-				notification.error({
-					message: `${file.name} is not a pdf file`
-				});
-			}
-			return isPDF || Upload.LIST_IGNORE;
-		},
-		onChange(info: any) {
-			console.log('info.file -------->', info);
-			if (info.file.status === 'done') {
-				notification.success({
-					message: `${info.file.name} file uploaded successfully`
-				});
-			} else if (info.file.status === 'error') {
-				notification.error({
-					message: `${info.file.response.message || '--'
-						} failed to upload file.`
-				});
-			}
+			if (isFolder) {
+				console.log(
+					'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
+					isFolder
+				);
+			} else history.navigate?.('/documents');
 		}
 	};
 
@@ -134,8 +111,8 @@ const FileListing = () => {
 
 					{/* File Tab bar start */}
 
-					<HeaderFileTab span={18}>
-						<HeaderFileTab className="flex items-center">
+					<HeaderFileTab span={18} className="flex">
+						<HeaderFileTab span={6} className="flex items-center">
 							<Input
 								bordered={false}
 								style={{ width: 250 }}
@@ -143,37 +120,85 @@ const FileListing = () => {
 								prefix={<SearchOutlined />}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
-							<HeaderFileTab className="flex items-center">
-								<Upload
-									{...onUploadDocument}
-									showUploadList={false}
-								>
-									<Button className="ml1 color-sl" type="link">
-										<CloudUploadOutlined
-											style={{ fontSize: '16px', color: 'black' }}
-										/>
-										Upload document
-									</Button>
-								</Upload>
-							</HeaderFileTab>
-							<HeaderFileTab className="flex items-center">
+						</HeaderFileTab>
+
+						<div className="fluid flex justify-end">
+							<Button
+								className="color-light-gray border-light-gray mr1"
+								shape="round"
+							>
+								Store
+							</Button>
+							<div
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}}
+								className="flex items-center"
+							>
 								<Button
-									className="ml1 color-sl"
+									className="ml1 color-light-gray"
+									type="link"
+									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}
+								>
+									<FolderOutlined
+										style={{ fontSize: '16px', color: 'black' }}
+									/>
+									Create Folder
+									{isCreateFolderModalOpen && (
+										<span className="ml1 font-13 color-sd2">X</span>
+									)}
+								</Button>
+							</div>
+							<div
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}}
+								className="flex items-center"
+							>
+								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
+								<Button
+									className="ml1 color-light-gray"
+									type="link"
+									onClick={() => setIsUploadModalOpen((prev) => !prev)}
+								>
+									<CloudUploadOutlined
+										style={{ fontSize: '16px', color: 'black' }}
+									/>
+									Upload document
+									{isUploadModalOpen && (
+										<span
+											className="ml1 font-13 color-sd2"
+											onClick={() => setIsUploadModalOpen(false)}
+										>
+											X
+										</span>
+									)}
+								</Button>
+								{/* </Upload> */}
+							</div>
+							<div
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}}
+							>
+								<Button
+									className="ml1 color-light-gray flex items-center"
 									type="link"
 									onClick={() => setAssendingOrder(!assendingOrder)}
 								>
-									<FilterDocIcon style={{ marginRight: '20px' }} />
+									<FilterDocIcon className="mr2" />
 									Recently added
 									<DropDownIcon
 										style={{
 											marginLeft: '20px',
-											transform: `rotate(${assendingOrder ? '180deg' : '0deg'
-												} )`
+											transform: `rotate(${
+												assendingOrder ? '180deg' : '0deg'
+											} )`
 										}}
 									/>
 								</Button>
-							</HeaderFileTab>
-						</HeaderFileTab>
+							</div>
+						</div>
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}
@@ -188,7 +213,10 @@ const FileListing = () => {
 							</LeftIconGroup>
 							<RightIconGroup span={15} className="pr2 justify-end">
 								<DeleteIcon alt="delete" className="icon22" />
-								<Button className="ml1 color-sl" shape="round">
+								<Button
+									className="ml1 color-light-gray border-light-gray"
+									shape="round"
+								>
 									Open
 								</Button>
 							</RightIconGroup>
@@ -215,6 +243,19 @@ const FileListing = () => {
 							<FileUpload />
 						) : (
 							<>
+								{/*---------------- Modal for Upload File ------- */}
+								{isUploadModalOpen && (
+									<UploadFileModal isOpen={isUploadModalOpen} />
+								)}
+								{/*---------------- Modal for Create Folder ------- */}
+								{isCreateFolderModalOpen && (
+									<CreateFolderModal
+										isOpen={isCreateFolderModalOpen}
+										closeModal={() => setIsCreateFolderModalOpen(false)}
+									/>
+								)}
+
+								{/*---------------- File Listing ------- */}
 								<p className="ml1" style={{ color: '#C5C9CE' }}>
 									Personal Documents
 								</p>
@@ -225,24 +266,43 @@ const FileListing = () => {
 											<div
 												key={index}
 												style={{ width: '160px' }}
-												onClick={() => handleDocClick(index)}
-												className={`${docClicked !== index ? 'hover-blue' : ''}`}
+												onClick={() =>
+													handleDocClick(index, document?.isFolder)
+												}
+												className={`${
+													docClicked !== index ? 'hover-blue' : ''
+												}`}
 											>
-												<DefaultPdf
-													stroke={docClicked === index ? '#25CA69' : '#ECF2F7'}
-													width="138px"
-													height="158px"
-													color={docClicked === index ? '#25CA69' : '#1379FF'}
-												/>
+												{/* if document is folder */}
+												{document?.isFolder ? (
+													<DefaultPdf
+														stroke={docClicked === index ? '#25CA69' : 'red'}
+														width="138px"
+														height="158px"
+														color={docClicked === index ? '#25CA69' : '#1379FF'}
+													/>
+												) : (
+													<DefaultPdf
+														stroke={
+															docClicked === index ? '#25CA69' : '#ECF2F7'
+														}
+														width="138px"
+														height="158px"
+														color={docClicked === index ? '#25CA69' : '#1379FF'}
+													/>
+												)}
 												<Tooltip
 													placement="top"
-													title={`${document.name || '---'}.pdf`}
+													title={`${document.name || '---'}`}
 												>
 													<p
 														style={{
 															width: '80%',
 															WebkitLineClamp: 2,
-															color: docClicked === index ? '#25CA69' : 'currentColor',
+															color:
+																docClicked === index
+																	? '#25CA69'
+																	: 'currentColor'
 														}}
 														className="truncate pl2 font-12"
 													>
@@ -261,7 +321,7 @@ const FileListing = () => {
 							<div className="flex justify-center mb2">
 								<Button
 									shape="round"
-									className="color-sl"
+									className="color-light-gray"
 									onClick={() => setPageNo(pageNo + 1)}
 								>
 									More
@@ -291,9 +351,9 @@ const FileListing = () => {
 						<Row className="flex justify-center align-center py1">
 							<MemberCount className="pt1 font-12">28 members</MemberCount>
 							<Checkbox
-								className="py1 font-12 color-sl"
+								className="py1 font-12 color-light-gray"
 								style={{ width: '90%' }}
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

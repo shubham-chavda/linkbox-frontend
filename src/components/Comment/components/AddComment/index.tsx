@@ -69,7 +69,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 
 					<div className="my1">
 						<Button
-							className="font-12 color-sl"
+							className="font-12 color-light-gray"
 							style={{ padding: '0px 25px' }}
 							shape="round"
 							onClick={cancelReply}

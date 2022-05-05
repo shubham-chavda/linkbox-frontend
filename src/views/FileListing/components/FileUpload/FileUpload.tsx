@@ -94,11 +94,16 @@ const FileUpload = ({}: FileUploadTypes) => {
 	};
 
 	return (
-		<DraggerContainer {...onUploadDocument} multiple={true} accept=".pdf">
+		<DraggerContainer
+			{...onUploadDocument}
+			multiple={true}
+			showUploadList={false}
+			accept=".pdf"
+		>
 			<div className="flex  justify-center">
 				<div
-					className="flex items-center flex-column"
-					style={{ color: '#AAAFB5', width: '50%' }}
+					className="flex items-center flex-column color-sl-gray"
+					style={{ width: '50%' }}
 				>
 					<DefaultPdf width="138px" height="158px" color={'#C4CEDB'} />
 					<div className="bold mb1">Start uploading documents...</div>
@@ -106,11 +111,7 @@ const FileUpload = ({}: FileUploadTypes) => {
 						Upload documents from your computer or copy from a store
 					</div>
 					<div className="flex justify-center item-center">
-						<Button
-							style={{ borderColor: '#686087' }}
-							className="color-sl ml1"
-							shape="round"
-						>
+						<Button className="color-sl ml1 border-light-gray" shape="round">
 							Copy from store
 						</Button>
 						<ButtonFilled

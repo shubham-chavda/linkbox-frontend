@@ -30,9 +30,9 @@ import ReplyIcon from './icons/ReplyIcon.svg';
 import CursorTextCopyMove from './icons/CursorTextCopyMove.svg';
 import VoiceIcon from './icons/VoiceIcon.svg';
 import AttachmentIcon from './icons/AttachmentIcon.svg';
-import UploadDocumentIcon from './icons/UploadDocumentIcon.svg';
 import DropDownIcon from './icons/DropDownIcon.svg';
 import FilterDocIcon from './icons/FilterDocIcon.svg';
+import UploadIcon from './icons/UploadIcon.svg';
 
 // ------------------- images ----------------------------
 
@@ -75,9 +75,9 @@ export {
 	CursorTextCopyMove,
 	VoiceIcon,
 	AttachmentIcon,
-	UploadDocumentIcon,
 	DropDownIcon,
 	FilterDocIcon,
+	UploadIcon,
 	// ------------------- images ----------------------------
 	SignInSVG,
 	DefaultPdf,

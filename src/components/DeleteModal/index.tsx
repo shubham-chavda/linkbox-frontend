@@ -20,8 +20,8 @@ const DeleteModal: React.FC<IDeleteModal> = (props) => {
 					</div>
 					<div className="mt3 fluid ">
 						<Button
-							style={{ borderColor: '#686087', width: '45%' }}
-							className="color-sl ml1 font-13"
+							style={{ width: '45%' }}
+							className="color-light-gray ml1 font-13 border-light-gray"
 							shape="round"
 							onClick={setIsDelete}
 						>
