@@ -1,7 +1,13 @@
-import { Avatar, Col, Row } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Col, Row, Typography } from 'antd';
+
 import { EditIcon } from '../../assets';
 import { Title, Name, Tag } from './OwnerInfo.style';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { getDocumentInfo, getDocumentList } from '../../store/Documents/DocumentsReducer';
+
+const { Paragraph } = Typography;
 
 interface IOwnerInfo {
 	fileListing: boolean;
@@ -10,19 +16,30 @@ interface IOwnerInfo {
 		name?: string;
 		fileName?: string;
 		description?: string;
+		uuid: string;
 	};
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing, ownerData } = props;
+
+	const dispatch = useAppDispatch();
+	const selectedDocumentInfo = useAppSelector(
+		(RootState) => RootState.documents.selectedDocumentInfo
+	);
+
+	const [editableStr, setEditableStr] = useState('This is an editable text.');
+
+	useEffect(() => {
+	}, [])
 	return (
 		<>
 			<Row className="flex items-center">
 				<Col span={17} className="flex items-center">
 					<Avatar
-						className="mr2"
-						src={'https://joeschmoe.io/api/v1/random'}
 						size={35}
+						className="mr2"
 						style={{ border: '1px solid gray' }}
+						src={'https://joeschmoe.io/api/v1/random'}
 					/>
 					<Name>{'Robert__fox_'}</Name>
 				</Col>
@@ -36,13 +53,23 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				</Col>
 			</Row>
 			<Row className="mt2">
-				<Title>{ownerData?.name || 'Gmat Official Guide 2019'}</Title>
+				<Paragraph
+					editable={{
+						onChange: setEditableStr,
+						icon: <EditIcon alt="edit" />,
+						tooltip: 'click to edit text',
+					}}
+				>
+					{selectedDocumentInfo?.name || '---'}
+				</Paragraph>
 			</Row>
 			<Row>
-				<p className="font-12">
-					{ownerData?.description ||
+				<Paragraph
+					className="font-12"
+				>
+					{selectedDocumentInfo?.description ||
 						'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'}
-				</p>
+				</Paragraph>
 			</Row>
 		</>
 	);

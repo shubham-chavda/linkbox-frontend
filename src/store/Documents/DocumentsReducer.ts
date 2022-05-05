@@ -7,6 +7,7 @@ interface IGlobalState {
   documentList: any[];
   showMoreDocs: boolean;
   selectedDocuments: any[];
+  selectedDocumentInfo: any;
 }
 
 // Define the initial state using that type
@@ -14,6 +15,7 @@ export const initialState: Immutable<IGlobalState> = {
   documentList: [],
   showMoreDocs: false,
   selectedDocuments: [],
+  selectedDocumentInfo: "",
 };
 
 export const DocumentsReducer = createSlice({
@@ -24,14 +26,21 @@ export const DocumentsReducer = createSlice({
     uploadDocument(state, action) { },
     getDocumentList(state, action) { },
     setDocumentList(state, action) {
-      state.documentList = action.payload;
+      state.documentList = [
+        ...action.payload,
+        ...state.documentList,
+      ]
       if (action.payload.length === 10) {
         state.showMoreDocs = true;
       } else {
         state.showMoreDocs = false;
       }
     },
+    getDocumentInfo(state, action) {
+      console.log("action --------->", action);
+    },
     setDocumentInfo(state, action) {
+      state.selectedDocumentInfo = action.payload;
     },
     setSelectedDocuments(state, action) {
       console.log("action.payload ------->", action.payload);
@@ -45,6 +54,7 @@ export const {
   getDocumentList,
   setDocumentList,
   setDocumentInfo,
+  getDocumentInfo,
   setSelectedDocuments,
 } = DocumentsReducer.actions;
 

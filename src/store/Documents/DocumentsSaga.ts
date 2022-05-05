@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
-import { getDocumentList, setDocumentList, uploadDocument } from "./DocumentsReducer";
+import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
 	payload: { pageNo: number; sortBy: string };
@@ -63,9 +63,41 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		yield put(toggleLoader(false));
 	}
 }
+
+type GetDocumentInfoType = { payload: { uuid: string } } & SagaType;
+
+function* GetDocumentInfoFunc(action: GetDocumentInfoType): Generator<StrictEffect, void, any> {
+	const { payload } = action;
+	try {
+		const apis = init();
+		yield put(toggleLoader(true));
+		const response = yield call(apis.documents.getDocumentInfo, payload.uuid);
+		console.log("response ------->", response)
+		if (response?.status === 200) {
+			if (response?.data?.docUrl) {
+				yield put(setDocumentInfo(response?.data));
+				notification.success({
+					message: 'Document Info Received',
+				});
+			}
+		}
+	} catch (error) {
+		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
+		notification.error({
+			message: 'Something went wrong',
+			description: 'Please try again'
+		});
+		yield put(toggleLoader(false));
+	} finally {
+		yield put(toggleLoader(false));
+	}
+}
+
+// 
 export default function* DocumentsWatcher(): Generator<StrictEffect, void, any> {
 	yield all([
 		yield takeLatest(uploadDocument.type, UploadDocumentFunc),
 		yield takeLatest(getDocumentList.type, GetDocumentsListFunc),
+		yield takeLatest(getDocumentInfo.type, GetDocumentInfoFunc),
 	]);
 }

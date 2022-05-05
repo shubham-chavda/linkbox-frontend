@@ -46,6 +46,7 @@ import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import {
+	getDocumentInfo,
 	getDocumentList,
 	setSelectedDocuments,
 	uploadDocument
@@ -89,6 +90,8 @@ const FileListing = () => {
 		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
 			setDocClicked(index);
+			console.log("documentList[index]= ======>", documentList[index]);
+			dispatch(getDocumentInfo({ uuid: documentList[index].uuid }));
 			// setDocInfo(documentList[index].name);
 		} else {
 			if (isFolder) {
@@ -192,9 +195,7 @@ const FileListing = () => {
 									<DropDownIcon
 										style={{
 											marginLeft: '20px',
-											transform: `rotate(${
-												assendingOrder ? '180deg' : '0deg'
-											} )`
+											transform: `rotate(${assendingOrder ? '180deg' : '0deg'})`
 										}}
 									/>
 								</Button>
@@ -270,25 +271,24 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${
-													docClicked !== index ? 'hover-blue' : ''
-												}`}
+												className={`${docClicked !== index ? 'hover-blue' : ''
+													}`}
 											>
 												{/* if document is folder */}
 												{document?.isFolder ? (
 													<DefaultPdf
-														stroke={docClicked === index ? '#25CA69' : 'red'}
 														width="138px"
 														height="158px"
+														stroke={docClicked === index ? '#25CA69' : 'red'}
 														color={docClicked === index ? '#25CA69' : '#1379FF'}
 													/>
 												) : (
 													<DefaultPdf
+														width="138px"
+														height="158px"
 														stroke={
 															docClicked === index ? '#25CA69' : '#ECF2F7'
 														}
-														width="138px"
-														height="158px"
 														color={docClicked === index ? '#25CA69' : '#1379FF'}
 													/>
 												)}
@@ -352,9 +352,9 @@ const FileListing = () => {
 						<Row className="flex justify-center align-center py1">
 							<MemberCount className="pt1 font-12">28 members</MemberCount>
 							<Checkbox
-								className="py1 font-12 color-light-gray"
 								style={{ width: '90%' }}
-								// onChange={onChange}
+								className="py1 font-12 color-light-gray"
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
