@@ -64,9 +64,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				</Paragraph>
 			</Row>
 			<Row>
-				<Paragraph
-					className="font-12"
-				>
+				<Paragraph className="font-12">
 					{selectedDocumentInfo?.description ||
 						'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'}
 				</Paragraph>
