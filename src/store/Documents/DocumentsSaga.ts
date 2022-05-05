@@ -44,15 +44,9 @@ function* UploadDocumentFunc(action: UploadDocumentType): Generator<StrictEffect
 		yield put(toggleLoader(true));
 		const response = yield call(apis.documents.uploadDocument, payload);
 		console.log("response ------->", response)
-		// if(response?.statusCode === 409) {
-		// 	notification.success({
-		// 		message: 'There is filename same ',
-		// 	});
-		// }
 		if (response?.status === 200) {
 			yield put(getDocumentList({ pageNo: 1, sortBy: "ASC" }));
 			if (response?.data?.docUrl) {
-				// yield put(setUserDetails(response?.user));
 				notification.success({
 					message: 'Document Uploaded successsfully',
 				});

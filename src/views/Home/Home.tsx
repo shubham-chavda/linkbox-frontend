@@ -42,7 +42,7 @@ import {
 import { ExpandAltOutlined } from '@ant-design/icons';
 import Comment from '../../components/Comment';
 import { useAppSelector } from '../../hooks/useAppSelector';
-const { DOC_URL } = process.env;
+const { PREFIX_DOC_ENDPOINT } = process.env;
 
 declare global {
 	interface Window {
@@ -272,7 +272,7 @@ const Home = () => {
 		if (selectedDocument.length) {
 			console.log("selectedDocument[0].docUrl ------>", selectedDocument);
 			loadPdfDocumentByPath(
-				`${DOC_URL}${selectedDocument[0].docUrl}`
+				`${PREFIX_DOC_ENDPOINT}${selectedDocument[0].docUrl}`
 				//  : 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
 			);
 			// initialPanes = [
