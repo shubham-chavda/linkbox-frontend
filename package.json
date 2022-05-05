@@ -16,6 +16,7 @@
 		"@ant-design/icons": "^4.7.0",
 		"@emotion/react": "^11.9.0",
 		"@emotion/styled": "^11.8.1",
+		"@pdftron/collab-client": "^2.0.1",
 		"@pdftron/webviewer": "^8.4.1",
 		"@reduxjs/toolkit": "^1.8.1",
 		"@types/lodash": "^4.14.181",

@@ -97,6 +97,7 @@ const FileListing = () => {
 					isFolder
 				);
 			} else history.navigate?.('/documents');
+			history.navigate?.('/documents');
 		}
 	};
 
