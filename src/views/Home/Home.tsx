@@ -8,6 +8,7 @@ import {
 } from './Home.style';
 
 import WebViewer from '@pdftron/webviewer';
+import { CollabClient } from '@pdftron/collab-client';
 
 import {
 	BookmarkIcon,
@@ -42,7 +43,7 @@ import {
 import { ExpandAltOutlined } from '@ant-design/icons';
 import Comment from '../../components/Comment';
 import { useAppSelector } from '../../hooks/useAppSelector';
-const { PREFIX_DOC_ENDPOINT } = process.env;
+const { DOC_URL } = process.env;
 
 declare global {
 	interface Window {
@@ -82,13 +83,22 @@ const Home = () => {
 			content: 'Content of Tab 1',
 			key: '1'
 		},
-		// {
-		// 	title: 'Gmat Official Guide 2021 new shubham',
-		// 	content: 'Content of Tab 2',
-		// 	key: '2'
-		// },
-		// { title: 'Gmat Official Guide 2019', content: 'Content of Tab 3', key: '3' }
 	];
+
+	useEffect(() => {
+		console.log("selectedDocument ------->", selectedDocument);
+		if (selectedDocument.length) {
+			console.log("selectedDocument[0].docUrl ------>", selectedDocument);
+			loadPdfDocumentByPath(
+				`${DOC_URL}document/fetch/${selectedDocument[0].docUrl.replace('upload/doc/', '')}`
+			);
+		} else {
+			loadPdfDocumentByPath(
+				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+			);
+		}
+	}, [selectedDocument]);
+
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
@@ -106,6 +116,47 @@ const Home = () => {
 			viewer.current
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
+
+			const client = new CollabClient({
+				instance,
+				url: 'https://0e52-103-250-136-184.ngrok.io',
+				subscriptionUrl: 'ws://0e52-103-250-136-184.ngrok.io',
+			});
+
+			const user = await client.loginAnonymously("Guest");
+
+
+			client.EventManager.subscribe('annotationAdded', (annotation) => {
+				console.log("annotation ---------->", annotation);
+				annotation.subscribe('onChange', (updatedAnnotation) => {
+					console.log('annotation changed', updatedAnnotation)
+				})
+			})
+
+			// const documents = await user.getAllDocuments();
+
+			// // Load a document by default
+			// if (documents.length > 0) {
+			// 	const document = documents[0]
+			// 	await document.view(`http://mywebsite.com/documents/${document.id}.pdf`)
+			// }
+
+			// // Create a document from an HTML file input
+			// const filePickerInput = document.getElementById('file-picker');
+			// if (filePickerInput) {
+			// 	filePickerInput.onchange = async (e: any) => {
+			// 		const file = e.target.files[0];
+
+			// 		const document = await user.createDocument({
+			// 			document: file,
+			// 			isPublic: true,
+			// 			name: file.name
+			// 		});
+
+			// 		await document.view(`http://mywebsite.com/documents/${document.id}.pdf`);
+			// 	}
+			// }
+
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
@@ -267,23 +318,6 @@ const Home = () => {
 			alert('Text edit box is not selected');
 		}
 	};
-	useEffect(() => {
-		console.log("selectedDocument ------->", selectedDocument);
-		if (selectedDocument.length) {
-			console.log("selectedDocument[0].docUrl ------>", selectedDocument);
-			loadPdfDocumentByPath(
-				`${PREFIX_DOC_ENDPOINT}${selectedDocument[0].docUrl}`
-				//  : 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-			);
-			// initialPanes = [
-			// 	{
-			// 		title: selectedDocument[0].name,
-			// 		content: 'Content of Tab 1',
-			// 		key: '1'
-			// 	},
-			// ]
-		}
-	}, [selectedDocument]);
 
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);

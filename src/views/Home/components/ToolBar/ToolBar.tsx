@@ -256,7 +256,7 @@ const ToolBar = ({
 			</Col>
 
 			<HandMoveIcon
-				onClick={() => createRectangle()}
+				onClick={() => selectTool()}
 				alt="move"
 				className="icon22"
 			/>
