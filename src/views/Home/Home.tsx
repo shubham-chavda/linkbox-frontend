@@ -119,11 +119,18 @@ const Home = () => {
 
 			const client = new CollabClient({
 				instance,
-				url: 'https://0e52-103-250-136-184.ngrok.io',
-				subscriptionUrl: 'ws://0e52-103-250-136-184.ngrok.io',
+				url: 'https://c446-103-250-136-208.ngrok.io',
+				subscriptionUrl: 'ws://c446-103-250-136-208.ngrok.io/subscribe',
 			});
 
-			const user = await client.loginAnonymously("Guest");
+			console.log("client --------->", client);
+
+			const token = window.localStorage.getItem('token');
+
+			const responseLogin = await client.loginWithToken(token || "");
+			console.log("responseLogin ------->", responseLogin);
+
+			// const user = await client.loginAnonymously("Guest");
 
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
