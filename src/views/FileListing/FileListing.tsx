@@ -55,8 +55,6 @@ import {
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 
-const { DOC_URL } = process.env;
-
 export enum SORT_BY {
 	ASC = 'ASC',
 	DESC = 'DESC'
@@ -91,6 +89,9 @@ const FileListing = () => {
 
 	useEffect(() => {
 		setCurrentDocument(documentList[0]);
+		if (documentList[0]) {
+			dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
+		}
 	}, [documentList]);
 
 	// const handleDocClick = (index: number, isFolder: boolean) => {
@@ -206,7 +207,7 @@ const FileListing = () => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-											// onClick={() => setIsUploadModalOpen(false)}
+										// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -288,7 +289,10 @@ const FileListing = () => {
 							<>
 								{/*---------------- Modal for Upload File ------- */}
 								{isUploadModalOpen && (
-									<UploadFileModal isOpen={isUploadModalOpen} />
+									<UploadFileModal
+										isOpen={isUploadModalOpen}
+										closeModal={() => setIsUploadModalOpen(false)}
+									/>
 								)}
 
 								{/*---------------- File Listing ------- */}
@@ -305,9 +309,8 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${
-													docClicked !== index ? 'hover-blue' : ''
-												}`}
+												className={`${docClicked !== index ? 'hover-blue' : ''
+													}`}
 											>
 												{/* if document object is folder */}
 												{document?.isFolder ? (
@@ -392,7 +395,7 @@ const FileListing = () => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

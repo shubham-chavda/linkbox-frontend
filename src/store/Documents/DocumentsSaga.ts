@@ -21,7 +21,7 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		}
 		console.log("response ------->", response)
 		if (response?.data?.data) {
-			yield put(setDocumentList(response?.data?.data));
+			yield put(setDocumentList(response?.data));
 			// notification.success({
 			// 	message: 'Documents list successsfully received',
 			// });

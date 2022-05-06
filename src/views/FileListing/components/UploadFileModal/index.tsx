@@ -7,7 +7,7 @@ import { uploadDocument } from '../../../../store/Documents/DocumentsReducer';
 import { MainContainer, ModalDialog } from './UploadFileModal.style';
 
 const UploadFileModal = (props: any) => {
-	const { isOpen } = props;
+	const { isOpen, closeModal } = props;
 	const dispatch = useAppDispatch();
 
 	const onUploadDocument = {
@@ -35,26 +35,24 @@ const UploadFileModal = (props: any) => {
 				});
 			} else if (info.file.status === 'error') {
 				notification.error({
-					message: `${
-						info.file.response.message || '--'
-					} failed to upload file.`
+					message: `${info.file.response.message || '--'} failed to upload file.`
 				});
 			}
 		}
 	};
 	return (
 		<MainContainer
-			onClick={() => console.log('------------------------')}
+			onClick={() => closeModal()}
 			className="justify-center items-center"
 			style={{ display: isOpen ? 'flex' : 'none' }}
 		>
-			<ModalDialog className="p2 m2">
+			<ModalDialog className="p2 m2" onClick={(e: any) => { e.stopPropagation(); }}>
 				<div className="m1 p1 ">
 					<div className="center font-14 mt2 bold" style={{ color: '#9F9AB2' }}>
 						Upload Files
 					</div>
 					<div className="mt3 mx3 mb2">
-						<Dragger {...onUploadDocument} multiple={true} accept=".pdf">
+						<Dragger {...onUploadDocument} multiple={true} accept=".pdf" showUploadList={false}>
 							<div className="flex items-center flex-column">
 								<div className="mb1">
 									<UploadIcon />

@@ -158,39 +158,12 @@ const Home = (props: any) => {
 			const responseLogin = await client.loginWithToken(token || "");
 			console.log("responseLogin ------->", responseLogin);
 
-			// const user = await client.loginAnonymously("Guest");
-
-
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
 				});
 			});
-
-			// const documents = await user.getAllDocuments();
-
-			// // Load a document by default
-			// if (documents.length > 0) {
-			// 	const document = documents[0]
-			// 	await document.view(`http://mywebsite.com/documents/${document.id}.pdf`)
-			// }
-
-			// // Create a document from an HTML file input
-			// const filePickerInput = document.getElementById('file-picker');
-			// if (filePickerInput) {
-			// 	filePickerInput.onchange = async (e: any) => {
-			// 		const file = e.target.files[0];
-
-			// 		const document = await user.createDocument({
-			// 			document: file,
-			// 			isPublic: true,
-			// 			name: file.name
-			// 		});
-
-			// 		await document.view(`http://mywebsite.com/documents/${document.id}.pdf`);
-			// 	}
-			// }
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');

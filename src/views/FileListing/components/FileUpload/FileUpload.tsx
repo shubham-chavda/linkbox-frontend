@@ -20,7 +20,7 @@ const convertNestedObjectToArray = (nestedObj: any) =>
 const convertBytesToKB = (bytes: any) =>
 	Math.round(bytes / KILO_BYTES_PER_BYTE);
 
-const FileUpload = ({}: FileUploadTypes) => {
+const FileUpload = ({ }: FileUploadTypes) => {
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
 
@@ -102,8 +102,8 @@ const FileUpload = ({}: FileUploadTypes) => {
 		>
 			<div className="flex  justify-center">
 				<div
-					className="flex items-center flex-column color-sl-gray"
 					style={{ width: '50%' }}
+					className="flex items-center flex-column color-sl-gray"
 				>
 					<DefaultPdf width="138px" height="158px" color={'#C4CEDB'} />
 					<div className="bold mb1">Start uploading documents...</div>

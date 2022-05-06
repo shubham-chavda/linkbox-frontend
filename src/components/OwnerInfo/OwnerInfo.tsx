@@ -20,7 +20,7 @@ interface IOwnerInfo {
 	};
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing, ownerData } = props;
+	const { fileListing } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -31,16 +31,11 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const [titleText, setTitleText] = useState('');
 	const [descriptionText, setDescriptionText] = useState('');
 
-	const getData = () => {
+	useEffect(() => {
+		console.log("selectedDocumentInfo- ------>", selectedDocumentInfo);
 		setTitleText(selectedDocumentInfo?.name);
 		setDescriptionText(selectedDocumentInfo?.desc);
-	};
-	useEffect(() => {
-		getData();
 	}, [selectedDocumentInfo]);
-	useEffect(() => {
-		getData();
-	}, []);
 
 	useEffect(() => {
 		updateDocument();
