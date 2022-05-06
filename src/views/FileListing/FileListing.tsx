@@ -70,6 +70,7 @@ const FileListing = () => {
 
 	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
+	const [searchString, setSearchString] = useState('');
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [currentDocument, setCurrentDocument] = useState({});
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -78,13 +79,16 @@ const FileListing = () => {
 	useEffect(() => {
 		const data = {
 			pageNo,
+			q: searchString,
 			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC
 		};
 		dispatch(getDocumentList(data));
-	}, [assendingOrder, pageNo]);
+	}, [assendingOrder, pageNo, searchString.length > 3]);
+
 	useEffect(() => {
 		setCurrentDocument(documentList[0]);
 	}, [documentList]);
+
 	const handleDocClick = (index: number, isFolder: boolean) => {
 		// dispatch(setSelectedDocuments(documentList[index]));
 		setCurrentDocument(documentList[index]);
@@ -99,6 +103,10 @@ const FileListing = () => {
 			} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
 			// history.navigate?.('/documents');
 		}
+	};
+
+	const onChange = (e: any) => {
+		setSearchString(e.target.value);
 	};
 
 	return (
@@ -126,6 +134,7 @@ const FileListing = () => {
 								style={{ width: 250 }}
 								placeholder="Search"
 								prefix={<SearchOutlined />}
+								onChange={onChange}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
 						</HeaderFileTab>

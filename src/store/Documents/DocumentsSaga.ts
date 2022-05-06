@@ -5,7 +5,7 @@ import { toggleLoader } from "../global/globalReducer";
 import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
-	payload: { pageNo: number; sortBy: string };
+	payload: { pageNo: number; sortBy: string, q?: string };
 } & SagaType;
 
 function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEffect, void, any> {
@@ -13,7 +13,12 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 	try {
 		const apis = init();
 		yield put(toggleLoader(true));
-		const response = yield call(apis.documents.getDocumentsList, payload);
+		let response: any = "";
+		if (payload.q) {
+			response = yield call(apis.documents.getDocumentsListBySearch, payload);
+		} else {
+			response = yield call(apis.documents.getDocumentsList, payload);
+		}
 		console.log("response ------->", response)
 		if (response?.data?.data) {
 			yield put(setDocumentList(response?.data?.data));

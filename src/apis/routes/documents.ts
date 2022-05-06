@@ -8,6 +8,9 @@ export default (base: ISimpleInterface) => {
     getDocumentsList(data: any) {
       return base.detail(`document/list?order=${data.sortBy}&page=${data.pageNo}&take=${10}`);
     },
+    getDocumentsListBySearch(data: any) {
+      return base.detail(`document/list?order=${data.sortBy}&page=${data.pageNo}&take=${10}&q=${data.q}`);
+    },
     getDocumentInfo(uuid: string) {
       return base.detail(`document/info/${uuid}`);
     },
