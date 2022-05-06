@@ -72,6 +72,7 @@ const FileListing = () => {
 
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
+	const [searchString, setSearchString] = useState("");
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
@@ -79,10 +80,11 @@ const FileListing = () => {
 	useEffect(() => {
 		const data = {
 			pageNo,
-			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC
+			q: searchString,
+			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC,
 		};
 		dispatch(getDocumentList(data));
-	}, [assendingOrder, pageNo]);
+	}, [assendingOrder, pageNo, searchString.length > 3]);
 
 	const handleDocClick = (index: number, isFolder: boolean) => {
 		dispatch(setSelectedDocuments(documentList[index]));
@@ -102,6 +104,10 @@ const FileListing = () => {
 		}
 	};
 
+	const onChange = (e: any) => {
+		setSearchString(e.target.value);
+	}
+
 	return (
 		<>
 			<MainContainer>
@@ -120,6 +126,7 @@ const FileListing = () => {
 								style={{ width: 250 }}
 								placeholder="Search"
 								prefix={<SearchOutlined />}
+								onChange={onChange}
 							/>
 							<FilterIcon alt="filter" className="icon16" />
 						</HeaderFileTab>

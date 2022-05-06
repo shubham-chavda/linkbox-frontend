@@ -31,11 +31,7 @@ export const DocumentsReducer = createSlice({
         ...action.payload,
         ...state.documentList,
       ], 'uuid')
-      if (action.payload.length === 10) {
-        state.showMoreDocs = true;
-      } else {
-        state.showMoreDocs = false;
-      }
+      state.showMoreDocs = action.payload.hasNextPage || false;
     },
     getDocumentInfo(state, action) {
       console.log("action --------->", action);
