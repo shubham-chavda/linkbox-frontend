@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { createSlice } from '@reduxjs/toolkit'
-import { Immutable } from "immer"
+import { Immutable } from "immer";
+import _ from "lodash";
 
 // Define a type for the slice state
 interface IGlobalState {
@@ -26,10 +27,10 @@ export const DocumentsReducer = createSlice({
     uploadDocument(state, action) { },
     getDocumentList(state, action) { },
     setDocumentList(state, action) {
-      state.documentList = [
+      state.documentList = _.uniqBy([
         ...action.payload,
         ...state.documentList,
-      ]
+      ], 'uuid')
       if (action.payload.length === 10) {
         state.showMoreDocs = true;
       } else {

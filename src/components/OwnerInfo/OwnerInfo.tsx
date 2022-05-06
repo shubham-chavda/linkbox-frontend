@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Col, Row, Typography } from 'antd';
+import { Avatar, Button, Col, Row, Typography } from 'antd';
 
 import { EditIcon } from '../../assets';
-import { Title, Name, Tag } from './OwnerInfo.style';
+import { Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentInfo, getDocumentList } from '../../store/Documents/DocumentsReducer';
 
 const { Paragraph } = Typography;
 
@@ -27,9 +26,11 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		(RootState) => RootState.documents.selectedDocumentInfo
 	);
 
-	const [editableStr, setEditableStr] = useState('This is an editable text.');
+	const [isEdit, setIsEdit] = useState(false);
+	const [titleText, setTitleText] = useState(selectedDocumentInfo?.name);
 
 	useEffect(() => {
+		setTitleText(selectedDocumentInfo?.name);
 	}, [])
 	return (
 		<>
@@ -46,7 +47,16 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 				<Col span={6}>
 					{fileListing ? (
-						<EditIcon alt="edit" />
+						<Button
+							type={'link'}
+							onClick={() => setIsEdit(!isEdit)}
+							icon={
+								<EditIcon
+									alt="edit"
+									color={isEdit ? "#25CA69" : "#170944"}
+									stroke={isEdit ? "#25CA69" : "#170944"}
+								/>}
+						/>
 					) : (
 						<Tag className="font-12">Owner</Tag>
 					)}
@@ -55,16 +65,15 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			<Row className="mt2">
 				<Paragraph
 					editable={{
-						onChange: setEditableStr,
+						onChange: setTitleText,
 						icon: <EditIcon alt="edit" />,
-						tooltip: 'click to edit text',
 					}}
 				>
 					{selectedDocumentInfo?.name || '---'}
 				</Paragraph>
 			</Row>
 			<Row>
-				<Paragraph className="font-12">
+				<Paragraph className="font-12" editable={isEdit}>
 					{selectedDocumentInfo?.description ||
 						'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'}
 				</Paragraph>
