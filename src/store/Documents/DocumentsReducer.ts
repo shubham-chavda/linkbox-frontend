@@ -20,7 +20,7 @@ export const initialState: Immutable<IGlobalState> = {
 };
 
 export const DocumentsReducer = createSlice({
-  name: 'global',
+  name: 'document',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
@@ -36,12 +36,10 @@ export const DocumentsReducer = createSlice({
     getDocumentInfo(state, action) {
     },
     setDocumentInfo(state, action) {
-      console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 43 ~ setDocumentInfo ", action.payload)
       state.selectedDocumentInfo = action.payload;
     },
     setSelectedDocuments(state, action) {
-      console.log("action.payload ------->", action.payload);
-      state.selectedDocuments = [action.payload];
+     state.selectedDocuments = [action.payload];
     },
     updateDocumentInfo(state, action) { }
   }

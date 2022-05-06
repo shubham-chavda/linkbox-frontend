@@ -3,23 +3,44 @@ import { Avatar, Button, Col, Row, Typography } from 'antd';
 
 import { EditIcon } from '../../assets';
 import { Name, Tag } from './OwnerInfo.style';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { useAppSelector } from '../../hooks/useAppSelector';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
 
 const { Paragraph } = Typography;
 
 interface IOwnerInfo {
 	fileListing: boolean;
-	ownerData?: any;
+	ownerData?: {
+		key?: string;
+		name?: string;
+		fileName?: string;
+		description?: string;
+		uuid: string;
+	};
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing, ownerData } = props;
-	const dispatch = useDispatch();
-	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 28 ~ ownerData', ownerData);
+
+	const dispatch = useAppDispatch();
+	const selectedDocumentInfo = useAppSelector(
+		(RootState) => RootState.documents.selectedDocumentInfo
+	);
 
 	const [isEdit, setIsEdit] = useState(false);
 	const [titleText, setTitleText] = useState('');
 	const [descriptionText, setDescriptionText] = useState('');
+
+	const getData = () => {
+		setTitleText(selectedDocumentInfo?.name);
+		setDescriptionText(selectedDocumentInfo?.desc);
+	};
+	useEffect(() => {
+		getData();
+	}, [selectedDocumentInfo]);
+	useEffect(() => {
+		getData();
+	}, []);
 
 	useEffect(() => {
 		updateDocument();
@@ -32,7 +53,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				desc: descriptionText,
 				isShareable: true,
 				sendNotification: true,
-				uuid: ownerData?.uuid
+				uuid: selectedDocumentInfo?.uuid
 			};
 			dispatch(updateDocumentInfo(payload));
 		}
@@ -42,8 +63,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 	return (
 		<>
-			<Row className="flex items-center">
-				<Col span={17} className="flex items-center">
+			<Row className="flex items-center ">
+				<Col span={17} className="flex items-center fluid">
 					<Avatar
 						size={35}
 						className="mr2"
@@ -79,7 +100,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						icon: null
 					}}
 				>
-					{titleText}
+					{titleText || '-----'}
 				</Paragraph>
 			</Row>
 			<Row>
@@ -91,7 +112,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						onChange: setDescriptionText
 					}}
 				>
-					{descriptionText}
+					{descriptionText || '-----'}
 				</Paragraph>
 			</Row>
 		</>
