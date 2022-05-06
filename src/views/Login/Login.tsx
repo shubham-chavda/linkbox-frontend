@@ -14,7 +14,7 @@ import history from '../../history';
 function Login() {
 	useEffect(() => {
 		if (window.localStorage.getItem('token')) {
-			history.navigate?.('/');
+			history.navigate?.('/documents');
 		}
 	}, []);
 	return (

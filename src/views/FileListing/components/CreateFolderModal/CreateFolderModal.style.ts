@@ -19,7 +19,7 @@ export const ModalDialog = styled.div`
   margin: auto;
   border-radius:12px;
   box-shadow:0 1px 4px rgba(0,0,0,0.2);
-  width: 35%;
+  width: 25%;
 
 `;
 

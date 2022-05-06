@@ -11,12 +11,6 @@ const UploadFileModal = (props: any) => {
 	const dispatch = useAppDispatch();
 
 	const onUploadDocument = {
-		// name: 'file',
-		// action: `${DOC_URL}document/create`,
-		// headers: {
-		// 	'Content-Type': 'multipart/form-data',
-		// 	authorization: token ? 'Bearer ' + token : ''
-		// },
 		customRequest: ({ file, onSuccess }: any) => {
 			console.log('file ------->', file);
 			const formData = new FormData();

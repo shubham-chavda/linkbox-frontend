@@ -5,12 +5,16 @@ import { EditIcon } from '../../assets';
 import { Title, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentInfo, getDocumentList } from '../../store/Documents/DocumentsReducer';
+import {
+	getDocumentInfo,
+	getDocumentList
+} from '../../store/Documents/DocumentsReducer';
 
 const { Paragraph } = Typography;
 
 interface IOwnerInfo {
 	fileListing: boolean;
+	data?: any;
 	ownerData?: {
 		key?: string;
 		name?: string;
@@ -20,17 +24,16 @@ interface IOwnerInfo {
 	};
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing, ownerData } = props;
+	const { fileListing, data } = props;
+	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 28 ~ data', data);
 
-	const dispatch = useAppDispatch();
+	// const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
 		(RootState) => RootState.documents.selectedDocumentInfo
 	);
 
 	const [editableStr, setEditableStr] = useState('This is an editable text.');
 
-	useEffect(() => {
-	}, [])
 	return (
 		<>
 			<Row className="flex items-center">
@@ -57,10 +60,10 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 					editable={{
 						onChange: setEditableStr,
 						icon: <EditIcon alt="edit" />,
-						tooltip: 'click to edit text',
+						tooltip: 'click to edit text'
 					}}
 				>
-					{selectedDocumentInfo?.name || '---'}
+					{data?.name || '---'}
 				</Paragraph>
 			</Row>
 			<Row>

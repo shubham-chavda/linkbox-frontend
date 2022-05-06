@@ -7,6 +7,7 @@ import {
 	SearchOutlined
 } from '@ant-design/icons';
 import {
+	BookmarkIcon,
 	DefaultMap,
 	DefaultPdf,
 	DeleteIcon,
@@ -74,6 +75,7 @@ const FileListing = () => {
 	const [docClicked, setDocClicked] = useState(1);
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
+	const [currentDocument, setCurrentDocument] = useState({});
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 	// const [docInfo, setDocInfo] = useState<object[]>([]);
@@ -87,26 +89,31 @@ const FileListing = () => {
 	}, [assendingOrder, pageNo]);
 
 	const handleDocClick = (index: number, isFolder: boolean) => {
-		dispatch(setSelectedDocuments(documentList[index]));
+		// dispatch(setSelectedDocuments(documentList[index]));
+		setCurrentDocument(documentList[index]);
 		if (docClicked !== index) {
 			setDocClicked(index);
-			console.log("documentList[index]= ======>", documentList[index]);
-			dispatch(getDocumentInfo({ uuid: documentList[index].uuid }));
-			// setDocInfo(documentList[index].name);
 		} else {
 			if (isFolder) {
 				console.log(
 					'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
 					isFolder
 				);
-			} else history.navigate?.('/documents');
-			history.navigate?.('/documents');
+			} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
+			// history.navigate?.('/documents');
 		}
 	};
 
 	return (
 		<>
 			<MainContainer>
+				{/*---------------- Modal for Create Folder ------- */}
+				{isCreateFolderModalOpen && (
+					<CreateFolderModal
+						isOpen={isCreateFolderModalOpen}
+						closeModal={() => setIsCreateFolderModalOpen(false)}
+					/>
+				)}
 				{/* Header part start */}
 				<HeaderContainer>
 					<HeaderHome className="height-full" span={1}>
@@ -172,7 +179,7 @@ const FileListing = () => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-											onClick={() => setIsUploadModalOpen(false)}
+											// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -209,6 +216,7 @@ const FileListing = () => {
 
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
+							<BookmarkIcon alt="bookmark" className="icon22" />
 							<LeftIconGroup span={6}>
 								<DownloadButton alt="download" className="mr1 icon22" />
 								<PrintIcon alt="Print" className="icon22" />
@@ -249,13 +257,6 @@ const FileListing = () => {
 								{isUploadModalOpen && (
 									<UploadFileModal isOpen={isUploadModalOpen} />
 								)}
-								{/*---------------- Modal for Create Folder ------- */}
-								{isCreateFolderModalOpen && (
-									<CreateFolderModal
-										isOpen={isCreateFolderModalOpen}
-										closeModal={() => setIsCreateFolderModalOpen(false)}
-									/>
-								)}
 
 								{/*---------------- File Listing ------- */}
 								<p className="ml1" style={{ color: '#C5C9CE' }}>
@@ -271,10 +272,11 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${docClicked !== index ? 'hover-blue' : ''
-													}`}
+												className={`${
+													docClicked !== index ? 'hover-blue' : ''
+												}`}
 											>
-												{/* if document is folder */}
+												{/* if document object is folder */}
 												{document?.isFolder ? (
 													<DefaultPdf
 														width="138px"
@@ -340,6 +342,7 @@ const FileListing = () => {
 							<OwnerInfoContainer>
 								<OwnerInfo
 									fileListing={true}
+									data={currentDocument}
 									ownerData={documentList[docClicked]}
 								/>
 							</OwnerInfoContainer>
@@ -354,7 +357,7 @@ const FileListing = () => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>

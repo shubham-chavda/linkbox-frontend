@@ -43,6 +43,11 @@ import {
 import { ExpandAltOutlined } from '@ant-design/icons';
 import Comment from '../../components/Comment';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { getDocumentInfo } from '../../store/Documents/DocumentsReducer';
+import { useParams } from 'react-router-dom';
+import Spinner from '../../components/Spinner/Spinner';
+import { connect } from 'react-redux';
 const { DOC_URL } = process.env;
 
 declare global {
@@ -51,12 +56,17 @@ declare global {
 	}
 }
 
-const Home = () => {
+const Home = (props: any) => {
+	const dispatch = useAppDispatch();
+	const { id: documentID } = useParams();
+	const { isLoading } = props;
+	console.log('🚀 ~ file: Home.tsx ~ line 63 ~ Home ~ isLoading', isLoading);
+
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
 	);
-	const selectedDocument = useAppSelector(
-		(RootState) => RootState.documents.selectedDocuments
+	const selectedDocumentInfo = useAppSelector(
+		(RootState) => RootState.documents.selectedDocumentInfo
 	);
 	const [rightSiderClicks, setRightSiderClicks] = useState('comment');
 	const viewer: any = useRef(null);
@@ -77,27 +87,45 @@ const Home = () => {
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
 
-	let initialPanes: initPanel = [
+	const initialPanes: initPanel = [
 		{
-			title: selectedDocument.length ? selectedDocument[0].name : "PdfTron default",
+			title: selectedDocumentInfo
+				? selectedDocumentInfo.name
+				: 'PdfTron default',
 			content: 'Content of Tab 1',
 			key: '1'
-		},
+		}
 	];
-
 	useEffect(() => {
-		console.log("selectedDocument ------->", selectedDocument);
-		if (selectedDocument.length) {
-			console.log("selectedDocument[0].docUrl ------>", selectedDocument);
-			loadPdfDocumentByPath(
-				`${DOC_URL}document/fetch/${selectedDocument[0].docUrl.replace('upload/doc/', '')}`
+		dispatch(getDocumentInfo({ uuid: documentID }));
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 96 ~ useEffect ~ getDocumentInfo',
+			getDocumentInfo
+		);
+	}, []);
+	useEffect(() => {
+		if (selectedDocumentInfo) {
+			console.log(
+				'🚀 ~ file: Home.tsx ~ line 108 ~ useEffect ~ selectedDocumentInfo',
+				selectedDocumentInfo
 			);
-		} else {
+
 			loadPdfDocumentByPath(
-				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
+					'upload/doc/',
+					''
+				)}`
 			);
 		}
-	}, [selectedDocument]);
+		// else {
+		// 	console.log(
+		// 		'🚀------------------- ~ file: Home.tsx ~ line 130 ~ useEffect ~ else'
+		// 	);
+		// 	loadPdfDocumentByPath(
+		// 		'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+		// 	);
+		// }
+	}, [selectedDocumentInfo]);
 
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
@@ -120,18 +148,17 @@ const Home = () => {
 			const client = new CollabClient({
 				instance,
 				url: 'https://0e52-103-250-136-184.ngrok.io',
-				subscriptionUrl: 'ws://0e52-103-250-136-184.ngrok.io',
+				subscriptionUrl: 'ws://0e52-103-250-136-184.ngrok.io'
 			});
 
-			const user = await client.loginAnonymously("Guest");
-
+			const user = await client.loginAnonymously('Guest');
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
-				console.log("annotation ---------->", annotation);
+				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
-					console.log('annotation changed', updatedAnnotation)
-				})
-			})
+					console.log('annotation changed', updatedAnnotation);
+				});
+			});
 
 			// const documents = await user.getAllDocuments();
 
@@ -156,7 +183,6 @@ const Home = () => {
 			// 		await document.view(`http://mywebsite.com/documents/${document.id}.pdf`);
 			// 	}
 			// }
-
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
@@ -307,7 +333,7 @@ const Home = () => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -464,4 +490,8 @@ const Home = () => {
 		</>
 	);
 };
-export default Home;
+const mapStateToProps = (state: any) => ({
+	// isLoading: state.getIn(['global', 'globalLoading'])
+	isLoading: state.global.globalLoading
+});
+export default connect(mapStateToProps)(Home);

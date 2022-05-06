@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppNavigate } from './components/App/AppNavigate';
 import { ProtectedRoutes } from './components/App/ProtectedRoutes';
 import NotFound from './components/NotFound';
@@ -25,9 +25,10 @@ const App: React.FC = () => {
 			<AppNavigate />
 			<Routes>
 				<Route path="/" element={<ProtectedRoutes />}>
-					<Route index element={<FileListing />} />
 					{/* <Route path="/" element={<FileListing />} /> */}
-					<Route path="/documents" element={<Home />} />
+					<Route path="/" element={<Navigate to="/documents" />} />
+					<Route path="/documents" element={<FileListing />} />
+					<Route path="/document-detail/:id" element={<Home />} />
 					<Route path="*" element={<NotFound />} />
 				</Route>
 

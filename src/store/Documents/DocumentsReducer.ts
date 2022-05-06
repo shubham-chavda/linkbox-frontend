@@ -15,7 +15,7 @@ export const initialState: Immutable<IGlobalState> = {
   documentList: [],
   showMoreDocs: false,
   selectedDocuments: [],
-  selectedDocumentInfo: "",
+  selectedDocumentInfo: null,
 };
 
 export const DocumentsReducer = createSlice({
@@ -37,9 +37,9 @@ export const DocumentsReducer = createSlice({
       }
     },
     getDocumentInfo(state, action) {
-      console.log("action --------->", action);
     },
     setDocumentInfo(state, action) {
+      console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 43 ~ setDocumentInfo ", action.payload)
       state.selectedDocumentInfo = action.payload;
     },
     setSelectedDocuments(state, action) {
