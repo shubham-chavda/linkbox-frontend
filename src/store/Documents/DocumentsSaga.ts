@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
-import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, uploadDocument } from "./DocumentsReducer";
+import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
 	payload: { pageNo: number; sortBy: string };
@@ -76,9 +76,9 @@ function* GetDocumentInfoFunc(action: GetDocumentInfoType): Generator<StrictEffe
 		if (response?.status === 200) {
 			if (response?.data?.docUrl) {
 				yield put(setDocumentInfo(response?.data));
-				notification.success({
-					message: 'Document Info Received',
-				});
+				// notification.success({
+				// 	message: 'Document Info Received',
+				// });
 			}
 		}
 	} catch (error) {
@@ -93,11 +93,49 @@ function* GetDocumentInfoFunc(action: GetDocumentInfoType): Generator<StrictEffe
 	}
 }
 
-// 
+type UpdateDocumentInfoType = {
+	payload: {
+		name: string,
+		desc: string,
+		isShareable: boolean,
+		sendNotification: boolean
+		uuid: string,
+	},
+} & SagaType;
+
+function* UpdateDocumentInfoFunc(action: UpdateDocumentInfoType): Generator<StrictEffect, void, any> {
+	const { payload } = action;
+	try {
+		const apis = init();
+		yield put(toggleLoader(true));
+		const response = yield call(apis.documents.updateDocumentInfo, payload);
+		console.log("response ------->", response)
+		if (response?.status === 200) {
+			if (response?.data?.docUrl) {
+				yield put(setDocumentInfo(response?.data));
+				// notification.success({
+				// 	message: 'Document updated successfully',
+				// });
+			}
+		}
+	} catch (error) {
+		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
+		notification.error({
+			message: 'Something went wrong',
+			description: 'Please try again'
+		});
+		yield put(toggleLoader(false));
+	} finally {
+		yield put(toggleLoader(false));
+	}
+}
+
 export default function* DocumentsWatcher(): Generator<StrictEffect, void, any> {
 	yield all([
 		yield takeLatest(uploadDocument.type, UploadDocumentFunc),
 		yield takeLatest(getDocumentList.type, GetDocumentsListFunc),
 		yield takeLatest(getDocumentInfo.type, GetDocumentInfoFunc),
+		yield takeLatest(updateDocumentInfo.type, UpdateDocumentInfoFunc),
+
 	]);
 }

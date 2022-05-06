@@ -11,5 +11,8 @@ export default (base: ISimpleInterface) => {
     getDocumentInfo(uuid: string) {
       return base.detail(`document/info/${uuid}`);
     },
+    updateDocumentInfo(payload: any) {
+      return base.edit(`document/update/${payload.uuid}`, payload);
+    }
   };
 };

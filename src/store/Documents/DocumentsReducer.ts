@@ -47,6 +47,7 @@ export const DocumentsReducer = createSlice({
       console.log("action.payload ------->", action.payload);
       state.selectedDocuments = [action.payload];
     },
+    updateDocumentInfo(state, action) { }
   }
 });
 
@@ -56,6 +57,7 @@ export const {
   setDocumentList,
   setDocumentInfo,
   getDocumentInfo,
+  updateDocumentInfo,
   setSelectedDocuments,
 } = DocumentsReducer.actions;
 

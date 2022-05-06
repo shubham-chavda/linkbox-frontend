@@ -49,7 +49,6 @@ import {
 	getDocumentInfo,
 	getDocumentList,
 	setSelectedDocuments,
-	uploadDocument
 } from '../../store/Documents/DocumentsReducer';
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
@@ -76,7 +75,6 @@ const FileListing = () => {
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
 		const data = {
@@ -271,8 +269,7 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${docClicked !== index ? 'hover-blue' : ''
-													}`}
+												className={`${docClicked !== index ? 'hover-blue' : ''}`}
 											>
 												{/* if document is folder */}
 												{document?.isFolder ? (
