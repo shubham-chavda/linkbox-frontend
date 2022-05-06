@@ -1,10 +1,20 @@
-import { Button, Checkbox, Col, Row, Select } from 'antd';
+import { Button, Checkbox, Col, message, Row, Select } from 'antd';
 import React from 'react';
 import { InfoIcon, ShareLinkIcon } from '../../assets';
 import { ButtonFilled } from '../../styles/Layout.style';
 import { GenreSelector, ShareCol } from './ShareLinks.style';
 
-const ShareLinks = () => {
+interface IShareLinks {
+	DocId: string;
+}
+const ShareLinks = (props: IShareLinks) => {
+	const { DocId } = props;
+	const copyLink = () => {
+		navigator.clipboard.writeText(
+			`${window.location.origin}/document-detail/${DocId}`
+		);
+		message.success('Document link Copied 🎉');
+	};
 	return (
 		<>
 			<Row>
@@ -16,8 +26,10 @@ const ShareLinks = () => {
 						// dropdownStyle={{}}
 						// onChange={handleChange}
 					>
-						<Select.Option value="jack">Jack (100)</Select.Option>
-						<Select.Option value="lucy">Lucy (101)</Select.Option>
+						<Select.Option value="General">General (100)</Select.Option>
+						<Select.Option value="Confidential">
+							Confidential (101)
+						</Select.Option>
 					</GenreSelector>
 					<GenreSelector
 						labelInValue
@@ -26,15 +38,19 @@ const ShareLinks = () => {
 						// dropdownStyle={{}}
 						// onChange={handleChange}
 					>
-						<Select.Option value="jack">Jack (100)</Select.Option>
-						<Select.Option value="lucy">Lucy (101)</Select.Option>
+						<Select.Option value="Medium">Medium</Select.Option>
+						<Select.Option value="High">High</Select.Option>
 					</GenreSelector>
 					<InfoIcon alt="info" className="icon16" />
 				</Col>
 			</Row>
 
 			<Row className="mt2">
-				<ShareCol span={24} className="flex justify-between ">
+				<ShareCol
+					span={24}
+					className="flex justify-between "
+					onClick={() => copyLink()}
+				>
 					<Col className="p1">
 						<ShareLinkIcon alt="share" className="icon22" />
 						<span className="p1 font-13">Get Sharable link</span>
@@ -56,6 +72,7 @@ const ShareLinks = () => {
 					shape="round"
 					style={{ width: '100%' }}
 					type="ghost"
+					onClick={() => copyLink()}
 				>
 					Share with friends
 				</Button>

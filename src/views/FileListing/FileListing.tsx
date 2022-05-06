@@ -46,12 +46,7 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import {
-	getDocumentInfo,
-	getDocumentList,
-	setSelectedDocuments,
-	uploadDocument
-} from '../../store/Documents/DocumentsReducer';
+import { getDocumentList } from '../../store/Documents/DocumentsReducer';
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 
@@ -72,7 +67,7 @@ const FileListing = () => {
 		(RootState) => RootState.documents.showMoreDocs
 	);
 
-	const [docClicked, setDocClicked] = useState(1);
+	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [currentDocument, setCurrentDocument] = useState({});
@@ -87,7 +82,9 @@ const FileListing = () => {
 		};
 		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo]);
-
+	useEffect(() => {
+		setCurrentDocument(documentList[0]);
+	}, [documentList]);
 	const handleDocClick = (index: number, isFolder: boolean) => {
 		// dispatch(setSelectedDocuments(documentList[index]));
 		setCurrentDocument(documentList[index]);
@@ -216,12 +213,18 @@ const FileListing = () => {
 
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
-							<BookmarkIcon alt="bookmark" className="icon22" />
-							<LeftIconGroup span={6}>
+							<Col
+								span={4}
+								className="height-full flex justify-center items-center"
+								style={{ borderRight: '1px solid #ECF2F7' }}
+							>
+								<BookmarkIcon alt="bookmark" className="icon22" />
+							</Col>
+							<LeftIconGroup span={7}>
 								<DownloadButton alt="download" className="mr1 icon22" />
 								<PrintIcon alt="Print" className="icon22" />
 							</LeftIconGroup>
-							<RightIconGroup span={15} className="pr2 justify-end">
+							<RightIconGroup span={12} className="pr2 justify-end">
 								<DeleteIcon alt="delete" className="icon22" />
 								<Button
 									className="ml1 color-light-gray border-light-gray"
@@ -342,14 +345,13 @@ const FileListing = () => {
 							<OwnerInfoContainer>
 								<OwnerInfo
 									fileListing={true}
-									data={currentDocument}
 									ownerData={documentList[docClicked]}
 								/>
 							</OwnerInfoContainer>
 						</Row>
 
 						<OwnerInfoContainer>
-							<ShareLinks />
+							<ShareLinks DocId={documentList[docClicked]?.uuid} />
 						</OwnerInfoContainer>
 
 						<Row className="flex justify-center align-center py1">
