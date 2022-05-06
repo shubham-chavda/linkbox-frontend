@@ -42,7 +42,7 @@ function* LoginFunc(action: LoginUserType): Generator<StrictEffect, void, any> {
 		if (response?.user?.uuid) {
 			window.localStorage.setItem('token', response?.token?.accessToken);
 			yield put(setUserDetails(response?.user));
-			history.navigate?.('/', { replace: true });
+			history.navigate?.('/documents', { replace: true });
 		}
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)

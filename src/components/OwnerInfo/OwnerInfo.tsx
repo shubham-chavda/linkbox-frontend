@@ -3,42 +3,27 @@ import { Avatar, Button, Col, Row, Typography } from 'antd';
 
 import { EditIcon } from '../../assets';
 import { Name, Tag } from './OwnerInfo.style';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { useAppSelector } from '../../hooks/useAppSelector';
+import { useDispatch } from 'react-redux';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
 
 const { Paragraph } = Typography;
 
 interface IOwnerInfo {
 	fileListing: boolean;
-	ownerData?: {
-		key?: string;
-		name?: string;
-		fileName?: string;
-		description?: string;
-		uuid: string;
-	};
+	ownerData?: any;
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing, ownerData } = props;
-
-	const dispatch = useAppDispatch();
-	const selectedDocumentInfo = useAppSelector(
-		(RootState) => RootState.documents.selectedDocumentInfo
-	);
+	const dispatch = useDispatch();
+	console.log('🚀 ~ file: OwnerInfo.tsx ~ line 28 ~ ownerData', ownerData);
 
 	const [isEdit, setIsEdit] = useState(false);
-	const [titleText, setTitleText] = useState("");
-	const [descriptionText, setDescriptionText] = useState("");
-
-	useEffect(() => {
-		setTitleText(selectedDocumentInfo?.name);
-		setDescriptionText(selectedDocumentInfo?.desc);
-	}, [selectedDocumentInfo]);
+	const [titleText, setTitleText] = useState('');
+	const [descriptionText, setDescriptionText] = useState('');
 
 	useEffect(() => {
 		updateDocument();
-	}, [isEdit])
+	}, [isEdit]);
 
 	const updateDocument = () => {
 		if (!isEdit && titleText && descriptionText) {
@@ -47,13 +32,13 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				desc: descriptionText,
 				isShareable: true,
 				sendNotification: true,
-				uuid: selectedDocumentInfo?.uuid
-			}
+				uuid: ownerData?.uuid
+			};
 			dispatch(updateDocumentInfo(payload));
 		}
 	};
 
-	console.log("titleText -------->", titleText);
+	console.log('titleText -------->', titleText);
 
 	return (
 		<>
@@ -76,8 +61,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 							icon={
 								<EditIcon
 									alt="edit"
-									color={isEdit ? "#25CA69" : "#170944"}
-									stroke={isEdit ? "#25CA69" : "#170944"}
+									color={isEdit ? '#25CA69' : '#170944'}
+									stroke={isEdit ? '#25CA69' : '#170944'}
 								/>
 							}
 						/>
@@ -103,7 +88,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 					editable={{
 						icon: null,
 						editing: isEdit,
-						onChange: setDescriptionText,
+						onChange: setDescriptionText
 					}}
 				>
 					{descriptionText}

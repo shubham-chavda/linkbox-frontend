@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 // import { useDispatch } from 'react-redux';
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, Route } from 'react-router-dom';
+import FileListing from '../../views/FileListing/FileListing';
 
 export const ProtectedRoutes: React.FC = () => {
 	console.log('ProtectedRoutes');
@@ -24,6 +25,7 @@ export const ProtectedRoutes: React.FC = () => {
 	// }
 	return (
 		<>
+			{/* <Route path="/documents" element={<FileListing />} /> */}
 			<Outlet />
 		</>
 	);

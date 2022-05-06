@@ -7,6 +7,7 @@ import {
 	SearchOutlined
 } from '@ant-design/icons';
 import {
+	BookmarkIcon,
 	DefaultMap,
 	DefaultPdf,
 	DeleteIcon,
@@ -45,11 +46,8 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import {
-	getDocumentInfo,
-	getDocumentList,
-	setSelectedDocuments,
-} from '../../store/Documents/DocumentsReducer';
+import { getDocumentList } from '../../store/Documents/DocumentsReducer';
+
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 
@@ -70,10 +68,11 @@ const FileListing = () => {
 		(RootState) => RootState.documents.showMoreDocs
 	);
 
-	const [docClicked, setDocClicked] = useState(1);
+	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
-	const [searchString, setSearchString] = useState("");
+	const [searchString, setSearchString] = useState('');
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
+	const [currentDocument, setCurrentDocument] = useState({});
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
@@ -81,36 +80,45 @@ const FileListing = () => {
 		const data = {
 			pageNo,
 			q: searchString,
-			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC,
+			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC
 		};
 		dispatch(getDocumentList(data));
 	}, [assendingOrder, pageNo, searchString.length > 3]);
 
+	useEffect(() => {
+		setCurrentDocument(documentList[0]);
+	}, [documentList]);
+
 	const handleDocClick = (index: number, isFolder: boolean) => {
-		dispatch(setSelectedDocuments(documentList[index]));
+		// dispatch(setSelectedDocuments(documentList[index]));
+		setCurrentDocument(documentList[index]);
 		if (docClicked !== index) {
 			setDocClicked(index);
-			console.log("documentList[index]= ======>", documentList[index]);
-			dispatch(getDocumentInfo({ uuid: documentList[index].uuid }));
-			// setDocInfo(documentList[index].name);
 		} else {
 			if (isFolder) {
 				console.log(
 					'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
 					isFolder
 				);
-			} else history.navigate?.('/documents');
-			history.navigate?.('/documents');
+			} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
+			// history.navigate?.('/documents');
 		}
 	};
 
 	const onChange = (e: any) => {
 		setSearchString(e.target.value);
-	}
+	};
 
 	return (
 		<>
 			<MainContainer>
+				{/*---------------- Modal for Create Folder ------- */}
+				{isCreateFolderModalOpen && (
+					<CreateFolderModal
+						isOpen={isCreateFolderModalOpen}
+						closeModal={() => setIsCreateFolderModalOpen(false)}
+					/>
+				)}
 				{/* Header part start */}
 				<HeaderContainer>
 					<HeaderHome className="height-full" span={1}>
@@ -177,7 +185,7 @@ const FileListing = () => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-											onClick={() => setIsUploadModalOpen(false)}
+											// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -214,11 +222,18 @@ const FileListing = () => {
 
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
-							<LeftIconGroup span={6}>
+							<Col
+								span={4}
+								className="height-full flex justify-center items-center"
+								style={{ borderRight: '1px solid #ECF2F7' }}
+							>
+								<BookmarkIcon alt="bookmark" className="icon22" />
+							</Col>
+							<LeftIconGroup span={7}>
 								<DownloadButton alt="download" className="mr1 icon22" />
 								<PrintIcon alt="Print" className="icon22" />
 							</LeftIconGroup>
-							<RightIconGroup span={15} className="pr2 justify-end">
+							<RightIconGroup span={12} className="pr2 justify-end">
 								<DeleteIcon alt="delete" className="icon22" />
 								<Button
 									className="ml1 color-light-gray border-light-gray"
@@ -254,13 +269,6 @@ const FileListing = () => {
 								{isUploadModalOpen && (
 									<UploadFileModal isOpen={isUploadModalOpen} />
 								)}
-								{/*---------------- Modal for Create Folder ------- */}
-								{isCreateFolderModalOpen && (
-									<CreateFolderModal
-										isOpen={isCreateFolderModalOpen}
-										closeModal={() => setIsCreateFolderModalOpen(false)}
-									/>
-								)}
 
 								{/*---------------- File Listing ------- */}
 								<p className="ml1" style={{ color: '#C5C9CE' }}>
@@ -276,9 +284,11 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${docClicked !== index ? 'hover-blue' : ''}`}
+												className={`${
+													docClicked !== index ? 'hover-blue' : ''
+												}`}
 											>
-												{/* if document is folder */}
+												{/* if document object is folder */}
 												{document?.isFolder ? (
 													<DefaultPdf
 														width="138px"
@@ -350,7 +360,7 @@ const FileListing = () => {
 						</Row>
 
 						<OwnerInfoContainer>
-							<ShareLinks />
+							<ShareLinks DocId={documentList[docClicked]?.uuid} />
 						</OwnerInfoContainer>
 
 						<Row className="flex justify-center align-center py1">
@@ -358,7 +368,7 @@ const FileListing = () => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
