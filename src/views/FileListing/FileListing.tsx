@@ -47,6 +47,7 @@ import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { getDocumentList } from '../../store/Documents/DocumentsReducer';
+
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 
@@ -73,7 +74,6 @@ const FileListing = () => {
 	const [currentDocument, setCurrentDocument] = useState({});
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
-	// const [docInfo, setDocInfo] = useState<object[]>([]);
 
 	useEffect(() => {
 		const data = {
