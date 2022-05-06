@@ -6,14 +6,17 @@ import { GenreSelector, ShareCol } from './ShareLinks.style';
 
 interface IShareLinks {
 	DocId: string;
+	isShareable: boolean;
 }
 const ShareLinks = (props: IShareLinks) => {
-	const { DocId } = props;
+	const { DocId, isShareable } = props;
 	const copyLink = () => {
-		navigator.clipboard.writeText(
-			`${window.location.origin}/document-detail/${DocId}`
-		);
-		message.success('Document link Copied 🎉');
+		if (isShareable) {
+			navigator.clipboard.writeText(
+				`${window.location.origin}/document-detail/${DocId}`
+			);
+			message.success('Document link Copied 🎉');
+		} else message.info('Document is not Shareable');
 	};
 	return (
 		<>
@@ -50,6 +53,7 @@ const ShareLinks = (props: IShareLinks) => {
 					span={24}
 					className="flex justify-between "
 					onClick={() => copyLink()}
+					aria-disabled={!isShareable}
 				>
 					<Col className="p1">
 						<ShareLinkIcon alt="share" className="icon22" />

@@ -46,7 +46,11 @@ import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { getDocumentList } from '../../store/Documents/DocumentsReducer';
+import {
+	getDocumentInfo,
+	getDocumentList,
+	setSelectedDocuments
+} from '../../store/Documents/DocumentsReducer';
 
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
@@ -89,15 +93,32 @@ const FileListing = () => {
 		setCurrentDocument(documentList[0]);
 	}, [documentList]);
 
+	// const handleDocClick = (index: number, isFolder: boolean) => {
+	// 	dispatch(setSelectedDocuments(documentList[index]));
+	// 	// setCurrentDocument(documentList[index]);
+	// 	if (docClicked !== index) {
+	// 		setDocClicked(index);
+	// 	} else {
+	// 		if (isFolder) {
+	// 			console.log(
+	// 				'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
+	// 				isFolder
+	// 			);
+	// 		} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
+	// 		// history.navigate?.('/documents');
+	// 	}
+	// };
 	const handleDocClick = (index: number, isFolder: boolean) => {
-		// dispatch(setSelectedDocuments(documentList[index]));
-		setCurrentDocument(documentList[index]);
+		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
 			setDocClicked(index);
+			console.log('documentList[index]= ======>', documentList[index]);
+			dispatch(getDocumentInfo({ uuid: documentList[index].uuid }));
+			// setDocInfo(documentList[index].name);
 		} else {
 			if (isFolder) {
 				console.log(
-					'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
+					'🚀  file: FileListing.tsx  line 90  handleDocClick  isFolder',
 					isFolder
 				);
 			} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
@@ -351,7 +372,7 @@ const FileListing = () => {
 
 					<Col className="pt1" span={5}>
 						<Row>
-							<OwnerInfoContainer>
+							<OwnerInfoContainer className="fluid">
 								<OwnerInfo
 									fileListing={true}
 									ownerData={documentList[docClicked]}
@@ -360,7 +381,10 @@ const FileListing = () => {
 						</Row>
 
 						<OwnerInfoContainer>
-							<ShareLinks DocId={documentList[docClicked]?.uuid} />
+							<ShareLinks
+								isShareable={documentList[docClicked]?.isShareable}
+								DocId={documentList[docClicked]?.uuid}
+							/>
 						</OwnerInfoContainer>
 
 						<Row className="flex justify-center align-center py1">
