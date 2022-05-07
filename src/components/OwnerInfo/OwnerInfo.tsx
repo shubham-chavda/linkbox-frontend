@@ -11,7 +11,7 @@ interface IOwnerInfo {
 	ownerData?: any;
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing } = props;
+	const { fileListing, ownerData } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -36,8 +36,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		console.log(
 			'---------------------',
 			!isEdit &&
-				(titleText !== selectedDocumentInfo?.name ||
-					descriptionText !== selectedDocumentInfo?.desc)
+			(titleText !== selectedDocumentInfo?.name ||
+				descriptionText !== selectedDocumentInfo?.desc)
 		);
 		console.log(
 			'---------------------',
