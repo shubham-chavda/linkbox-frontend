@@ -163,6 +163,8 @@ const Home = (props: any) => {
 
 			const responseLogin = await client.loginWithToken(token || "");
 			console.log("responseLogin ------->", responseLogin);
+			const docContext = await client.setContext({ id: responseLogin.id });
+			console.log("doc --------->", docContext);
 			if (!responseLogin) {
 				notification.error({
 					message: "Login is failed Please refresh page...."
@@ -174,8 +176,9 @@ const Home = (props: any) => {
 				authorization: token || "",
 			});
 			const doc = await responseLogin.getDocument("12");
+			console.log("doc ------->", doc);
 			doc.view(documentPath);
-			console.log("doc --------->", doc);
+			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
 			// 	isPublic: true,
