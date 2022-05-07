@@ -148,25 +148,6 @@ const ToolBar = ({
 			{/* Search Button */}
 
 			<Col>
-				{/* <SearchButtonDropDown
-					showSearch
-					value={searchValue}
-					showArrow={false}
-					bordered={false}
-					style={{ width: 241 }}
-					placeholder="Search"
-					filterOption={false}
-					onSearch={onChangeSearchInput}
-					onChange={(e) => handleSearchChange(e)}
-					dropdownMatchSelectWidth={false}
-					// prefix={<SearchOutlined />}
-					dropdownStyle={{
-						borderRadius: '12px',
-						width: '400px'
-					}}
-				>
-					{options()}
-				</SearchButtonDropDown> */}
 				<Popover
 					isOpen={isPopoverOpen}
 					containerStyle={{ top: '14%', left: '5%' }}

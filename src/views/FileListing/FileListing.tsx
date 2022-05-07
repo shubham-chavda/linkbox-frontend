@@ -45,7 +45,6 @@ import {
 import history from '../../history';
 import FileUpload from './components/FileUpload/FileUpload';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { useAppSelector } from '../../hooks/useAppSelector';
 import {
 	getDocumentInfo,
 	getDocumentList,
@@ -54,21 +53,17 @@ import {
 
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
+import { connect } from 'react-redux';
 
 export enum SORT_BY {
 	ASC = 'ASC',
 	DESC = 'DESC'
 }
 
-const FileListing = () => {
+const FileListing: React.FC = (props: any) => {
+	const { showMoreDocs, showMoreSearchDocs, searchData, documentListData } =
+		props;
 	const dispatch = useAppDispatch();
-
-	const documentList = useAppSelector(
-		(RootState) => RootState.documents.documentList
-	);
-	const showMoreButton = useAppSelector(
-		(RootState) => RootState.documents.showMoreDocs
-	);
 
 	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
@@ -77,6 +72,17 @@ const FileListing = () => {
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
+	const [showMoreButton, setShowMoreButton] = useState(
+		searchString ? showMoreSearchDocs : showMoreDocs
+	);
+	const [documentList, setDocumentList] = useState(
+		searchString ? searchData : documentListData
+	);
+	useEffect(() => {
+		setDocumentList(searchString ? searchData : documentListData);
+		setShowMoreButton(searchString ? showMoreSearchDocs : showMoreDocs);
+	}, [documentListData, searchData]);
+
 	useEffect(() => {
 		const data = {
 			pageNo,
@@ -84,7 +90,7 @@ const FileListing = () => {
 			sortBy: assendingOrder ? SORT_BY.ASC : SORT_BY.DESC
 		};
 		dispatch(getDocumentList(data));
-	}, [assendingOrder, pageNo, searchString.length > 3]);
+	}, [assendingOrder, pageNo, searchString.length > 2]);
 
 	useEffect(() => {
 		// setCurrentDocument(documentList[0])
@@ -288,7 +294,6 @@ const FileListing = () => {
 								</p>
 								<Row>
 									{documentList.map((document: any, index: number) => {
-										console.log('document ------->', document);
 										return (
 											<div
 												key={index}
@@ -396,4 +401,10 @@ const FileListing = () => {
 		</>
 	);
 };
-export default FileListing;
+const mapStateToProps = (state: any) => ({
+	showMoreDocs: state.documents.showMoreDocs,
+	showMoreSearchDocs: state.documents.showMoreSearchDocs,
+	searchData: state.documents.searchDocumentList,
+	documentListData: state.documents.documentList
+});
+export default connect(mapStateToProps)(FileListing);

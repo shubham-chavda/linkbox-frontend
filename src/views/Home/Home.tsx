@@ -148,10 +148,10 @@ const Home = (props: any) => {
 
 			console.log('token ------>', token);
 
-			const responseLogin = await client.loginWithToken(token || "");
-			console.log("responseLogin ------->", responseLogin);
+			const responseLogin = await client.loginWithToken(token || '');
+			console.log('responseLogin ------->', responseLogin);
 			const docContext = await client.setContext({ id: responseLogin.id });
-			console.log("doc --------->", docContext);
+			console.log('doc --------->', docContext);
 			if (!responseLogin) {
 				notification.error({
 					message: 'Login is failed Please refresh page....'
@@ -162,8 +162,8 @@ const Home = (props: any) => {
 			await client.setCustomHeaders({
 				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument("12");
-			console.log("doc ------->", doc);
+			const doc = await responseLogin.getDocument('12');
+			console.log('doc ------->', doc);
 			doc.view(documentPath);
 			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
@@ -328,7 +328,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -360,8 +360,8 @@ const Home = (props: any) => {
 	const onChangeSearchInput = async (string: any) => {
 		const searchPattern = string;
 		const searchOptions = {
-			caseSensitive: true, // match case
-			wholeWord: true, // match whole words only
+			caseSensitive: false, // match case
+			wholeWord: false, // match whole words only
 			wildcard: false, // allow using '*' as a wildcard value
 			regex: false, // string is treated as a regular expression
 			searchUp: false, // search from the end of the document upwards
