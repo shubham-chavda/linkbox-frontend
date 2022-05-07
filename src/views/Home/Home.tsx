@@ -21,7 +21,7 @@ import {
 	InfoIcon,
 	UserStarIcon
 } from '../../assets';
-import { Col, Row } from 'antd';
+import { Col, notification, Row } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import MemberList from './components/MemberList/MemberList';
 import FileTabBar from './components/FileTabBar/FileTabBar';
@@ -130,7 +130,7 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: 'https://lbweb.dev.brainvire.net/lib',
+				path: '/webviewer/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
@@ -145,18 +145,42 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
+			// https://lbdocapi.dev.brainvire.net/collab
+
+			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
 			const client = new CollabClient({
 				instance,
-				url: 'https://c446-103-250-136-208.ngrok.io',
-				subscriptionUrl: 'ws://c446-103-250-136-208.ngrok.io/subscribe',
+				// logLevel: CollabClient.LogLevels.DEBUG,
+				filterLogsByTag: CollabClient.LogTags.AUTH,
+				url: 'https://lbdocapi.dev.brainvire.net/collab',
+				logLevel: CollabClient.LogLevels.DEBUG,
+				subscriptionUrl: 'wss://lbdocapi.dev.brainvire.net/collab/subscribe',
 			});
-
-			console.log("client --------->", client);
-
 			const token = window.localStorage.getItem('token');
+			// console.log("client --------->", client);
+
+			console.log("token ------>", token);
 
 			const responseLogin = await client.loginWithToken(token || "");
 			console.log("responseLogin ------->", responseLogin);
+			if (!responseLogin) {
+				notification.error({
+					message: "Login is failed Please refresh page...."
+				})
+				return false;
+			}
+
+			await client.setCustomHeaders({
+				authorization: token || "",
+			});
+			const doc = await responseLogin.getDocument("12");
+			doc.view(documentPath);
+			console.log("doc --------->", doc);
+			// const document = await responseLogin.createDocument({
+			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
+			// 	isPublic: true,
+			// 	name: 'my_document.pdf'
+			// })
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
@@ -182,26 +206,26 @@ const Home = (props: any) => {
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
-			instance.UI.textPopup.update([
-				{
-					type: 'actionButton',
-					img: '/Icons/copyIcon.svg',
-					onClick: instance.UI.Feature.Copy
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/chatIcon.svg',
-					onClick: instance.UI.Feature.NotesPanel
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/bookmarkIcon.svg'
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/userStarIcon.svg'
-				}
-			]);
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/copyIcon.svg',
+			// 		onClick: instance.UI.Feature.Copy
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/chatIcon.svg',
+			// 		onClick: instance.UI.Feature.NotesPanel
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/bookmarkIcon.svg'
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/userStarIcon.svg'
+			// 	}
+			// ]);
 		});
 	};
 

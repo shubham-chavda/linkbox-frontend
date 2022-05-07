@@ -4,6 +4,7 @@
 @import './utilities.less';
 @import './fonts.less';
 @import './ant.less';
+
 html {
 	font-size: 16px;
 	overflow: hidden;
@@ -18,14 +19,22 @@ body,
 
 * {
 	outline: 0;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-o-user-select: none;
-	user-select: none;
+	// -webkit-user-select: none;
+	// -khtml-user-select: none;
+	// -moz-user-select: none;
+	// -o-user-select: none;
+	// user-select: none;
 	box-sizing: border-box;
 	.Poppins;
 
+}
+
+*:not(Input) {
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 /* width */
@@ -43,6 +52,7 @@ body,
 	background: @thumbColor;
 	border-radius: 25px;
 }
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
 	background: fade(@thumbColor, 80%);
@@ -56,15 +66,17 @@ body,
 input[type='number'] {
 	-moz-appearance: textfield;
 }
+
 /* Webkit browsers like Safari and Chrome */
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
 }
-select{
+
+select {
 	// appearance: none;
-    // outline: 0;
+	// outline: 0;
 	// cursor: pointer;
 	// border-radius: 3px;
 	// border:none;
@@ -72,7 +84,12 @@ select{
 	-moz-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
-	&::-ms-expand { display: none };
+
+	&::-ms-expand {
+		display: none
+	}
+
+	;
 	-ms-appearance: none;
 	background: white;
 	background-image: none;

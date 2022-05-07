@@ -32,7 +32,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const [descriptionText, setDescriptionText] = useState('');
 
 	useEffect(() => {
-		console.log("selectedDocumentInfo- ------>", selectedDocumentInfo);
 		setTitleText(selectedDocumentInfo?.name);
 		setDescriptionText(selectedDocumentInfo?.desc);
 	}, [selectedDocumentInfo]);
@@ -53,8 +52,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			dispatch(updateDocumentInfo(payload));
 		}
 	};
-
-	console.log('titleText -------->', titleText);
 
 	return (
 		<>

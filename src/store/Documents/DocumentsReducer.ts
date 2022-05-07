@@ -9,6 +9,7 @@ interface IGlobalState {
   showMoreDocs: boolean;
   selectedDocuments: any[];
   selectedDocumentInfo: any;
+  searchDocumentList: any[];
 }
 
 // Define the initial state using that type
@@ -17,6 +18,7 @@ export const initialState: Immutable<IGlobalState> = {
   showMoreDocs: false,
   selectedDocuments: [],
   selectedDocumentInfo: null,
+  searchDocumentList: []
 };
 
 export const DocumentsReducer = createSlice({
