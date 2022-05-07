@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import { MemberCount } from './FileListing.style';
@@ -54,6 +55,7 @@ import {
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 import { connect } from 'react-redux';
+import Spinner from '../../components/Spinner/Spinner';
 
 export enum SORT_BY {
 	ASC = 'ASC',
@@ -61,8 +63,13 @@ export enum SORT_BY {
 }
 
 const FileListing: React.FC = (props: any) => {
-	const { showMoreDocs, showMoreSearchDocs, searchData, documentListData } =
-		props;
+	const {
+		showMoreDocs,
+		showMoreSearchDocs,
+		searchData,
+		documentListData,
+		isGlobalLoading
+	} = props;
 	const dispatch = useAppDispatch();
 
 	const [docClicked, setDocClicked] = useState(0);
@@ -73,15 +80,17 @@ const FileListing: React.FC = (props: any) => {
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
 	const [showMoreButton, setShowMoreButton] = useState(
-		searchString ? showMoreSearchDocs : showMoreDocs
+		searchString.length > 2 ? showMoreSearchDocs : showMoreDocs
 	);
 	const [documentList, setDocumentList] = useState(
-		searchString ? searchData : documentListData
+		searchString.length > 2 ? searchData : documentListData
 	);
 	useEffect(() => {
-		setDocumentList(searchString ? searchData : documentListData);
-		setShowMoreButton(searchString ? showMoreSearchDocs : showMoreDocs);
-	}, [documentListData, searchData]);
+		setDocumentList(searchString.length > 2 ? searchData : documentListData);
+		setShowMoreButton(
+			searchString.length > 2 ? showMoreSearchDocs : showMoreDocs
+		);
+	}, [documentListData, searchData, searchString.length]);
 
 	useEffect(() => {
 		const data = {
@@ -289,62 +298,74 @@ const FileListing: React.FC = (props: any) => {
 								)}
 
 								{/*---------------- File Listing ------- */}
-								<p className="ml1" style={{ color: '#C5C9CE' }}>
-									Personal Documents
-								</p>
-								<Row>
-									{documentList.map((document: any, index: number) => {
-										return (
-											<div
-												key={index}
-												style={{ width: '160px' }}
-												onClick={() =>
-													handleDocClick(index, document?.isFolder)
-												}
-												className={`${
-													docClicked !== index ? 'hover-blue' : ''
-												}`}
-											>
-												{/* if document object is folder */}
-												{document?.isFolder ? (
-													<DefaultPdf
-														width="138px"
-														height="158px"
-														stroke={docClicked === index ? '#25CA69' : 'red'}
-														color={docClicked === index ? '#25CA69' : '#1379FF'}
-													/>
-												) : (
-													<DefaultPdf
-														width="138px"
-														height="158px"
-														stroke={
-															docClicked === index ? '#25CA69' : '#ECF2F7'
+								{isGlobalLoading ? (
+									<Spinner />
+								) : (
+									<>
+										<p className="ml1" style={{ color: '#C5C9CE' }}>
+											Personal Documents
+										</p>
+										<Row>
+											{documentList.map((document: any, index: number) => {
+												return (
+													<div
+														key={index}
+														style={{ width: '160px' }}
+														onClick={() =>
+															handleDocClick(index, document?.isFolder)
 														}
-														color={docClicked === index ? '#25CA69' : '#1379FF'}
-													/>
-												)}
-												<Tooltip
-													placement="top"
-													title={`${document.name || '---'}`}
-												>
-													<p
-														style={{
-															width: '80%',
-															WebkitLineClamp: 2,
-															color:
-																docClicked === index
-																	? '#25CA69'
-																	: 'currentColor'
-														}}
-														className="truncate pl2 font-12"
+														className={`${
+															docClicked !== index ? 'hover-blue' : ''
+														}`}
 													>
-														{document.name || '---'}
-													</p>
-												</Tooltip>
-											</div>
-										);
-									})}
-								</Row>
+														{/* if document object is folder */}
+														{document?.isFolder ? (
+															<DefaultPdf
+																width="138px"
+																height="158px"
+																stroke={
+																	docClicked === index ? '#25CA69' : 'red'
+																}
+																color={
+																	docClicked === index ? '#25CA69' : '#1379FF'
+																}
+															/>
+														) : (
+															<DefaultPdf
+																width="138px"
+																height="158px"
+																stroke={
+																	docClicked === index ? '#25CA69' : '#ECF2F7'
+																}
+																color={
+																	docClicked === index ? '#25CA69' : '#1379FF'
+																}
+															/>
+														)}
+														<Tooltip
+															placement="top"
+															title={`${document.name || '---'}`}
+														>
+															<p
+																style={{
+																	width: '80%',
+																	WebkitLineClamp: 2,
+																	color:
+																		docClicked === index
+																			? '#25CA69'
+																			: 'currentColor'
+																}}
+																className="truncate pl2 font-12"
+															>
+																{document.name || '---'}
+															</p>
+														</Tooltip>
+													</div>
+												);
+											})}
+										</Row>
+									</>
+								)}
 							</>
 						)}
 
@@ -405,6 +426,7 @@ const mapStateToProps = (state: any) => ({
 	showMoreDocs: state.documents.showMoreDocs,
 	showMoreSearchDocs: state.documents.showMoreSearchDocs,
 	searchData: state.documents.searchDocumentList,
-	documentListData: state.documents.documentList
+	documentListData: state.documents.documentList,
+	isGlobalLoading: state.global.globalLoading
 });
 export default connect(mapStateToProps)(FileListing);
