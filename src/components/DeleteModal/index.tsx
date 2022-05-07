@@ -9,7 +9,6 @@ interface IDeleteModal {
 }
 const DeleteModal: React.FC<IDeleteModal> = (props) => {
 	const { isDelete, setIsDelete } = props;
-	console.log('🚀 ~ file: index.tsx ~ line 9 ~ isDelete', isDelete);
 
 	return (
 		<MainContainer style={{ display: isDelete ? 'block' : 'none' }}>

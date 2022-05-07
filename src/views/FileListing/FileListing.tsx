@@ -372,10 +372,7 @@ const FileListing = () => {
 						</Row>
 
 						<OwnerInfoContainer>
-							<ShareLinks
-								isShareable={documentList[docClicked]?.isShareable}
-								DocId={documentList[docClicked]?.uuid}
-							/>
+							<ShareLinks />
 						</OwnerInfoContainer>
 
 						<Row className="flex justify-center align-center py1">

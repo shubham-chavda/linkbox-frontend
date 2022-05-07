@@ -60,7 +60,6 @@ const Home = (props: any) => {
 	const dispatch = useAppDispatch();
 	const { id: documentID } = useParams();
 	const { isLoading } = props;
-	console.log('🚀 ~ file: Home.tsx ~ line 63 ~ Home ~ isLoading', isLoading);
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -98,18 +97,9 @@ const Home = (props: any) => {
 	];
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
-		console.log(
-			'🚀 ~ file: Home.tsx ~ line 96 ~ useEffect ~ getDocumentInfo',
-			getDocumentInfo
-		);
 	}, []);
 	useEffect(() => {
 		if (selectedDocumentInfo) {
-			console.log(
-				'🚀 ~ file: Home.tsx ~ line 108 ~ useEffect ~ selectedDocumentInfo',
-				selectedDocumentInfo
-			);
-
 			loadPdfDocumentByPath(
 				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
 					'upload/doc/',
@@ -118,9 +108,6 @@ const Home = (props: any) => {
 			);
 		}
 		// else {
-		// 	console.log(
-		// 		'🚀------------------- ~ file: Home.tsx ~ line 130 ~ useEffect ~ else'
-		// 	);
 		// 	loadPdfDocumentByPath(
 		// 		'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
 		// 	);

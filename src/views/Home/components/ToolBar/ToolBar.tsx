@@ -105,10 +105,6 @@ const ToolBar = ({
 		changeLayOutMode(isSingleLayout);
 	};
 	const handleSearchChange = (e: any) => {
-		console.log(
-			'🚀 ~ file: ToolBar.tsx ~ line 114 ~ handleSearchChange ~ e',
-			e
-		);
 		onChangeSearchInput(e.target.value);
 		setSearchValue(e.target.value);
 		setIsPopoverOpen(true);

@@ -11,10 +11,6 @@ const UploadImage = () => {
 	const [fileList, setFileList] = useState([]);
 	// here we need to set status OK because we are only storing file.
 	const customeSetStatus = ({ file, onSuccess }: any) => {
-		console.log(
-			'🚀 ~ file: index.tsx ~ line 32 ~ customeSetStatus ~ file',
-			file
-		);
 		setTimeout(() => {
 			onSuccess('ok');
 		}, 0);
