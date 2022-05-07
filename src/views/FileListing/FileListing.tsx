@@ -74,7 +74,6 @@ const FileListing = () => {
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [searchString, setSearchString] = useState('');
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
-	const [currentDocument, setCurrentDocument] = useState({});
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
 
@@ -88,27 +87,14 @@ const FileListing = () => {
 	}, [assendingOrder, pageNo, searchString.length > 3]);
 
 	useEffect(() => {
-		setCurrentDocument(documentList[0]);
+		// setCurrentDocument(documentList[0])
 		if (documentList[0]) {
 			dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
 	}, [documentList]);
-
-	// const handleDocClick = (index: number, isFolder: boolean) => {
-	// 	dispatch(setSelectedDocuments(documentList[index]));
-	// 	// setCurrentDocument(documentList[index]);
-	// 	if (docClicked !== index) {
-	// 		setDocClicked(index);
-	// 	} else {
-	// 		if (isFolder) {
-	// 			console.log(
-	// 				'🚀 ~ file: FileListing.tsx ~ line 90 ~ handleDocClick ~ isFolder',
-	// 				isFolder
-	// 			);
-	// 		} else history.navigate?.(`/document-detail/${documentList[index].uuid}`);
-	// 		// history.navigate?.('/documents');
-	// 	}
-	// };
+	const getDocInfo = () => {
+		dispatch(setSelectedDocuments(documentList[0]));
+	};
 	const handleDocClick = (index: number, isFolder: boolean) => {
 		dispatch(setSelectedDocuments(documentList[index]));
 		if (docClicked !== index) {
@@ -207,7 +193,7 @@ const FileListing = () => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-										// onClick={() => setIsUploadModalOpen(false)}
+											// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -309,8 +295,9 @@ const FileListing = () => {
 												onClick={() =>
 													handleDocClick(index, document?.isFolder)
 												}
-												className={`${docClicked !== index ? 'hover-blue' : ''
-													}`}
+												className={`${
+													docClicked !== index ? 'hover-blue' : ''
+												}`}
 											>
 												{/* if document object is folder */}
 												{document?.isFolder ? (
@@ -395,7 +382,7 @@ const FileListing = () => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
