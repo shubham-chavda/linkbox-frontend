@@ -370,7 +370,7 @@ const FileListing: React.FC = (props: any) => {
 						)}
 
 						{/*---------------------- more Button ----------------*/}
-						{showMoreButton && (
+						{showMoreButton && !isGlobalLoading && (
 							<div className="flex justify-center mb2">
 								<Button
 									shape="round"
