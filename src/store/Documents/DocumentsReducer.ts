@@ -27,11 +27,13 @@ export const DocumentsReducer = createSlice({
     uploadDocument(state, action) { },
     getDocumentList(state, action) { },
     setDocumentList(state, action) {
+      const { data, meta } = action.payload;
       state.documentList = _.uniqBy([
-        ...action.payload,
+        ...data,
         ...state.documentList,
-      ], 'uuid')
-      state.showMoreDocs = action.payload.hasNextPage || false;
+      ], 'uuid');
+      console.log("action.payload.hasNextPage ----->", meta.hasNextPage);
+      state.showMoreDocs = meta.hasNextPage || false;
     },
     getDocumentInfo(state, action) {
     },
@@ -39,7 +41,7 @@ export const DocumentsReducer = createSlice({
       state.selectedDocumentInfo = action.payload;
     },
     setSelectedDocuments(state, action) {
-     state.selectedDocuments = [action.payload];
+      state.selectedDocuments = [action.payload];
     },
     updateDocumentInfo(state, action) { }
   }

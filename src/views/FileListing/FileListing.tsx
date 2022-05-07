@@ -55,8 +55,6 @@ import {
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 
-const { DOC_URL } = process.env;
-
 export enum SORT_BY {
 	ASC = 'ASC',
 	DESC = 'DESC'
@@ -89,7 +87,10 @@ const FileListing = () => {
 	}, [assendingOrder, pageNo, searchString.length > 3]);
 
 	useEffect(() => {
-		// getDocInfo();
+		// setCurrentDocument(documentList[0])
+		if (documentList[0]) {
+			dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
+		}
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));
@@ -274,7 +275,10 @@ const FileListing = () => {
 							<>
 								{/*---------------- Modal for Upload File ------- */}
 								{isUploadModalOpen && (
-									<UploadFileModal isOpen={isUploadModalOpen} />
+									<UploadFileModal
+										isOpen={isUploadModalOpen}
+										closeModal={() => setIsUploadModalOpen(false)}
+									/>
 								)}
 
 								{/*---------------- File Listing ------- */}

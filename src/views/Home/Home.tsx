@@ -147,11 +147,16 @@ const Home = (props: any) => {
 
 			const client = new CollabClient({
 				instance,
-				url: 'https://0e52-103-250-136-184.ngrok.io',
-				subscriptionUrl: 'ws://0e52-103-250-136-184.ngrok.io'
+				url: 'https://c446-103-250-136-208.ngrok.io',
+				subscriptionUrl: 'ws://c446-103-250-136-208.ngrok.io/subscribe',
 			});
 
-			const user = await client.loginAnonymously('Guest');
+			console.log("client --------->", client);
+
+			const token = window.localStorage.getItem('token');
+
+			const responseLogin = await client.loginWithToken(token || "");
+			console.log("responseLogin ------->", responseLogin);
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
@@ -159,30 +164,6 @@ const Home = (props: any) => {
 					console.log('annotation changed', updatedAnnotation);
 				});
 			});
-
-			// const documents = await user.getAllDocuments();
-
-			// // Load a document by default
-			// if (documents.length > 0) {
-			// 	const document = documents[0]
-			// 	await document.view(`http://mywebsite.com/documents/${document.id}.pdf`)
-			// }
-
-			// // Create a document from an HTML file input
-			// const filePickerInput = document.getElementById('file-picker');
-			// if (filePickerInput) {
-			// 	filePickerInput.onchange = async (e: any) => {
-			// 		const file = e.target.files[0];
-
-			// 		const document = await user.createDocument({
-			// 			document: file,
-			// 			isPublic: true,
-			// 			name: file.name
-			// 		});
-
-			// 		await document.view(`http://mywebsite.com/documents/${document.id}.pdf`);
-			// 	}
-			// }
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
@@ -333,7 +314,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
