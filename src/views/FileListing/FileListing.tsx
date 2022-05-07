@@ -147,7 +147,7 @@ const FileListing = () => {
 							<FilterIcon alt="filter" className="icon16" />
 						</HeaderFileTab>
 
-						<div className="fluid flex justify-end">
+						<div className="fluid flex justify-end items-center">
 							<Button
 								className="color-light-gray border-light-gray mr1"
 								shape="round"
@@ -202,6 +202,7 @@ const FileListing = () => {
 								{/* </Upload> */}
 							</div>
 							<div
+								className="flex items-center"
 								style={{
 									borderLeft: '1px solid #e3ecf3'
 								}}
@@ -237,7 +238,7 @@ const FileListing = () => {
 							>
 								<BookmarkIcon alt="bookmark" className="icon22" />
 							</Col>
-							<LeftIconGroup span={7}>
+							<LeftIconGroup span={7} className="flex items-center">
 								<DownloadButton alt="download" className="mr1 icon22" />
 								<PrintIcon alt="Print" className="icon22" />
 							</LeftIconGroup>
