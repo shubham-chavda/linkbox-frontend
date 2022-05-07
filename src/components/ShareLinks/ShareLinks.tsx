@@ -55,7 +55,7 @@ const ShareLinks = (props: IShareLinks) => {
 					onClick={() => copyLink()}
 					aria-disabled={!isShareable}
 				>
-					<Col className="p1">
+					<Col className="p1 flex items-center">
 						<ShareLinkIcon alt="share" className="icon22" />
 						<span className="p1 font-13">Get Sharable link</span>
 					</Col>

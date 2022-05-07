@@ -68,7 +68,7 @@ const Home = (props: any) => {
 	const selectedDocumentInfo = useAppSelector(
 		(RootState) => RootState.documents.selectedDocumentInfo
 	);
-	const [rightSiderClicks, setRightSiderClicks] = useState('comment');
+	const [rightSiderClicks, setRightSiderClicks] = useState('info');
 	const viewer: any = useRef(null);
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
@@ -150,17 +150,30 @@ const Home = (props: any) => {
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
 			const client = new CollabClient({
 				instance,
+<<<<<<< HEAD
+				url: 'https://c446-103-250-136-208.ngrok.io',
+				subscriptionUrl: 'ws://c446-103-250-136-208.ngrok.io/subscribe'
+			});
+
+			console.log('client --------->', client);
+
+=======
 				// logLevel: CollabClient.LogLevels.DEBUG,
 				filterLogsByTag: CollabClient.LogTags.AUTH,
 				url: 'https://lbdocapi.dev.brainvire.net/collab',
 				logLevel: CollabClient.LogLevels.DEBUG,
 				subscriptionUrl: 'wss://lbdocapi.dev.brainvire.net/collab/subscribe',
 			});
+>>>>>>> 1f97a2d15127740f81d787fa0d33fb75dd1c87e2
 			const token = window.localStorage.getItem('token');
 			// console.log("client --------->", client);
 
 			console.log("token ------>", token);
 
+<<<<<<< HEAD
+			const responseLogin = await client.loginWithToken(token || '');
+			console.log('responseLogin ------->', responseLogin);
+=======
 			const responseLogin = await client.loginWithToken(token || "");
 			console.log("responseLogin ------->", responseLogin);
 			if (!responseLogin) {
@@ -181,6 +194,7 @@ const Home = (props: any) => {
 			// 	isPublic: true,
 			// 	name: 'my_document.pdf'
 			// })
+>>>>>>> 1f97a2d15127740f81d787fa0d33fb75dd1c87e2
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
@@ -338,7 +352,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -479,7 +493,7 @@ const Home = (props: any) => {
 										{!collapsed && <OwnerInfo fileListing={false} />}
 									</OwnerInfoContainer>
 								</Row>
-								<Row className="justify-start">
+								<Row className="justify-start height-full">
 									{!collapsed && <MemberList />}
 								</Row>
 							</>

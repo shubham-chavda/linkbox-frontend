@@ -1,4 +1,4 @@
-import { Avatar, Col, Popover, Row } from "antd";
+import { Avatar, Col, Row } from "antd";
 import styled from "styled-components";
 
 

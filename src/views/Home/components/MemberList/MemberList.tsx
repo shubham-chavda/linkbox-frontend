@@ -25,7 +25,7 @@ const MemberList: React.FC = () => {
 	);
 	return (
 		<>
-			<MainContainer>
+			<MainContainer className="height-full">
 				<Row>
 					<MemberCount>28 members</MemberCount>
 				</Row>
