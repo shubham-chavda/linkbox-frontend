@@ -11,13 +11,7 @@ const { Paragraph } = Typography;
 
 interface IOwnerInfo {
 	fileListing: boolean;
-	ownerData?: {
-		key?: string;
-		name?: string;
-		fileName?: string;
-		description?: string;
-		uuid: string;
-	};
+	ownerData?: any;
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing, ownerData } = props;
@@ -47,13 +41,31 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	}, [isEdit]);
 
 	const updateDocument = () => {
-		if (!isEdit && titleText && descriptionText) {
+		console.log(
+			'---------------------',
+			!isEdit &&
+				(titleText !== selectedDocumentInfo?.name ||
+					descriptionText !== selectedDocumentInfo?.desc)
+		);
+		console.log(
+			'---------------------',
+			!isEdit,
+			titleText,
+			selectedDocumentInfo,
+			descriptionText
+		);
+
+		if (
+			!isEdit &&
+			(titleText !== selectedDocumentInfo?.name ||
+				descriptionText !== selectedDocumentInfo?.desc)
+		) {
 			const payload = {
 				name: titleText,
 				desc: descriptionText,
 				isShareable: true,
-				sendNotification: true,
-				uuid: selectedDocumentInfo?.uuid
+				sendNotification: true
+				// uuid: selectedDocumentInfo?.uuid
 			};
 			dispatch(updateDocumentInfo(payload));
 		}
@@ -100,7 +112,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						icon: null
 					}}
 				>
-					{titleText || '-----'}
+					{titleText || ownerData?.name || '-----'}
 				</Paragraph>
 			</Row>
 			<Row>
@@ -112,7 +124,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						onChange: setDescriptionText
 					}}
 				>
-					{descriptionText || '-----'}
+					{descriptionText || ownerData?.desc || '-----'}
 				</Paragraph>
 			</Row>
 		</>
