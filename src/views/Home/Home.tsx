@@ -150,51 +150,37 @@ const Home = (props: any) => {
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
 			const client = new CollabClient({
 				instance,
-<<<<<<< HEAD
-				url: 'https://c446-103-250-136-208.ngrok.io',
-				subscriptionUrl: 'ws://c446-103-250-136-208.ngrok.io/subscribe'
-			});
-
-			console.log('client --------->', client);
-
-=======
 				// logLevel: CollabClient.LogLevels.DEBUG,
 				filterLogsByTag: CollabClient.LogTags.AUTH,
 				url: 'https://lbdocapi.dev.brainvire.net/collab',
 				logLevel: CollabClient.LogLevels.DEBUG,
-				subscriptionUrl: 'wss://lbdocapi.dev.brainvire.net/collab/subscribe',
+				subscriptionUrl: 'wss://lbdocapi.dev.brainvire.net/collab/subscribe'
 			});
->>>>>>> 1f97a2d15127740f81d787fa0d33fb75dd1c87e2
 			const token = window.localStorage.getItem('token');
 			// console.log("client --------->", client);
 
-			console.log("token ------>", token);
+			console.log('token ------>', token);
 
-<<<<<<< HEAD
 			const responseLogin = await client.loginWithToken(token || '');
 			console.log('responseLogin ------->', responseLogin);
-=======
-			const responseLogin = await client.loginWithToken(token || "");
-			console.log("responseLogin ------->", responseLogin);
 			if (!responseLogin) {
 				notification.error({
-					message: "Login is failed Please refresh page...."
-				})
+					message: 'Login is failed Please refresh page....'
+				});
 				return false;
 			}
 
 			await client.setCustomHeaders({
-				authorization: token || "",
+				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument("12");
+			const doc = await responseLogin.getDocument('12');
 			doc.view(documentPath);
-			console.log("doc --------->", doc);
+			console.log('doc --------->', doc);
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
 			// 	isPublic: true,
 			// 	name: 'my_document.pdf'
 			// })
->>>>>>> 1f97a2d15127740f81d787fa0d33fb75dd1c87e2
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
