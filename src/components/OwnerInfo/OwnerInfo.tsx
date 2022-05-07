@@ -63,8 +63,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		}
 	};
 
-	console.log('titleText -------->', titleText);
-
 	return (
 		<>
 			<Row className="flex items-center ">
