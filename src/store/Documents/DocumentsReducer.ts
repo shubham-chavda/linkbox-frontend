@@ -7,6 +7,7 @@ import _ from "lodash";
 interface IGlobalState {
   documentList: any[];
   showMoreDocs: boolean;
+  showMoreSearchDocs: boolean;
   selectedDocuments: any[];
   selectedDocumentInfo: any;
   searchDocumentList: any[];
@@ -18,7 +19,9 @@ export const initialState: Immutable<IGlobalState> = {
   showMoreDocs: false,
   selectedDocuments: [],
   selectedDocumentInfo: null,
-  searchDocumentList: []
+  searchDocumentList: [],
+  showMoreSearchDocs: false,
+
 };
 
 export const DocumentsReducer = createSlice({
@@ -34,8 +37,14 @@ export const DocumentsReducer = createSlice({
         ...data,
         ...state.documentList,
       ], 'uuid');
-      console.log("action.payload.hasNextPage ----->", meta.hasNextPage);
       state.showMoreDocs = meta.hasNextPage || false;
+    },
+    setSearchDocumentList(state,action){
+      const { data, meta } = action.payload;
+      state.searchDocumentList = _.uniqBy([
+        ...data,
+      ], 'uuid');
+      state.showMoreSearchDocs = meta.hasNextPage || false;
     },
     getDocumentInfo(state, action) {
     },
@@ -57,6 +66,7 @@ export const {
   getDocumentInfo,
   updateDocumentInfo,
   setSelectedDocuments,
+  setSearchDocumentList,
 } = DocumentsReducer.actions;
 
 export default DocumentsReducer.reducer

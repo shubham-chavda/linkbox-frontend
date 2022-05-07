@@ -105,10 +105,6 @@ const ToolBar = ({
 		changeLayOutMode(isSingleLayout);
 	};
 	const handleSearchChange = (e: any) => {
-		console.log(
-			'🚀 ~ file: ToolBar.tsx ~ line 114 ~ handleSearchChange ~ e',
-			e
-		);
 		onChangeSearchInput(e.target.value);
 		setSearchValue(e.target.value);
 		setIsPopoverOpen(true);
@@ -152,25 +148,6 @@ const ToolBar = ({
 			{/* Search Button */}
 
 			<Col>
-				{/* <SearchButtonDropDown
-					showSearch
-					value={searchValue}
-					showArrow={false}
-					bordered={false}
-					style={{ width: 241 }}
-					placeholder="Search"
-					filterOption={false}
-					onSearch={onChangeSearchInput}
-					onChange={(e) => handleSearchChange(e)}
-					dropdownMatchSelectWidth={false}
-					// prefix={<SearchOutlined />}
-					dropdownStyle={{
-						borderRadius: '12px',
-						width: '400px'
-					}}
-				>
-					{options()}
-				</SearchButtonDropDown> */}
 				<Popover
 					isOpen={isPopoverOpen}
 					containerStyle={{ top: '14%', left: '5%' }}

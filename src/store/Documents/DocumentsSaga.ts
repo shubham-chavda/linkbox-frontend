@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
-import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
+import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, setSearchDocumentList, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
 	payload: { pageNo: number; sortBy: string, q?: string };
@@ -16,16 +16,21 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		let response: any = "";
 		if (payload.q) {
 			response = yield call(apis.documents.getDocumentsListBySearch, payload);
+            console.log("🚀🚀🚀🚀 SEARCH ~~ response", response)
+			if (response?.data?.data) 
+				yield put(setSearchDocumentList(response?.data));
 		} else {
 			response = yield call(apis.documents.getDocumentsList, payload);
+			console.log("🚀🚀🚀🚀 NO SEARCH ~~ response", response)
+			if (response?.data?.data) 
+				yield put(setDocumentList(response?.data));
 		}
 		console.log("response ------->", response)
-		if (response?.data?.data) {
-			yield put(setDocumentList(response?.data));
+		
 			// notification.success({
 			// 	message: 'Documents list successsfully received',
 			// });
-		}
+
 	} catch (error) {
 		console.log("🚀 ~ file: globalSaga.ts ~ line 48 ~ function*LoginFunc ~ error", error)
 		// notification.error({
