@@ -150,11 +150,10 @@ const Home = (props: any) => {
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
 			const client = new CollabClient({
 				instance,
-				// logLevel: CollabClient.LogLevels.DEBUG,
-				filterLogsByTag: CollabClient.LogTags.AUTH,
-				url: 'https://lbdocapi.dev.brainvire.net/collab',
 				logLevel: CollabClient.LogLevels.DEBUG,
-				subscriptionUrl: 'wss://lbdocapi.dev.brainvire.net/collab/subscribe'
+				filterLogsByTag: CollabClient.LogTags.AUTH,
+				url: 'https://lbnotifapi.dev.brainvire.net',
+				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
 			});
 			const token = window.localStorage.getItem('token');
 			// console.log("client --------->", client);
