@@ -148,8 +148,10 @@ const Home = (props: any) => {
 
 			console.log('token ------>', token);
 
-			const responseLogin = await client.loginWithToken(token || '');
-			console.log('responseLogin ------->', responseLogin);
+			const responseLogin = await client.loginWithToken(token || "");
+			console.log("responseLogin ------->", responseLogin);
+			const docContext = await client.setContext({ id: responseLogin.id });
+			console.log("doc --------->", docContext);
 			if (!responseLogin) {
 				notification.error({
 					message: 'Login is failed Please refresh page....'
@@ -160,9 +162,10 @@ const Home = (props: any) => {
 			await client.setCustomHeaders({
 				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument('12');
+			const doc = await responseLogin.getDocument("12");
+			console.log("doc ------->", doc);
 			doc.view(documentPath);
-			console.log('doc --------->', doc);
+			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
 			// 	isPublic: true,
@@ -325,7 +328,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation

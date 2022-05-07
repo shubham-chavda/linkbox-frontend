@@ -3,6 +3,7 @@ import { add } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { initPanel } from '../../../../types/Home.interface';
 import { Tab } from './FileTabBar.style';
+import history from '../../../../history';
 
 const { TabPane } = Tabs;
 interface IFileTabBar {
@@ -73,6 +74,10 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 
 		setPanes(newPanes);
 		onChange(newActiveKey);
+		if (!newPanes?.length) {
+			history.navigate?.('/documents');
+		}
+
 	};
 
 	return (
