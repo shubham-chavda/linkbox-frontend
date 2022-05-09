@@ -132,6 +132,7 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -367,6 +368,11 @@ const Home = (props: any) => {
 			ambientString: true // return ambient string as part of the result
 		};
 
+		// if (!string) {
+		// 	documentViewer.clearSearchResults();
+		// 	return false;
+		// }
+		console.log("searchPattern ------>", searchPattern);
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
