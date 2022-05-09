@@ -132,9 +132,6 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
-			// https://lbdocapi.dev.brainvire.net/collab
-
-			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
 			const client = new CollabClient({
 				instance,
 				logLevel: CollabClient.LogLevels.DEBUG,
@@ -161,18 +158,12 @@ const Home = (props: any) => {
 			await client.setCustomHeaders({
 				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument(selectedDocumentInfo.uuid);
+			const doc = await responseLogin.getDocument(documentID || "");
 			console.log('doc ------->', doc);
 			doc.view(documentPath);
 
 			console.log('isAuthor', doc.isAuthor)
 			console.log('isMember', doc.isMember())
-			// const docContext = await client.setContext({ id: responseLogin.id });
-			// const document = await responseLogin.createDocument({
-			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
-			// 	isPublic: true,
-			// 	name: 'my_document.pdf'
-			// })
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
