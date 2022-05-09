@@ -117,7 +117,7 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: 'https://lbweb.dev.brainvire.net/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
@@ -194,12 +194,12 @@ const Home = (props: any) => {
 			await client.setCustomHeaders({
 				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument(documentID || "");
+			const doc = await responseLogin.getDocument(documentID || '');
 			console.log('doc ------->', doc);
 			doc.view(documentPath);
 
-			console.log('isAuthor', doc.isAuthor)
-			console.log('isMember', doc.isMember())
+			console.log('isAuthor', doc.isAuthor);
+			console.log('isMember', doc.isMember());
 
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
@@ -210,8 +210,6 @@ const Home = (props: any) => {
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
-
-
 		});
 	};
 
@@ -324,11 +322,12 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			documentInstance.Core.ContentEdit.Types.TEXT
+				documentInstance.Core.ContentEdit.Types.TEXT
 		) {
-			const content = await documentInstance.Core.ContentEdit.getDocumentContent(
-				selectedAnnotation
-			);
+			const content =
+				await documentInstance.Core.ContentEdit.getDocumentContent(
+					selectedAnnotation
+				);
 			setEditBoxAnnotation(selectedAnnotation);
 			setEditBoxCurrentValue(content);
 		} else {
@@ -368,7 +367,7 @@ const Home = (props: any) => {
 		// 	documentViewer.clearSearchResults();
 		// 	return false;
 		// }
-		console.log("searchPattern ------>", searchPattern);
+		console.log('searchPattern ------>', searchPattern);
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
