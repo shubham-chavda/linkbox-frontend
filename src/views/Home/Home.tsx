@@ -161,9 +161,12 @@ const Home = (props: any) => {
 			await client.setCustomHeaders({
 				authorization: token || ''
 			});
-			const doc = await responseLogin.getDocument('12');
+			const doc = await responseLogin.getDocument(selectedDocumentInfo.uuid);
 			console.log('doc ------->', doc);
 			doc.view(documentPath);
+
+			console.log('isAuthor', doc.isAuthor)
+			console.log('isMember', doc.isMember())
 			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
@@ -327,7 +330,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
