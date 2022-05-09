@@ -1,6 +1,7 @@
-import { Button, notification, Upload } from 'antd';
-import Dragger from 'antd/lib/upload/Dragger';
 import React from 'react';
+import Dragger from 'antd/lib/upload/Dragger';
+import { Button, notification, Upload } from 'antd';
+
 import { UploadIcon } from '../../../../assets';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { uploadDocument } from '../../../../store/Documents/DocumentsReducer';
