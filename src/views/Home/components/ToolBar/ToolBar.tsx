@@ -22,7 +22,7 @@ import {
 	PageIcon,
 	ShareIcon
 } from '../../../../assets';
-import { Col } from 'antd';
+import { Col, Tooltip } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
 import { Popover } from 'react-tiny-popover';
@@ -136,7 +136,9 @@ const ToolBar = ({
 					onClick={() => jumpToSearchResult(-1)}
 				/>
 				<>
-					<span style={{ paddingLeft: '7px' }}>{currentSearchResultOn}</span>
+					<span style={{ paddingLeft: '7px' }}>
+						{searchResults.length ? currentSearchResultOn + 1 : currentSearchResultOn}
+					</span>
 					<span>of</span>
 					<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
 				</>
@@ -239,22 +241,26 @@ const ToolBar = ({
 			</Col>
 
 			{isHandTool ?
-				<HandMoveIcon
-					onClick={() => {
-						setIsHandTool(!isHandTool)
-						createRectangle()
-					}}
-					alt="move"
-					className="icon22"
-				/> :
-				<ShareIcon
-					onClick={() => {
-						setIsHandTool(!isHandTool)
-						selectTool()
-					}}
-					alt="select"
-					className="icon22"
-				/>
+				<Tooltip placement="bottom" title={`HandTool`}>
+					<HandMoveIcon
+						onClick={() => {
+							setIsHandTool(!isHandTool)
+							createRectangle()
+						}}
+						alt="move"
+						className="icon22"
+					/>
+				</Tooltip> :
+				<Tooltip placement="bottom" title={`SelectTool`}>
+					<ShareIcon
+						onClick={() => {
+							setIsHandTool(!isHandTool)
+							selectTool()
+						}}
+						alt="select"
+						className="icon22"
+					/>
+				</Tooltip>
 			}
 			{/* <VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />

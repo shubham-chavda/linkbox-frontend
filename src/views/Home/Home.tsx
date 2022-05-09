@@ -146,6 +146,28 @@ const Home = (props: any) => {
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
+			instance.UI.textPopup.update([
+				{
+					type: 'actionButton',
+					img: '/Icons/copyIcon.svg',
+					onClick: () => instance.UI.Feature.Copy
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/chatIcon.svg',
+					onClick: () => instance.UI.Feature.NotesPanel
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/bookmarkIcon.svg',
+					onClick: () => instance.Core.Bookmark
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/userStarIcon.svg'
+				}
+			]);
+
 			const client = new CollabClient({
 				instance,
 				logLevel: CollabClient.LogLevels.DEBUG,
@@ -189,26 +211,7 @@ const Home = (props: any) => {
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
 
-			// instance.UI.textPopup.update([
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/copyIcon.svg',
-			// 		onClick: instance.UI.Feature.Copy
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/chatIcon.svg',
-			// 		onClick: instance.UI.Feature.NotesPanel
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/bookmarkIcon.svg'
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/userStarIcon.svg'
-			// 	}
-			// ]);
+
 		});
 	};
 
