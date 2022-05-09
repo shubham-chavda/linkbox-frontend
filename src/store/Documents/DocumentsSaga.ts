@@ -85,7 +85,7 @@ function* GetDocumentInfoFunc(action: GetDocumentInfoType): Generator<StrictEffe
 	const { payload } = action;
 	try {
 		const apis = init();
-		yield put(toggleLoader(true));
+		yield put(toggleDocInfoLoader(true));
 		const response = yield call(apis.documents.getDocumentInfo, payload.uuid);
 		console.log("response ------->", response)
 		if (response?.status === 200) {
@@ -99,9 +99,9 @@ function* GetDocumentInfoFunc(action: GetDocumentInfoType): Generator<StrictEffe
 			message: 'Something went wrong',
 			description: 'Please try again'
 		});
-		yield put(toggleLoader(false));
+		yield put(toggleDocInfoLoader(false));
 	} finally {
-		yield put(toggleLoader(false));
+		yield put(toggleDocInfoLoader(false));
 	}
 }
 

@@ -20,6 +20,7 @@ import {
 	ReplyButton
 } from './Comment.style';
 import AddComment from './components/AddComment';
+import nameInitials from 'name-initials';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
 import VoiceRecording from './components/VoiceRecording';
 
@@ -87,7 +88,13 @@ function Comments(props: any) {
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
 				<Row>
 					<Col span={3}>
-						<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
+						<Avatar
+							style={{ backgroundColor: '#25CA69' }}
+							// src="https://joeschmoe.io/api/v1/random"
+							alt="Heisenberg Martin"
+						>
+							{nameInitials('Heisenberg Martin')}
+						</Avatar>
 					</Col>
 					<Col span={20} className="flex">
 						<Row className=" fluid flex  items-center">
