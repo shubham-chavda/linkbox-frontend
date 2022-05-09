@@ -32,11 +32,6 @@ export const ListSubContainer = styled.div`
     width:100%;
 `;
 
-export const AvatarImg = styled(Avatar)`
-
-   border:1px solid gray;
-`;
-
 export const Name = styled(Col)`
     white-space:nowrap;
     overflow:hidden;

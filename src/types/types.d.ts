@@ -18,3 +18,4 @@ declare module "*.svg" {
 	export default content;
   }
   declare module 'react-mic';
+  declare module 'name-initials';

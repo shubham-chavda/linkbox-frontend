@@ -1,14 +1,15 @@
-import { Col, Popover, Row } from 'antd';
+import { Avatar, Col, Popover, Row } from 'antd';
 import React from 'react';
 import {
 	MemberCount,
 	MainContainer,
 	MemberListContainer,
 	ListSubContainer,
-	AvatarImg,
 	Name,
 	PopOverContent
 } from './MemberList.style';
+
+import nameInitials from 'name-initials';
 import { MoreOutlined } from '@ant-design/icons';
 
 const MemberList: React.FC = () => {
@@ -33,7 +34,15 @@ const MemberList: React.FC = () => {
 					{[...Array(20)].map((_, index) => (
 						<ListSubContainer key={index}>
 							<Col>
-								<AvatarImg src="https://joeschmoe.io/api/v1/random" size={45} />
+								<Avatar
+									style={{ backgroundColor: '#25CA69' }}
+									// src="https://joeschmoe.io/api/v1/random"
+									alt="John Doe"
+									size={45}
+								>
+									{nameInitials('John Doe')}
+								</Avatar>
+								{/* <AvatarImg src="https://joeschmoe.io/api/v1/random" size={45} /> */}
 							</Col>
 							<Name span={15} offset={1}>
 								John Doe {index + 1}

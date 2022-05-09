@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
-import { MemberCount } from './FileListing.style';
+import { MemberCount, SearchButtonStyled } from './FileListing.style';
 import {
 	CloudUploadOutlined,
 	FolderOutlined,
@@ -15,21 +15,10 @@ import {
 	DownloadButton,
 	DropDownIcon,
 	FilterDocIcon,
-	FilterIcon,
 	HomeIcon,
 	PrintIcon
 } from '../../assets';
-import {
-	Button,
-	Checkbox,
-	Col,
-	Input,
-	notification,
-	Row,
-	Spin,
-	Tooltip,
-	Upload
-} from 'antd';
+import { Button, Checkbox, Col, Row, Spin, Tooltip } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import ShareLinks from '../../components/ShareLinks/ShareLinks';
 import {
@@ -158,24 +147,24 @@ const FileListing: React.FC = (props: any) => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18} className="flex">
-						<HeaderFileTab span={6} className="flex items-center">
-							<Input
+						<Col span={6} className="flex items-center">
+							{/* <Input
 								bordered={false}
 								style={{ width: 250 }}
 								placeholder="Search"
 								prefix={<SearchOutlined />}
 								onChange={onChange}
+							/> */}
+							<SearchButtonStyled
+								className="font-12 ml1"
+								onChange={onChange}
+								placeholder="Search"
+								prefix={<SearchOutlined />}
 							/>
-							<FilterIcon alt="filter" className="icon16" />
-						</HeaderFileTab>
+							{/* <FilterIcon alt="filter" className="icon16" /> */}
+						</Col>
 
 						<div className="fluid flex justify-end items-center">
-							<Button
-								className="color-light-gray border-light-gray mr1"
-								shape="round"
-							>
-								Store
-							</Button>
 							<div
 								style={{
 									borderLeft: '1px solid #e3ecf3'
@@ -190,10 +179,10 @@ const FileListing: React.FC = (props: any) => {
 									<FolderOutlined
 										style={{ fontSize: '16px', color: 'black' }}
 									/>
-									Create Folder
-									{isCreateFolderModalOpen && (
+									<span style={{ color: '#C4CEDB' }}>Create Folder</span>
+									{/* {isCreateFolderModalOpen && (
 										<span className="ml1 font-13 color-sd2">X</span>
-									)}
+									)} */}
 								</Button>
 							</div>
 							<div
@@ -211,7 +200,8 @@ const FileListing: React.FC = (props: any) => {
 									<CloudUploadOutlined
 										style={{ fontSize: '16px', color: 'black' }}
 									/>
-									Upload document
+									<span style={{ color: '#C4CEDB' }}>Upload document</span>
+
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
@@ -235,7 +225,8 @@ const FileListing: React.FC = (props: any) => {
 									onClick={() => setAssendingOrder(!assendingOrder)}
 								>
 									<FilterDocIcon className="mr2" />
-									Recently added
+
+									<span style={{ color: '#C4CEDB' }}>Recently added</span>
 									<DropDownIcon
 										style={{
 											marginLeft: '20px',

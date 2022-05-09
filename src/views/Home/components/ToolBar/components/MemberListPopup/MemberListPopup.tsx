@@ -9,13 +9,14 @@ import {
 	MainContainer,
 	SubContainer
 } from './MemberListPopup.style';
+import nameInitials from 'name-initials';
 
 const MemberListPopup: React.FC = () => {
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 	const [isMorePopoverOpen, setIsMorePopoverOpen] = useState(false);
 	const MemberList = [...Array(20)].map((_, i) => ({
 		key: `johnDoe ${i}`,
-		name: `johnDoe ${i}`,
+		name: `john Doe ${i}`,
 		src: 'https://joeschmoe.io/api/v1/random'
 	}));
 
@@ -51,7 +52,14 @@ const MemberListPopup: React.FC = () => {
 								return (
 									<SubContainer key={data.key} className="flex items-center m1">
 										<Col span={21}>
-											<Avatar size={45} src={data.src} />
+											<Avatar
+												style={{ backgroundColor: '#25CA69' }}
+												// src="https://joeschmoe.io/api/v1/random"
+												alt={data.name}
+												size={45}
+											>
+												{nameInitials(data.name)}
+											</Avatar>
 											<span className="ml2" style={{ fontSize: '14px' }}>
 												{data.name}
 											</span>
@@ -74,7 +82,15 @@ const MemberListPopup: React.FC = () => {
 						maxStyle={{ backgroundColor: '#25CA69' }}
 					>
 						{MemberList.map((data) => {
-							return <Avatar key={data.key} src={data.src} />;
+							return (
+								<Avatar
+									key={data.key}
+									style={{ backgroundColor: '#25CA69' }}
+									alt={data.name}
+								>
+									{nameInitials(data.name)}
+								</Avatar>
+							);
 						})}
 					</Avatar.Group>
 				</div>
