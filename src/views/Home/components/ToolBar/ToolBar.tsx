@@ -19,7 +19,8 @@ import {
 	ChatIcon2,
 	CursorTextCopyMove,
 	HandMoveIcon,
-	PageIcon
+	PageIcon,
+	ShareIcon
 } from '../../../../assets';
 import { Col } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
@@ -62,6 +63,7 @@ const ToolBar = ({
 	const [searchValue, setSearchValue] = useState<string | undefined>(undefined);
 	const [currentSearchResultOn, setCurrentSearchResultOn] = useState<number>(0);
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+	const [isHandTool, setIsHandTool] = useState(true);
 
 	const IncDecContainerProps = {
 		padding: '7px'
@@ -107,7 +109,11 @@ const ToolBar = ({
 	const handleSearchChange = (e: any) => {
 		onChangeSearchInput(e.target.value);
 		setSearchValue(e.target.value);
+		// if (e.target.value) {
 		setIsPopoverOpen(true);
+		// } else {
+		// 	setIsPopoverOpen(false);
+		// }
 	};
 
 	const jumpToSearchResult = (jumpTo: number) => {
@@ -121,13 +127,13 @@ const ToolBar = ({
 	const options = () => {
 		return (
 			<PaginationContainer
-				className="box-shadow flex justify-between items-center"
 				style={{ background: '#fff' }}
+				className="box-shadow flex justify-between items-center"
 			>
 				<LeftOutlined
+					{...IncDecContainerProps}
 					disabled={pageCount === 1}
 					onClick={() => jumpToSearchResult(-1)}
-					{...IncDecContainerProps}
 				/>
 				<>
 					<span style={{ paddingLeft: '7px' }}>{currentSearchResultOn}</span>
@@ -232,11 +238,24 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			<HandMoveIcon
-				onClick={() => selectTool()}
-				alt="move"
-				className="icon22"
-			/>
+			{isHandTool ?
+				<HandMoveIcon
+					onClick={() => {
+						setIsHandTool(!isHandTool)
+						createRectangle()
+					}}
+					alt="move"
+					className="icon22"
+				/> :
+				<ShareIcon
+					onClick={() => {
+						setIsHandTool(!isHandTool)
+						selectTool()
+					}}
+					alt="select"
+					className="icon22"
+				/>
+			}
 			{/* <VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
