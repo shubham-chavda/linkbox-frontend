@@ -132,6 +132,20 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
+			const Core = instance.Core;
+			Core.enableFullPDF();
+			const documentViewer = new Core.DocumentViewer();
+			documentViewer.setScrollViewElement(scrollView.current!);
+			documentViewer.setViewerElement(viewer.current);
+			documentViewer.setOptions({ enableAnnotations: true });
+			setDocumentViewer(Core.documentViewer);
+			setDocumentInstance(instance);
+			setAnnotationManager(annotationManager);
+			setAnnotations(Annotations);
+			documentViewer.disableViewportRenderMode();
+			const LayoutMode = instance.UI.LayoutMode;
+			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+
 			const client = new CollabClient({
 				instance,
 				logLevel: CollabClient.LogLevels.DEBUG,
@@ -146,8 +160,8 @@ const Home = (props: any) => {
 
 			const responseLogin = await client.loginWithToken(token || '');
 			console.log('responseLogin ------->', responseLogin);
-			const docContext = await client.setContext({ id: responseLogin.id });
-			console.log('doc --------->', docContext);
+			// const docContext = await client.setContext({ id: responseLogin.id });
+			// console.log('doc --------->', docContext);
 			if (!responseLogin) {
 				notification.error({
 					message: 'Login is failed Please refresh page....'
@@ -174,20 +188,6 @@ const Home = (props: any) => {
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
-
-			const Core = instance.Core;
-			Core.enableFullPDF();
-			const documentViewer = new Core.DocumentViewer();
-			documentViewer.setScrollViewElement(scrollView.current!);
-			documentViewer.setViewerElement(viewer.current);
-			documentViewer.setOptions({ enableAnnotations: true });
-			setDocumentViewer(Core.documentViewer);
-			setDocumentInstance(instance);
-			setAnnotationManager(annotationManager);
-			setAnnotations(Annotations);
-			documentViewer.disableViewportRenderMode();
-			const LayoutMode = instance.UI.LayoutMode;
-			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
 			// instance.UI.textPopup.update([
 			// 	{
@@ -243,26 +243,26 @@ const Home = (props: any) => {
 
 	const startEditingContent = () => {
 		const contentEditTool = documentViewer.getTool(
-			window.Core.Tools.ToolNames.CONTENT_EDIT
+			documentInstance.Core.Tools.ToolNames.CONTENT_EDIT
 		);
 		documentViewer.setToolMode(contentEditTool);
 	};
 
 	const createRectangle = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.RECTANGLE)
 		);
 	};
 
 	const selectTool = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.EDIT)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.EDIT)
 		);
 	};
 
 	const createRedaction = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.REDACTION)
 		);
 	};
 
@@ -277,7 +277,7 @@ const Home = (props: any) => {
 	};
 
 	const applyEditModal = () => {
-		window.Core.ContentEdit.updateDocumentContent(
+		documentInstance.Core.ContentEdit.updateDocumentContent(
 			editBoxAnnotation,
 			editBoxCurrentValue
 		);
@@ -321,9 +321,9 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+			documentInstance.Core.ContentEdit.Types.TEXT
 		) {
-			const content = await window.Core.ContentEdit.getDocumentContent(
+			const content = await documentInstance.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
 			);
 			setEditBoxAnnotation(selectedAnnotation);
@@ -361,6 +361,11 @@ const Home = (props: any) => {
 			ambientString: true // return ambient string as part of the result
 		};
 
+		// if (!string) {
+		// 	documentViewer.clearSearchResults();
+		// 	return false;
+		// }
+		console.log("searchPattern ------>", searchPattern);
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
@@ -478,6 +483,7 @@ const Home = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
 	// isLoading: state.getIn(['global', 'globalLoading'])
 	isLoading: state.global.globalLoading
