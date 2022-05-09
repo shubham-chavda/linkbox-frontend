@@ -4,7 +4,7 @@ import style from './Spinner.module.less';
 const Spinner = () => {
 	return (
 		<div className={style.spinner}>
-			<Spin />
+			<Spin size="default" />
 		</div>
 	);
 };

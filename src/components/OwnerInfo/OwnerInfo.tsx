@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Col, Row } from 'antd';
+import { Avatar, Button, Col, Row, Spin } from 'antd';
 import { EditIcon } from '../../assets';
 import { DescriptionBox, InputBox, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -11,7 +11,7 @@ interface IOwnerInfo {
 	ownerData?: any;
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing, ownerData } = props;
+	const { fileListing } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -33,20 +33,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	}, [isEdit]);
 
 	const updateDocument = () => {
-		console.log(
-			'---------------------',
-			!isEdit &&
-			(titleText !== selectedDocumentInfo?.name ||
-				descriptionText !== selectedDocumentInfo?.desc)
-		);
-		console.log(
-			'---------------------',
-			!isEdit,
-			titleText,
-			selectedDocumentInfo,
-			descriptionText
-		);
-
 		if (
 			!isEdit &&
 			titleText &&
@@ -120,4 +106,5 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		</>
 	);
 };
+
 export default OwnerInfo;

@@ -26,6 +26,7 @@ import {
 	Input,
 	notification,
 	Row,
+	Spin,
 	Tooltip,
 	Upload
 } from 'antd';
@@ -68,7 +69,8 @@ const FileListing: React.FC = (props: any) => {
 		showMoreSearchDocs,
 		searchData,
 		documentListData,
-		isGlobalLoading
+		isGlobalLoading,
+		docInfoLoader
 	} = props;
 	const dispatch = useAppDispatch();
 
@@ -78,10 +80,14 @@ const FileListing: React.FC = (props: any) => {
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
+	const [isSearchDoc, setIsSearchDoc] = useState(
+		searchString.length > 2 ? true : false
+	);
 
 	const [showMoreButton, setShowMoreButton] = useState(
 		searchString.length > 2 ? showMoreSearchDocs : showMoreDocs
 	);
+
 	const [documentList, setDocumentList] = useState(
 		searchString.length > 2 ? searchData : documentListData
 	);
@@ -286,7 +292,7 @@ const FileListing: React.FC = (props: any) => {
 						style={{ height: 'calc(100vh - 40px)' }}
 					>
 						{!documentList.length ? (
-							<FileUpload />
+							<FileUpload isSearchDoc={searchString.length > 2} />
 						) : (
 							<>
 								{/*---------------- Modal for Upload File ------- */}
@@ -388,18 +394,20 @@ const FileListing: React.FC = (props: any) => {
 					{/* right sider Start */}
 
 					<Col className="pt1" span={5}>
-						<Row>
-							<OwnerInfoContainer className="fluid">
-								<OwnerInfo
-									fileListing={true}
-									ownerData={documentList[docClicked]}
-								/>
-							</OwnerInfoContainer>
-						</Row>
+						<Spin spinning={docInfoLoader}>
+							<Row>
+								<OwnerInfoContainer className="fluid">
+									<OwnerInfo
+										fileListing={true}
+										ownerData={documentList[docClicked]}
+									/>
+								</OwnerInfoContainer>
+							</Row>
 
-						<OwnerInfoContainer>
-							<ShareLinks />
-						</OwnerInfoContainer>
+							<OwnerInfoContainer>
+								<ShareLinks />
+							</OwnerInfoContainer>
+						</Spin>
 
 						<Row className="flex justify-center align-center py1">
 							<MemberCount className="pt1 font-12">28 members</MemberCount>
@@ -427,6 +435,7 @@ const mapStateToProps = (state: any) => ({
 	showMoreSearchDocs: state.documents.showMoreSearchDocs,
 	searchData: state.documents.searchDocumentList,
 	documentListData: state.documents.documentList,
-	isGlobalLoading: state.global.globalLoading
+	isGlobalLoading: state.global.globalLoading,
+	docInfoLoader: state.documents.docInfoLoader
 });
 export default connect(mapStateToProps)(FileListing);

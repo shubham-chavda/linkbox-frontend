@@ -9,7 +9,9 @@ import { DraggerContainer, FileUploadContainer } from './FileUpload.styles';
 
 const { DOC_URL } = process.env;
 
-type FileUploadTypes = {};
+interface FileUploadTypes {
+	isSearchDoc: boolean;
+}
 
 const KILO_BYTES_PER_BYTE = 1000;
 const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
@@ -20,7 +22,8 @@ const convertNestedObjectToArray = (nestedObj: any) =>
 const convertBytesToKB = (bytes: any) =>
 	Math.round(bytes / KILO_BYTES_PER_BYTE);
 
-const FileUpload = ({ }: FileUploadTypes) => {
+const FileUpload = (props: FileUploadTypes) => {
+	const { isSearchDoc } = props;
 	const dispatch = useAppDispatch();
 	const token = window.localStorage.getItem('token');
 
@@ -106,22 +109,36 @@ const FileUpload = ({ }: FileUploadTypes) => {
 					className="flex items-center flex-column color-sl-gray"
 				>
 					<DefaultPdf width="138px" height="158px" color={'#C4CEDB'} />
-					<div className="bold mb1">Start uploading documents...</div>
-					<div className="bold mb1 font-13 regular" style={{ width: '50%' }}>
-						Upload documents from your computer or copy from a store
+					<div className="bold mb1">
+						{isSearchDoc
+							? 'No document found... '
+							: 'Start uploading documents...'}
 					</div>
-					<div className="flex justify-center item-center">
-						<Button className="color-sl ml1 border-light-gray" shape="round">
-							Copy from store
-						</Button>
-						<ButtonFilled
-							className="ml1"
-							ref={fileInputField}
-							onClick={() => handleUploadBtnClick}
-						>
-							Upload
-						</ButtonFilled>
-					</div>
+					{!isSearchDoc && (
+						<>
+							<div
+								className="bold mb1 font-13 regular"
+								style={{ width: '50%' }}
+							>
+								Upload documents from your computer or copy from a store
+							</div>
+							<div className="flex justify-center item-center">
+								<Button
+									className="color-sl ml1 border-light-gray"
+									shape="round"
+								>
+									Copy from store
+								</Button>
+								<ButtonFilled
+									className="ml1"
+									ref={fileInputField}
+									onClick={() => handleUploadBtnClick}
+								>
+									Upload
+								</ButtonFilled>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</DraggerContainer>

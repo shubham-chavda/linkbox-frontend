@@ -8,6 +8,7 @@ interface IGlobalState {
   documentList: any[];
   showMoreDocs: boolean;
   showMoreSearchDocs: boolean;
+  docInfoLoader: boolean;
   selectedDocuments: any[];
   selectedDocumentInfo: any;
   searchDocumentList: any[];
@@ -21,6 +22,7 @@ export const initialState: Immutable<IGlobalState> = {
   selectedDocumentInfo: null,
   searchDocumentList: [],
   showMoreSearchDocs: false,
+  docInfoLoader:false,
 
 };
 
@@ -54,7 +56,10 @@ export const DocumentsReducer = createSlice({
     setSelectedDocuments(state, action) {
       state.selectedDocuments = [action.payload];
     },
-    updateDocumentInfo(state, action) { }
+    updateDocumentInfo(state, action) { },
+    toggleDocInfoLoader(state, action) {
+      state.docInfoLoader = action.payload;
+    }, 
   }
 });
 
@@ -67,6 +72,7 @@ export const {
   updateDocumentInfo,
   setSelectedDocuments,
   setSearchDocumentList,
+  toggleDocInfoLoader,
 } = DocumentsReducer.actions;
 
 export default DocumentsReducer.reducer

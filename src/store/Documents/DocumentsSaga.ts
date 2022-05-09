@@ -2,7 +2,7 @@ import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
-import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, setSearchDocumentList, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
+import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, setSearchDocumentList, toggleDocInfoLoader, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
 	payload: { pageNo: number; sortBy: string, q?: string };
@@ -119,15 +119,15 @@ function* UpdateDocumentInfoFunc(action: UpdateDocumentInfoType): Generator<Stri
 	const { payload } = action;
 	try {
 		const apis = init();
-		yield put(toggleLoader(true));
+		yield put(toggleDocInfoLoader(true));
 		const response = yield call(apis.documents.updateDocumentInfo, payload);
 		console.log("response ------->", response)
 		if (response?.status === 200) {
 			if (response?.data?.docUrl) {
 				yield put(setDocumentInfo(response?.data));
-				// notification.success({
-				// 	message: 'Document updated successfully',
-				// });
+				notification.success({
+					message: 'Document updated successfully',
+				});
 			}
 		}
 	} catch (error) {
@@ -136,9 +136,9 @@ function* UpdateDocumentInfoFunc(action: UpdateDocumentInfoType): Generator<Stri
 			message: 'Something went wrong',
 			description: 'Please try again'
 		});
-		yield put(toggleLoader(false));
+		yield put(toggleDocInfoLoader(false));
 	} finally {
-		yield put(toggleLoader(false));
+		yield put(toggleDocInfoLoader(false));
 	}
 }
 
