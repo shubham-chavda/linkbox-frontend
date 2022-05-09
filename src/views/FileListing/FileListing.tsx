@@ -71,6 +71,7 @@ const FileListing: React.FC = (props: any) => {
 		isGlobalLoading
 	} = props;
 	const dispatch = useAppDispatch();
+	console.log("searchData ------->", searchData);
 
 	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
@@ -208,7 +209,7 @@ const FileListing: React.FC = (props: any) => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-											// onClick={() => setIsUploadModalOpen(false)}
+										// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -314,9 +315,8 @@ const FileListing: React.FC = (props: any) => {
 														onClick={() =>
 															handleDocClick(index, document?.isFolder)
 														}
-														className={`${
-															docClicked !== index ? 'hover-blue' : ''
-														}`}
+														className={`${docClicked !== index ? 'hover-blue' : ''
+															}`}
 													>
 														{/* if document object is folder */}
 														{document?.isFolder ? (
@@ -406,7 +406,7 @@ const FileListing: React.FC = (props: any) => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
