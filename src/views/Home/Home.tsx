@@ -87,6 +87,7 @@ const Home = (props: any) => {
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
+	const [updatedAnnotation, setUpdatedAnnotation] = useState<any>(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
 	const [initialPanes, setInitialPanes] = useState([
 		{
@@ -142,11 +143,30 @@ const Home = (props: any) => {
 					'contextMenuPopup',
 					// 'notesPanel',
 				],
-				css: '/test.css'
+				// css: '/test.css'
 			},
 			viewer.current
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
+
+			const Core = instance.Core;
+			Core.enableFullPDF();
+			const documentViewer = new Core.DocumentViewer();
+			documentViewer.setScrollViewElement(scrollView.current!);
+			documentViewer.setViewerElement(viewer.current);
+			documentViewer.setOptions({ enableAnnotations: true });
+			setDocumentViewer(Core.documentViewer);
+			setDocumentInstance(instance);
+			setAnnotationManager(annotationManager);
+			setAnnotations(Annotations);
+			documentViewer.disableViewportRenderMode();
+			const LayoutMode = instance.UI.LayoutMode;
+			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+
+			// Annotations.Annotation
+			// getContents
+
+			// annotationManager.setNoteContents(annotations, text)
 
 			// https://lbdocapi.dev.brainvire.net/collab
 
@@ -183,6 +203,12 @@ const Home = (props: any) => {
 			const doc = await session.getDocument(selectedDocumentInfo.id);
 			console.log('doc ------->', doc);
 			await doc.view(documentPath);
+
+			if (!doc.isAuthor) {
+				const canJoin = await doc.canJoin()
+				console.log('canJoin ---> ', canJoin)
+				if (canJoin) doc.join();
+			}
 			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
@@ -196,29 +222,16 @@ const Home = (props: any) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
-					if (updatedAnnotation.contents) {
-						setCommentOpen(true);
-						setRightSiderClicks('comment');
-					}
+					setUpdatedAnnotation(updatedAnnotation);
+					// if (updatedAnnotation.contents) {
+					// 	setCommentOpen(true);
+					// 	setRightSiderClicks('comment');
+					// }
 				});
 			});
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
-
-			const Core = instance.Core;
-			Core.enableFullPDF();
-			const documentViewer = new Core.DocumentViewer();
-			documentViewer.setScrollViewElement(scrollView.current!);
-			documentViewer.setViewerElement(viewer.current);
-			documentViewer.setOptions({ enableAnnotations: true });
-			setDocumentViewer(Core.documentViewer);
-			setDocumentInstance(instance);
-			setAnnotationManager(annotationManager);
-			setAnnotations(Annotations);
-			documentViewer.disableViewportRenderMode();
-			const LayoutMode = instance.UI.LayoutMode;
-			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
 			// instance.UI.textPopup.update([
 			// 	{
@@ -418,7 +431,7 @@ const Home = (props: any) => {
 
 					<Col span={5}>
 						<RightHeaderContainer>
-							<LeftIconGroup span={7} className="pl2">
+							<LeftIconGroup span={7} className="pl2 mb2">
 								{!collapsed ? (
 									<ExpandIcon
 										onClick={() => closeRightSider()}
@@ -432,7 +445,7 @@ const Home = (props: any) => {
 									/>
 								)}
 							</LeftIconGroup>
-							<RightIconGroup span={16} className="p1">
+							<RightIconGroup span={16} className="p1 mb2">
 								<ChatIcon2
 									id="comment"
 									className="icon22"
@@ -499,9 +512,11 @@ const Home = (props: any) => {
 								</Row>
 							</>
 						) : (
-							<div className="px1 ">
+							<div className="px1">
 								<Comment
 									isOpen={commentOpen}
+									annotations={annotations}
+									updatedAnnotation={updatedAnnotation}
 									annotationManager={annotationManager}
 								/>
 							</div>
