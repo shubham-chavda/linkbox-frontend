@@ -117,14 +117,16 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+					? '/webviewer/lib' : "https://lbweb.dev.brainvire.net/lib",
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
 					'header',
 					'toolsHeader',
 					'searchPanel',
-					'contextMenuPopup'
+					'contextMenuPopup',
+					// 'notesPanel',
 				],
 				css: '/test.css'
 			},
@@ -180,6 +182,7 @@ const Home = (props: any) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
+					// if(updatedAnnotation.comment)
 				});
 			});
 
@@ -481,7 +484,10 @@ const Home = (props: any) => {
 							</>
 						) : (
 							<div className="px1 ">
-								<Comment />
+								<Comment
+									isOpen={true}
+									annotationManager={annotationManager}
+								/>
 							</div>
 						)}
 					</RightCollapsibleSider>

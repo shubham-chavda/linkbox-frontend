@@ -24,10 +24,32 @@ import nameInitials from 'name-initials';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
 import VoiceRecording from './components/VoiceRecording';
 
-export default function CommentSection() {
+export default function CommentSection(props: any) {
 	const [isComment, setIsComment] = useState(true);
 	const [isReply, setIsReply] = useState(false);
 	const [isDelete, setIsDelete] = useState(false);
+
+	const [selectedNoteIds, setSelectedNoteIds] = useState({});
+
+	const { isOpen, annotationManager } = props;
+
+	useEffect(() => {
+		const onAnnotationSelected = () => {
+			const ids: any = {};
+
+			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
+				ids[annot.Id] = true;
+			});
+			if (isOpen) {
+				setSelectedNoteIds(ids);
+				// setScrollToSelectedAnnot(true);
+			}
+		};
+		onAnnotationSelected();
+
+		annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
+		return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
+	}, []);
 	return !isComment ? (
 		<div style={{ height: '93vh' }} className="flex items-center color-sl-gray">
 			<Row className="flex justify-center items-center">
