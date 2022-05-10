@@ -6,13 +6,15 @@ import { DescriptionBox, InputBox, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
+import { connect } from 'react-redux';
 
 interface IOwnerInfo {
 	fileListing: boolean;
 	ownerData?: any;
+	user: any;
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing } = props;
+	const { fileListing, user } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -34,10 +36,10 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	}, [isEdit]);
 
 	const updateDocument = () => {
-		if (!isEdit && titleText && descriptionText) {
+		if (!isEdit && (titleText || descriptionText)) {
 			const payload = {
 				name: titleText,
-				desc: descriptionText,
+				desc: descriptionText || '',
 				isShareable: true,
 				sendNotification: true,
 				uuid: selectedDocumentInfo?.uuid
@@ -56,7 +58,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						style={{ border: '1px solid gray' }}
 						src={'https://joeschmoe.io/api/v1/random'}
 					/>
-					<Name>{'Robert__fox_'}</Name>
+					<Name>{user?.fullName || 'Robert__fox_'}</Name>
 				</Col>
 
 				<Col span={5}>
@@ -103,5 +105,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		</>
 	);
 };
-
-export default OwnerInfo;
+const mapStateToProps = (state: any) => ({
+	user: state.global.user
+});
+export default connect(mapStateToProps)(OwnerInfo);

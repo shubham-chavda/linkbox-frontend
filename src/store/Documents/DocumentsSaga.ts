@@ -16,12 +16,12 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		let response: any = "";
 		if (payload.q) {
 			response = yield call(apis.documents.getDocumentsListBySearch, payload);
-			console.log("🚀🚀🚀🚀 SEARCH ~~ response", response)
+			
 			if (response?.data?.data)
 				yield put(setSearchDocumentList(response?.data));
 		} else {
 			response = yield call(apis.documents.getDocumentsList, payload);
-			console.log("🚀🚀🚀🚀 NO SEARCH ~~ response", response)
+			
 			if (response?.data?.data)
 				yield put(setDocumentList(response?.data));
 		}

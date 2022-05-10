@@ -102,10 +102,6 @@ const Home = (props: any) => {
 	}, []);
 	useEffect(() => {
 		if (selectedDocumentInfo) {
-			console.log(
-				'🚀 🚀 🚀 🚀 🚀 🚀 🚀 ~ file: Home.tsx ~ line 104 ~ useEffect ~ selectedDocumentInfo',
-				selectedDocumentInfo
-			);
 			loadPdfDocumentByPath(
 				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
 					'upload/doc/',
