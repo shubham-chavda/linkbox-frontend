@@ -287,7 +287,7 @@ const ToolBar = ({
 				<ChatIcon2
 					color="white"
 					onClick={() => downloadPfd()}
-					alt="copy"
+					alt="chat"
 					className="icon22"
 				/>
 			</IconBG>
