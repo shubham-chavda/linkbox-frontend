@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Col, Row, Spin } from 'antd';
+import { Avatar, Button, Col, Row } from 'antd';
+
 import { EditIcon } from '../../assets';
 import { DescriptionBox, InputBox, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -24,8 +25,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 	useEffect(() => {
 		console.log('selectedDocumentInfo- ------>', selectedDocumentInfo);
-		setTitleText(selectedDocumentInfo?.name);
-		setDescriptionText(selectedDocumentInfo?.desc);
+		setTitleText(selectedDocumentInfo?.name || "---");
+		setDescriptionText(selectedDocumentInfo?.desc || "---");
 	}, [selectedDocumentInfo]);
 
 	useEffect(() => {
@@ -33,11 +34,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	}, [isEdit]);
 
 	const updateDocument = () => {
-		if (
-			!isEdit &&
-			titleText &&
-			descriptionText !== selectedDocumentInfo?.desc
-		) {
+		if (!isEdit && titleText && descriptionText) {
 			const payload = {
 				name: titleText,
 				desc: descriptionText,
@@ -84,7 +81,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						style={{ width: '95%' }}
 						bordered={false}
 						readOnly={!isEdit}
-						value={titleText || '-----'}
+						value={titleText}
 						className="font-12 hide-scrollbar mb1"
 						onChange={(e) => setTitleText(e.target.value)}
 						placeholder="Write Title"
@@ -98,7 +95,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						className="font-12 hide-scrollbar"
 						style={{ resize: 'none', width: '100%' }}
 						placeholder="Write Description"
-						value={descriptionText || '-----'}
+						value={descriptionText}
 						onChange={(e) => setDescriptionText(e.target.value)}
 					/>
 				</Row>
