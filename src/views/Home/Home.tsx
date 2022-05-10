@@ -83,6 +83,8 @@ const Home = (props: any) => {
 
 	const [searchResults, setSearchResults] = useState<any>([]);
 
+	const [commentOpen, setCommentOpen] = useState(false);
+
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
@@ -125,14 +127,16 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+					? '/webviewer/lib' : "https://lbweb.dev.brainvire.net/lib",
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
 					'header',
 					'toolsHeader',
 					'searchPanel',
-					'contextMenuPopup'
+					'contextMenuPopup',
+					// 'notesPanel',
 				],
 				css: '/test.css'
 			},
@@ -188,6 +192,10 @@ const Home = (props: any) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
+					if (updatedAnnotation.contents) {
+						setCommentOpen(true);
+						setRightSiderClicks('comment');
+					}
 				});
 			});
 
@@ -208,27 +216,27 @@ const Home = (props: any) => {
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
-			instance.UI.textPopup.update([
-				{
-					type: 'actionButton',
-					img: '/Icons/copyIcon.svg',
-					onClick: () => instance.UI.Feature.Copy
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/chatIcon.svg',
-					onClick: () => instance.UI.Feature.NotesPanel
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/bookmarkIcon.svg',
-					onClick: () => instance.Core.Bookmark
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/userStarIcon.svg'
-				}
-			]);
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/copyIcon.svg',
+			// 		onClick: () => instance.UI.Feature.Copy
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/chatIcon.svg',
+			// 		onClick: () => instance.UI.Feature.NotesPanel
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/bookmarkIcon.svg',
+			// 		onClick: () => instance.Core.Bookmark
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/userStarIcon.svg'
+			// 	}
+			// ]);
 		});
 	};
 
@@ -341,7 +349,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-				window.Core.ContentEdit.Types.TEXT
+			window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -488,7 +496,10 @@ const Home = (props: any) => {
 							</>
 						) : (
 							<div className="px1 ">
-								<Comment />
+								<Comment
+									isOpen={commentOpen}
+									annotationManager={annotationManager}
+								/>
 							</div>
 						)}
 					</RightCollapsibleSider>
