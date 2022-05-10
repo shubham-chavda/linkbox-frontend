@@ -87,6 +87,7 @@ const Home = (props: any) => {
 
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
+	const [updatedAnnotation, setUpdatedAnnotation] = useState<any>(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
 	const [initialPanes, setInitialPanes] = useState([
 		{
@@ -142,11 +143,16 @@ const Home = (props: any) => {
 					'contextMenuPopup',
 					// 'notesPanel',
 				],
-				css: '/test.css'
+				// css: '/test.css'
 			},
 			viewer.current
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
+
+			// Annotations.Annotation
+			// getContents
+
+			// annotationManager.setNoteContents(annotations, text)
 
 			// https://lbdocapi.dev.brainvire.net/collab
 
@@ -183,6 +189,12 @@ const Home = (props: any) => {
 			const doc = await session.getDocument(selectedDocumentInfo.id);
 			console.log('doc ------->', doc);
 			await doc.view(documentPath);
+
+			if (!doc.isAuthor) {
+				const canJoin = await doc.canJoin()
+				console.log('canJoin ---> ', canJoin)
+				if (canJoin) doc.join();
+			}
 			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
 			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
@@ -196,10 +208,11 @@ const Home = (props: any) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
-					if (updatedAnnotation.contents) {
-						setCommentOpen(true);
-						setRightSiderClicks('comment');
-					}
+					setUpdatedAnnotation(updatedAnnotation);
+					// if (updatedAnnotation.contents) {
+					// 	setCommentOpen(true);
+					// 	setRightSiderClicks('comment');
+					// }
 				});
 			});
 
@@ -499,9 +512,11 @@ const Home = (props: any) => {
 								</Row>
 							</>
 						) : (
-							<div className="px1 ">
+							<div className="px1">
 								<Comment
 									isOpen={commentOpen}
+									annotations={annotations}
+									updatedAnnotation={updatedAnnotation}
 									annotationManager={annotationManager}
 								/>
 							</div>
