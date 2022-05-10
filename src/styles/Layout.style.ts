@@ -54,7 +54,6 @@ export const CenterColumn = styled(Col)`
 
 export const SearchButtonFilled = styled(Input)`
     border-radius:24px;
-    width: 180px;
     padding:10px;
     background:#F5F7F9;
     border:none;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
@@ -85,27 +86,38 @@ const Home = (props: any) => {
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
-
-	const initialPanes: initPanel = [
+	const [initialPanes, setInitialPanes] = useState([
 		{
-			title: selectedDocumentInfo
-				? selectedDocumentInfo.name
-				: 'PdfTron default',
+			title: selectedDocumentInfo ? selectedDocumentInfo.name : null,
 			content: 'Content of Tab 1',
 			key: '1'
 		}
-	];
+	]);
+	// const initialPanes: initPanel = ;
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
 	}, []);
 	useEffect(() => {
 		if (selectedDocumentInfo) {
+			console.log(
+				'🚀 🚀 🚀 🚀 🚀 🚀 🚀 ~ file: Home.tsx ~ line 104 ~ useEffect ~ selectedDocumentInfo',
+				selectedDocumentInfo
+			);
 			loadPdfDocumentByPath(
 				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
 					'upload/doc/',
 					''
 				)}`
 			);
+			setInitialPanes([
+				{
+					title: selectedDocumentInfo
+						? selectedDocumentInfo.name
+						: 'PdfTron default',
+					content: 'Content of Tab 1',
+					key: '1'
+				}
+			]);
 		}
 		// else {
 		// 	loadPdfDocumentByPath(
@@ -145,15 +157,15 @@ const Home = (props: any) => {
 				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
 			});
 			let session = await client.getUserSession();
-			console.log('session --->', session)
+			console.log('session --->', session);
 			if (!session) {
 				const token = window.localStorage.getItem('token');
 				// console.log("client --------->", client);
 
 				console.log('token ------>', token);
 
-				session = await client.loginWithToken(token || "");
-				console.log("new session ------->", session);
+				session = await client.loginWithToken(token || '');
+				console.log('new session ------->', session);
 				// await client.setContext({ userId: session.id, createdBy: session.id });
 				if (!session) {
 					notification.error({
@@ -167,7 +179,7 @@ const Home = (props: any) => {
 			}
 
 			const doc = await session.getDocument(selectedDocumentInfo.id);
-			console.log("doc ------->", doc);
+			console.log('doc ------->', doc);
 			await doc.view(documentPath);
 			// const docContext = await client.setContext({ id: responseLogin.id });
 			// const document = await responseLogin.createDocument({
@@ -175,8 +187,8 @@ const Home = (props: any) => {
 			// 	isPublic: true,
 			// 	name: 'my_document.pdf'
 			// })
-			console.log('isAuthor', doc.isAuthor)
-			console.log('isMember', doc.isMember())
+			console.log('isAuthor', doc.isAuthor);
+			console.log('isMember', doc.isMember());
 			// await doc.inviteUsers([responseLogin.id])
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
@@ -224,7 +236,6 @@ const Home = (props: any) => {
 					img: '/Icons/userStarIcon.svg'
 				}
 			]);
-
 		});
 	};
 
@@ -337,7 +348,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
@@ -498,7 +509,6 @@ const Home = (props: any) => {
 	);
 };
 const mapStateToProps = (state: any) => ({
-	// isLoading: state.getIn(['global', 'globalLoading'])
 	isLoading: state.global.globalLoading
 });
 export default connect(mapStateToProps)(Home);

@@ -18,6 +18,7 @@ const UploadFileModal = (props: any) => {
 			formData.append('name', file.name);
 			formData.append('docfile', file);
 			dispatch(uploadDocument(formData));
+			closeModal();
 		},
 		beforeUpload: (file: any) => {
 			const isPDF = file.type === 'application/pdf';
@@ -27,19 +28,19 @@ const UploadFileModal = (props: any) => {
 				});
 			}
 			return isPDF || Upload.LIST_IGNORE;
-		},
-		onChange(info: any) {
-			console.log('info.file -------->', info);
-			if (info.file.status === 'done') {
-				notification.success({
-					message: `${info.file.name} file uploaded successfully`
-				});
-			} else if (info.file.status === 'error') {
-				notification.error({
-					message: `${info.file.response.message || '--'} failed to upload file.`
-				});
-			}
 		}
+		// onChange(info: any) {
+		// 	console.log('info.file -------->', info);
+		// 	if (info.file.status === 'done') {
+		// 		notification.success({
+		// 			message: `${info.file.name} file uploaded successfully`
+		// 		});
+		// 	} else if (info.file.status === 'error') {
+		// 		notification.error({
+		// 			message: `${info.file.response.message || '--'} failed to upload file.`
+		// 		});
+		// 	}
+		// }
 	};
 	return (
 		<MainContainer
@@ -47,13 +48,23 @@ const UploadFileModal = (props: any) => {
 			className="justify-center items-center"
 			style={{ display: isOpen ? 'flex' : 'none' }}
 		>
-			<ModalDialog className="p2 m2" onClick={(e: any) => { e.stopPropagation(); }}>
+			<ModalDialog
+				className="p2 m2"
+				onClick={(e: any) => {
+					e.stopPropagation();
+				}}
+			>
 				<div className="m1 p1 ">
 					<div className="center font-14 mt2 bold" style={{ color: '#9F9AB2' }}>
 						Upload Files
 					</div>
 					<div className="mt3 mx3 mb2">
-						<Dragger {...onUploadDocument} multiple={true} accept=".pdf" showUploadList={false}>
+						<Dragger
+							{...onUploadDocument}
+							multiple={true}
+							accept=".pdf"
+							showUploadList={false}
+						>
 							<div className="flex items-center flex-column">
 								<div className="mb1">
 									<UploadIcon />

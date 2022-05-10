@@ -25,8 +25,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 	useEffect(() => {
 		console.log('selectedDocumentInfo- ------>', selectedDocumentInfo);
-		setTitleText(selectedDocumentInfo?.name || "---");
-		setDescriptionText(selectedDocumentInfo?.desc || "---");
+		setTitleText(selectedDocumentInfo?.name);
+		setDescriptionText(selectedDocumentInfo?.desc);
 	}, [selectedDocumentInfo]);
 
 	useEffect(() => {
