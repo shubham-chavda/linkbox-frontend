@@ -47,6 +47,7 @@ export default function CommentSection({
 			const ids: any = {};
 
 			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
+				console.log("annotationManager.getSelectedAnnotations ======>", annot);
 				ids[annot.Id] = true;
 			});
 			if (isOpen) {

@@ -281,7 +281,7 @@ const ToolBar = ({
 			<ShareIcon alt="share" className="icon22" />
 			<CopyIcon alt="copy" className="icon22" />
 			<DownloadButton alt="download" className="icon22" />
-			<PrintIcon alt="print" className="icon22" />
+			<PrintIcon alt="print" className="icon22" /> */}
 
 			<IconBG className="flex items-center">
 				<ChatIcon2
