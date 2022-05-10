@@ -399,7 +399,7 @@ const Home = (props: any) => {
 
 					<Col span={5}>
 						<RightHeaderContainer>
-							<LeftIconGroup span={7} className="pl2">
+							<LeftIconGroup span={7} className="pl2 mb2">
 								{!collapsed ? (
 									<ExpandIcon
 										onClick={() => closeRightSider()}
@@ -413,7 +413,7 @@ const Home = (props: any) => {
 									/>
 								)}
 							</LeftIconGroup>
-							<RightIconGroup span={16} className="p1">
+							<RightIconGroup span={16} className="p1 mb2">
 								<ChatIcon2
 									id="comment"
 									className="icon22"

@@ -76,8 +76,9 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						<Tag className="font-12">Owner</Tag>
 					)}
 				</Col>
-				<Row className="mt2">
-					<InputBox
+
+				<div className="mt2">
+				<InputBox
 						style={{ width: '95%' }}
 						bordered={false}
 						readOnly={!isEdit}
@@ -86,8 +87,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						onChange={(e) => setTitleText(e.target.value)}
 						placeholder="Write Title"
 					/>
-				</Row>
-				<Row>
 					<DescriptionBox
 						bordered={false}
 						readOnly={!isEdit}
@@ -98,7 +97,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						value={descriptionText}
 						onChange={(e) => setDescriptionText(e.target.value)}
 					/>
-				</Row>
+				</div>
 			</Row>
 		</>
 	);

@@ -144,115 +144,25 @@ const FileListing: React.FC = (props: any) => {
 						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
 
-					{/* File Tab bar start */}
+					<Col span={18}>
+					</Col>
 
-					<HeaderFileTab span={18} className="flex">
-						<Col span={6} className="flex items-center">
-							{/* <Input
-								bordered={false}
-								style={{ width: 250 }}
-								placeholder="Search"
-								prefix={<SearchOutlined />}
-								onChange={onChange}
-							/> */}
-							<SearchButtonStyled
-								className="font-12 ml1"
-								onChange={onChange}
-								placeholder="Search"
-								prefix={<SearchOutlined />}
-							/>
-							{/* <FilterIcon alt="filter" className="icon16" /> */}
-						</Col>
-
-						<div className="fluid flex justify-end items-center">
-							<div
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
-								className="flex items-center"
-							>
-								<Button
-									className="ml1 color-light-gray"
-									type="link"
-									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}
-								>
-									<FolderOutlined
-										style={{ fontSize: '16px', color: 'black' }}
-									/>
-									<span style={{ color: '#C4CEDB' }}>Create Folder</span>
-									{/* {isCreateFolderModalOpen && (
-										<span className="ml1 font-13 color-sd2">X</span>
-									)} */}
-								</Button>
-							</div>
-							<div
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
-								className="flex items-center"
-							>
-								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
-								<Button
-									className="ml1 color-light-gray"
-									type="link"
-									onClick={() => setIsUploadModalOpen((prev) => !prev)}
-								>
-									<CloudUploadOutlined
-										style={{ fontSize: '16px', color: 'black' }}
-									/>
-									<span style={{ color: '#C4CEDB' }}>Upload document</span>
-
-									{isUploadModalOpen && (
-										<span
-											className="ml1 font-13 color-sd2"
-										// onClick={() => setIsUploadModalOpen(false)}
-										>
-											X
-										</span>
-									)}
-								</Button>
-								{/* </Upload> */}
-							</div>
-							<div
-								className="flex items-center"
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
-							>
-								<Button
-									className="ml1 color-light-gray flex items-center"
-									type="link"
-									onClick={() => setAssendingOrder(!assendingOrder)}
-								>
-									<FilterDocIcon className="mr2" />
-
-									<span style={{ color: '#C4CEDB' }}>Recently added</span>
-									<DropDownIcon
-										style={{
-											marginLeft: '20px',
-											transform: `rotate(${assendingOrder ? '180deg' : '0deg'})`
-										}}
-									/>
-								</Button>
-							</div>
-						</div>
-					</HeaderFileTab>
-
-					{/* File Tab bar over */}
-
+				
 					{/* Header top right Icon tab start */}
 
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
 							<Col
 								span={4}
-								className="height-full flex justify-center items-center"
-								style={{ borderRight: '1px solid #ECF2F7' }}
+								className="height-full flex justify-center items-center mr1"
+								style={{ borderRight: '1px solid #ECF2F7',
+								borderLeft: '1px solid #ECF2F7'
+							}}
 							>
 								<BookmarkIcon alt="bookmark" className="icon22" />
 							</Col>
 							<LeftIconGroup span={7} className="flex items-center">
-								<DownloadButton alt="download" className="mr1 icon22" />
+								<DownloadButton alt="download" className="mr2 icon22" />
 								<PrintIcon alt="Print" className="icon22" />
 							</LeftIconGroup>
 							<RightIconGroup span={12} className="pr2 justify-end">
@@ -272,13 +182,116 @@ const FileListing: React.FC = (props: any) => {
 				{/* Header part Over */}
 
 				<Row>
-					{/* Left sider start */}
-					<LeftSliderContainer>
-						<LeftSlider />
-					</LeftSliderContainer>
-					{/* Left sider over */}
+					<Col span={1}>
+						{/* Left sider start */}
+						<LeftSliderContainer>
+							<LeftSlider />
+						</LeftSliderContainer>				
+						{/* Left sider over */}
+					</Col>
+					
+					<Col span={18}>
+						{/* Content part start */}
+					<Row>
+						<Col span={24}>
+								{/* File Tab bar start */}
+							<HeaderFileTab span={24} className="flex items-center">
+								<Col span={13} className="flex items-center">
+									{/* <Input
+										bordered={false}
+										style={{ width: 250 }}
+										placeholder="Search"
+										prefix={<SearchOutlined />}
+										onChange={onChange}
+									/> */}
+									<SearchButtonStyled
+										className="font-12 ml1"
+										onChange={onChange}
+										placeholder="Search"
+										prefix={<SearchOutlined style={{fontSize:"19px", paddingLeft:"3px"}}/>}
+									/>
+									{/* <FilterIcon alt="filter" className="icon16" /> */}
+								</Col>
+								<Col span={10}>
+								<div className="fluid flex justify-end items-center">
+									<div
+										className="flex items-center"
+									>
+										<Button
+											className="ml1 color-light-gray"
+											type="link"
+											onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}
+										>
+											<FolderOutlined
+												style={{ fontSize: '20px', color: 'black' }}
+											/>
+											<span style={{ color: '#C4CEDB' }}>Create Folder</span>
+											{/* {isCreateFolderModalOpen && (
+												<span className="ml1 font-13 color-sd2">X</span>
+											)} */}
+										</Button>
+									</div>
+									<div
+										style={{
+										
+										}}
+										className="flex items-center"
+									>
+										{/* <Upload {...onUploadDocument} showUploadList={false}> */}
+										<Button
+											className="ml1 color-light-gray"
+											type="link"
+											onClick={() => setIsUploadModalOpen((prev) => !prev)}
+										>
+											<CloudUploadOutlined
+												style={{ fontSize: '20px', color: 'black' }}
+											/>
+											<span style={{ color: '#C4CEDB' }}>Upload document</span>
 
-					{/* Content part start */}
+											{isUploadModalOpen && (
+												<span
+													className="ml1 font-13 color-sd2"
+												// onClick={() => setIsUploadModalOpen(false)}
+												>
+													X
+												</span>
+											)}
+										</Button>
+										{/* </Upload> */}
+									</div>
+									<div
+										className="flex items-center"
+										style={{
+										
+										}}
+									>
+										<Button
+											className="ml1 color-light-gray flex items-center"
+											type="link"
+											onClick={() => setAssendingOrder(!assendingOrder)}
+										>
+											<FilterDocIcon 
+											style={{ fontSize: '20px', color: 'black' }}
+											className="mr2" />
+
+											<span style={{ color: '#C4CEDB' }}>Recently added</span>
+											<DropDownIcon
+												style={{
+													marginLeft: '20px',
+													transform: `rotate(${assendingOrder ? '180deg' : '0deg'})`
+												}}
+											/>
+										</Button>
+									</div>
+								</div>
+								</Col>
+								
+							</HeaderFileTab>
+
+							{/* File Tab bar over */}
+
+						</Col>
+					</Row>
 					<CenterColumn
 						className="overflow-auto"
 						style={{ height: 'calc(100vh - 40px)' }}
@@ -300,7 +313,7 @@ const FileListing: React.FC = (props: any) => {
 									<Spinner />
 								) : (
 									<>
-										<p className="ml1" style={{ color: '#C5C9CE' }}>
+										<p className="ml1 mt2" style={{ color: '#C5C9CE' }}>
 											Personal Documents
 										</p>
 										<Row>
@@ -382,7 +395,9 @@ const FileListing: React.FC = (props: any) => {
 
 					{/* Content part over */}
 
-					{/* right sider Start */}
+					</Col>
+					
+						{/* right sider Start */}
 
 					<Col className="pt1" span={5}>
 						<Spin spinning={docInfoLoader}>
@@ -416,6 +431,8 @@ const FileListing: React.FC = (props: any) => {
 					</Col>
 
 					{/* right sider Over */}
+
+
 				</Row>
 			</MainContainer>
 		</>

@@ -77,13 +77,13 @@ const ToolBar = ({
 
 	const decrementPageCount = () => {
 		if (pageCount > 1) {
-			setPageCount((prev) => prev - 1);
+			setPageCount(prev => prev - 1);
 			documentViewer.setCurrentPage(pageCount - 1);
 		}
 	};
 	const incrementPageCount = () => {
 		if (pageCount <= maxCount) {
-			setPageCount((prev) => prev + 1);
+			setPageCount(prev => prev + 1);
 			documentViewer.setCurrentPage(pageCount + 1);
 		} else {
 			setPageCount(maxCount);
@@ -137,7 +137,9 @@ const ToolBar = ({
 				/>
 				<>
 					<span style={{ paddingLeft: '7px' }}>
-						{searchResults.length ? currentSearchResultOn + 1 : currentSearchResultOn}
+						{searchResults.length
+							? currentSearchResultOn + 1
+							: currentSearchResultOn}
 					</span>
 					<span>of</span>
 					<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
@@ -166,7 +168,7 @@ const ToolBar = ({
 					<SearchButtonFilled
 						value={searchValue}
 						onChange={handleSearchChange}
-						style={{ width: 450 }}
+						style={{ width: 410 }}
 						placeholder="Search"
 						prefix={<SearchOutlined />}
 					/>
@@ -190,7 +192,7 @@ const ToolBar = ({
 						<input
 							className="border-none"
 							value={pageCount}
-							onChange={(e) => setPageCount(parseInt(e.target.value))}
+							onChange={e => setPageCount(parseInt(e.target.value))}
 							style={{ width: '25px' }}
 						/>
 						<span>of</span>
@@ -240,28 +242,29 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			{isHandTool ?
+			{isHandTool ? (
 				<Tooltip placement="bottom" title={`HandTool`}>
 					<HandMoveIcon
 						onClick={() => {
-							setIsHandTool(!isHandTool)
-							createRectangle()
+							setIsHandTool(!isHandTool);
+							createRectangle();
 						}}
 						alt="move"
 						className="icon22"
 					/>
-				</Tooltip> :
+				</Tooltip>
+			) : (
 				<Tooltip placement="bottom" title={`SelectTool`}>
 					<ShareIcon
 						onClick={() => {
-							setIsHandTool(!isHandTool)
-							selectTool()
+							setIsHandTool(!isHandTool);
+							selectTool();
 						}}
 						alt="select"
 						className="icon22"
 					/>
 				</Tooltip>
-			}
+			)}
 			{/* <VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
