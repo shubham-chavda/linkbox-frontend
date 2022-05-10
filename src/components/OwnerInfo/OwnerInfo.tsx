@@ -45,6 +45,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				uuid: selectedDocumentInfo?.uuid
 			};
 			dispatch(updateDocumentInfo(payload));
+			console.log('payload--Ownerpage',payload)
 		}
 	};
 

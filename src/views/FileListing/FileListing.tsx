@@ -86,7 +86,15 @@ const FileListing: React.FC = (props: any) => {
 		setShowMoreButton(
 			searchString.length > 2 ? showMoreSearchDocs : showMoreDocs
 		);
-	}, [documentListData, searchData, searchString.length]);
+		console.log('payload--last',documentListData,'payload--selast',)
+	}, [props]);
+
+	// useEffect(() => {
+	// 	if (documentListData !== documentList) {
+	// 		setDocumentList(props.documentListData);
+	// 	}
+	// 	console.log('payload--last',props.documentListData,'payload--selast',)
+	//   }, [documentListData]);
 
 	useEffect(() => {
 		const data = {
@@ -102,6 +110,7 @@ const FileListing: React.FC = (props: any) => {
 		if (documentList[0]) {
 			dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
+		console.log('docss----',documentList)
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));
