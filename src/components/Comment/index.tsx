@@ -24,10 +24,48 @@ import nameInitials from 'name-initials';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
 import VoiceRecording from './components/VoiceRecording';
 
-export default function CommentSection() {
+type CommentSectionTypes = {
+	isOpen: any,
+	annotationManager: any,
+	annotations: any,
+	updatedAnnotation: any
+}
+
+export default function CommentSection({
+	isOpen, annotationManager, annotations, updatedAnnotation }: CommentSectionTypes) {
+	// const { isOpen, annotationManager, annotations, updatedAnnotation } = props;
+
 	const [isComment, setIsComment] = useState(true);
 	const [isReply, setIsReply] = useState(false);
 	const [isDelete, setIsDelete] = useState(false);
+
+	const [selectedNoteIds, setSelectedNoteIds] = useState({});
+
+
+	useEffect(() => {
+		const onAnnotationSelected = () => {
+			const ids: any = {};
+
+			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
+				console.log("annotationManager.getSelectedAnnotations ======>", annot);
+				ids[annot.Id] = true;
+			});
+			if (isOpen) {
+				setSelectedNoteIds(ids);
+				// setScrollToSelectedAnnot(true);
+			}
+		};
+		onAnnotationSelected();
+
+		annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
+		return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
+	}, []);
+
+	const onSendCommentEvent = (text: any) => {
+		console.log("onSendCommentEvent ==========>", text);
+		annotationManager.setNoteContents(updatedAnnotation, text);
+	}
+
 	return !isComment ? (
 		<div style={{ height: '93vh' }} className="flex items-center color-sl-gray">
 			<Row className="flex justify-center items-center">
@@ -51,6 +89,7 @@ export default function CommentSection() {
 				index={11}
 				setIsReply={() => setIsReply((prev) => !prev)}
 				isDelete={() => setIsDelete(true)}
+				onSendComment={onSendCommentEvent}
 			>
 				<div className="nested ml3">
 					{[...Array(2)].map((_, index) => (
@@ -60,6 +99,7 @@ export default function CommentSection() {
 							index={index}
 							setIsReply={() => setIsReply((prev) => !prev)}
 							isDelete={() => setIsDelete(true)}
+							onSendComment={onSendCommentEvent}
 						/>
 					))}
 					{isReply && <AddComment cancelReply={() => setIsReply(false)} />}
@@ -73,7 +113,8 @@ export default function CommentSection() {
 	);
 }
 function Comments(props: any) {
-	const { isDelete, setIsReply } = props;
+	const { isDelete, setIsReply, onSendComment } = props;
+
 	const [isEdit, setIsEdit] = useState(-1);
 	const [inputValue, setInputValue] =
 		useState(`We supply a series of design principles, practical patterns
@@ -157,7 +198,7 @@ function Comments(props: any) {
 										<Row className="font-12 flex justify-around items-center">
 											<Col className="flex  items-center">
 												<LocationComment className="icon12" />
-												<span className="ml1  ">15</span>
+												<span className="ml1">15</span>
 											</Col>
 											<Col className="flex  items-center">
 												<HeartIcon />
@@ -195,7 +236,11 @@ function Comments(props: any) {
 									>
 										Cancel
 									</Button>
-									<PostButton className="font-12  ml1 px3" shape="round">
+									<PostButton
+										shape="round"
+										className="font-12  ml1 px3"
+										onClick={() => onSendComment(inputValue)}
+									>
 										Post
 									</PostButton>
 								</div>

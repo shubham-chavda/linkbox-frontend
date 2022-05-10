@@ -29,7 +29,6 @@ const ShareLinks = (props: IShareLinks) => {
 		} else message.info('Document is not Shareable');
 	};
 	const setCheckState = (e: any) => {
-		console.log('🚀 ~ file: ShareLinks.tsx ~ line 36 ~ setCheckState ~ e', e);
 		const idsArray = e.target.id.split(/(\s+)/);
 		eval(idsArray[0])(e.target.checked);
 		updateDocument(idsArray[2], e.target.checked);

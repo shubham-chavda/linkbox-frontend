@@ -1,78 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, notification, Row, Upload } from 'antd';
 import React, { useRef, useState } from 'react';
+import { connect } from 'react-redux';
 import { DefaultPdf } from '../../../../assets';
+import Spinner from '../../../../components/Spinner/Spinner';
 import { useAppDispatch } from '../../../../hooks/useAppDispatch';
 import { uploadDocument } from '../../../../store/Documents/DocumentsReducer';
 import { ButtonFilled } from '../../../../styles/Layout.style';
-import { DraggerContainer, FileUploadContainer } from './FileUpload.styles';
-
-const { DOC_URL } = process.env;
+import { DraggerContainer } from './FileUpload.styles';
 
 interface FileUploadTypes {
 	isSearchDoc: boolean;
+	isLoading: boolean;
 }
 
-const KILO_BYTES_PER_BYTE = 1000;
-const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
+// const KILO_BYTES_PER_BYTE = 1000;
+// const DEFAULT_MAX_FILE_SIZE_IN_BYTES = 500000;
 
-const convertNestedObjectToArray = (nestedObj: any) =>
-	Object.keys(nestedObj).map((key) => nestedObj[key]);
+// const convertNestedObjectToArray = (nestedObj: any) =>
+// 	Object.keys(nestedObj).map((key) => nestedObj[key]);
 
-const convertBytesToKB = (bytes: any) =>
-	Math.round(bytes / KILO_BYTES_PER_BYTE);
+// const convertBytesToKB = (bytes: any) =>
+// 	Math.round(bytes / KILO_BYTES_PER_BYTE);
 
 const FileUpload = (props: FileUploadTypes) => {
-	const { isSearchDoc } = props;
+	const { isSearchDoc, isLoading } = props;
 	const dispatch = useAppDispatch();
-	const token = window.localStorage.getItem('token');
 
 	const fileInputField = useRef<any>(null);
 	const [files, setFiles] = useState<any>({});
 
-	const handleUploadBtnClick = () => {
-		fileInputField.current.click();
-	};
-
-	const addNewFiles = (newFiles: any) => {
-		for (const file of newFiles) {
-			if (file.size <= DEFAULT_MAX_FILE_SIZE_IN_BYTES) {
-				files[file.name] = file;
-			}
-		}
-		return { ...files };
-	};
-
-	const callUpdateFilesCb = (files: any) => {
-		const filesAsArray = convertNestedObjectToArray(files);
-
-		const formData = new FormData();
-		formData.append('name', filesAsArray[0].name);
-		formData.append('docfile', filesAsArray[0]);
-		dispatch(uploadDocument(formData));
-	};
-
-	const handleNewFileUpload = (e: any) => {
-		const { files: newFiles } = e.target;
-		if (newFiles.length) {
-			const updatedFiles = addNewFiles(newFiles);
-			setFiles(updatedFiles);
-			callUpdateFilesCb(updatedFiles);
-		}
-	};
-
-	const removeFile = (fileName: any) => {
-		delete files[fileName];
-		setFiles({ ...files });
-		callUpdateFilesCb({ ...files });
-	};
-
 	const onUploadDocument = {
-		name: 'file',
-		action: `${DOC_URL}document/create`,
-		headers: {
-			'Content-Type': 'multipart/form-data',
-			authorization: token ? 'Bearer ' + token : ''
+		customRequest: ({ file, onSuccess }: any) => {
+			const formData = new FormData();
+			formData.append('name', file.name);
+			formData.append('docfile', file);
+			dispatch(uploadDocument(formData));
 		},
 		beforeUpload: (file: any) => {
 			const isPDF = file.type === 'application/pdf';
@@ -82,24 +45,15 @@ const FileUpload = (props: FileUploadTypes) => {
 				});
 			}
 			return isPDF || Upload.LIST_IGNORE;
-		},
-		onChange(info: any) {
-			console.log('info.file -------->', info);
-			if (info.file.status === 'done') {
-				notification.success({
-					message: `${info.file.name} file uploaded successfully`
-				});
-			}
-		},
-		onDrop(e: any) {
-			console.log('Dropped files', e.dataTransfer.files);
 		}
 	};
 
-	return (
+	return isLoading ? (
+		<Spinner />
+	) : (
 		<DraggerContainer
 			{...onUploadDocument}
-			multiple={true}
+			multiple={false}
 			showUploadList={false}
 			accept=".pdf"
 		>
@@ -132,7 +86,7 @@ const FileUpload = (props: FileUploadTypes) => {
 								<ButtonFilled
 									className="ml1"
 									ref={fileInputField}
-									onClick={() => handleUploadBtnClick}
+									// onClick={() => handleNewFileUpload}
 								>
 									Upload
 								</ButtonFilled>
@@ -144,5 +98,7 @@ const FileUpload = (props: FileUploadTypes) => {
 		</DraggerContainer>
 	);
 };
-
-export default FileUpload;
+const mapStateToProps = (state: any) => ({
+	isLoading: state.global.globalLoading
+});
+export default connect(mapStateToProps)(FileUpload);
