@@ -1,9 +1,10 @@
-import { Tabs } from 'antd';
+import { Spin, Tabs } from 'antd';
 import { add } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { initPanel } from '../../../../types/Home.interface';
 import { Tab } from './FileTabBar.style';
 import history from '../../../../history';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 interface IFileTabBar {
@@ -18,7 +19,7 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 	useEffect(() => {
 		setPanes(props.initialPanes);
 		setActiveKey(props.initialPanes[0].key);
-	}, []);
+	}, [props.initialPanes]);
 
 	const onChange = (activeKey: string) => {
 		setActiveKey(activeKey);
@@ -77,9 +78,8 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 		if (!newPanes?.length) {
 			history.navigate?.('/documents');
 		}
-
 	};
-
+	const antIcon = <LoadingOutlined style={{ fontSize: 15 }} spin />;
 	return (
 		<Tab
 			hideAdd
@@ -91,7 +91,11 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 			onEdit={onEdit}
 		>
 			{panes?.map((pane) => (
-				<TabPane tab={pane.title} key={pane.key} closable={true} />
+				<TabPane
+					tab={pane.title || <Spin indicator={antIcon} size="small" />}
+					key={pane.key}
+					closable={true}
+				/>
 			))}
 		</Tab>
 	);

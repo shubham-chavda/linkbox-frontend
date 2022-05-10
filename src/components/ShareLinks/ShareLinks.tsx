@@ -42,7 +42,7 @@ const ShareLinks = (props: IShareLinks) => {
 		const payload = {
 			...checkedPayload,
 			name: selectedDocumentInfo.name,
-			desc: selectedDocumentInfo.desc,
+			desc: selectedDocumentInfo.desc || '',
 			uuid: selectedDocumentInfo.uuid
 		};
 
