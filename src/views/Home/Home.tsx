@@ -128,17 +128,18 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-					? '/webviewer/lib' : "https://lbweb.dev.brainvire.net/lib",
+				// path: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+				// 	? '/webviewer/lib' : "https://lbweb.dev.brainvire.net/lib",
+				path: 'https://lbweb.dev.brainvire.net/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
 					'header',
 					'toolsHeader',
 					'searchPanel',
-					'contextMenuPopup',
+					'contextMenuPopup'
 					// 'notesPanel',
-				],
+				]
 				// css: '/test.css'
 			},
 			viewer.current
@@ -201,8 +202,8 @@ const Home = (props: any) => {
 			await doc.view(documentPath);
 
 			if (!doc.isAuthor) {
-				const canJoin = await doc.canJoin()
-				console.log('canJoin ---> ', canJoin)
+				const canJoin = await doc.canJoin();
+				console.log('canJoin ---> ', canJoin);
 				if (canJoin) doc.join();
 			}
 			// const docContext = await client.setContext({ id: responseLogin.id });
@@ -362,7 +363,7 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+				window.Core.ContentEdit.Types.TEXT
 		) {
 			const content = await window.Core.ContentEdit.getDocumentContent(
 				selectedAnnotation
