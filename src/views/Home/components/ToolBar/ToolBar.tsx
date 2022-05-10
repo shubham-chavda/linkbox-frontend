@@ -46,6 +46,7 @@ interface IToolBarProps {
 	onChangeSearchInput: any;
 	toggleFullScreen: any;
 	searchResults: any;
+	printPdf: any;
 }
 
 const ToolBar = ({
@@ -60,7 +61,8 @@ const ToolBar = ({
 	downloadPfd,
 	changeLayOutMode,
 	onChangeSearchInput,
-	toggleFullScreen
+	toggleFullScreen,
+	printPdf,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -280,20 +282,28 @@ const ToolBar = ({
 			/>
 			<ShareIcon alt="share" className="icon22" />
 			<CopyIcon alt="copy" className="icon22" />
-			<DownloadButton alt="download" className="icon22" />
-			<PrintIcon alt="print" className="icon22" />
+			<DownloadButton
+				alt="download"
+				className="icon22"
+				onClick={() => downloadPfd()}
+			/>
+			<PrintIcon
+				alt="print"
+				className="icon22"
+				onClick={() => printPdf()}
+			/>
 
 			<IconBG className="flex items-center">
 				<ChatIcon2
 					color="white"
-					onClick={() => downloadPfd()}
+					// onClick={() => downloadPfd()}
 					alt="copy"
 					className="icon22"
 				/>
 			</IconBG>
 			<IconBG className="flex items-center">
 				<CursorTextCopyMove
-					onClick={() => downloadPfd()}
+					// onClick={() => downloadPfd()}
 					alt="copy"
 					className="icon22"
 				/>
