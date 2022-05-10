@@ -487,6 +487,7 @@ const Home = (props: any) => {
 								changeLayOutMode={changeLayOutMode}
 								onChangeSearchInput={onChangeSearchInput}
 								toggleFullScreen={toggleFullScreen}
+								printPdf={printPdf}
 							/>
 						</Row>
 						<ContentSection>
