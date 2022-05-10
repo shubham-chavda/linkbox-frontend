@@ -16,11 +16,17 @@ import {
 	ToolBarContainer
 } from './ToolBar.style';
 import {
+	CallIcon,
 	ChatIcon2,
+	CopyIcon,
 	CursorTextCopyMove,
+	DownloadButton,
 	HandMoveIcon,
 	PageIcon,
-	ShareIcon
+	PrintIcon,
+	ShareIcon,
+	SizeChangeIcon,
+	VideoIcon
 } from '../../../../assets';
 import { Col, Tooltip } from 'antd';
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
@@ -137,7 +143,9 @@ const ToolBar = ({
 				/>
 				<>
 					<span style={{ paddingLeft: '7px' }}>
-						{searchResults.length ? currentSearchResultOn + 1 : currentSearchResultOn}
+						{searchResults.length
+							? currentSearchResultOn + 1
+							: currentSearchResultOn}
 					</span>
 					<span>of</span>
 					<span style={{ paddingLeft: '7px' }}>{searchResults.length}</span>
@@ -166,7 +174,7 @@ const ToolBar = ({
 					<SearchButtonFilled
 						value={searchValue}
 						onChange={handleSearchChange}
-						style={{ width: 450 }}
+						style={{ width: 150 }}
 						placeholder="Search"
 						prefix={<SearchOutlined />}
 					/>
@@ -240,36 +248,41 @@ const ToolBar = ({
 				</IncDecContainer>
 			</Col>
 
-			{isHandTool ?
+			{isHandTool ? (
 				<Tooltip placement="bottom" title={`HandTool`}>
 					<HandMoveIcon
 						onClick={() => {
-							setIsHandTool(!isHandTool)
-							createRectangle()
+							setIsHandTool(!isHandTool);
+							createRectangle();
 						}}
 						alt="move"
 						className="icon22"
 					/>
-				</Tooltip> :
+				</Tooltip>
+			) : (
 				<Tooltip placement="bottom" title={`SelectTool`}>
 					<ShareIcon
 						onClick={() => {
-							setIsHandTool(!isHandTool)
-							selectTool()
+							setIsHandTool(!isHandTool);
+							selectTool();
 						}}
 						alt="select"
 						className="icon22"
 					/>
 				</Tooltip>
-			}
-			{/* <VideoIcon alt="video" className="icon22" />
+			)}
+			<VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
 				onClick={() => toggleFullScreen()}
 				alt="size"
 				className="icon22"
 			/>
-			<ShareIcon alt="share" className="icon22" />*/}
+			<ShareIcon alt="share" className="icon22" />
+			<CopyIcon alt="copy" className="icon22" />
+			<DownloadButton alt="download" className="icon22" />
+			<PrintIcon alt="print" className="icon22" />
+
 			<IconBG className="flex items-center">
 				<ChatIcon2
 					color="white"

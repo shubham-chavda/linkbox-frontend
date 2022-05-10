@@ -26,7 +26,7 @@ export const initialState: Immutable<IGlobalState> = {
 };
 
 export const DocumentsReducer = createSlice({
-  name: 'document',
+  name: 'documents',
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
