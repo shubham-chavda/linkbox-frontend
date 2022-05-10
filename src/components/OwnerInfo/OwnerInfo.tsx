@@ -34,10 +34,10 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	}, [isEdit]);
 
 	const updateDocument = () => {
-		if (!isEdit && titleText && descriptionText) {
+		if (!isEdit && (titleText || descriptionText)) {
 			const payload = {
 				name: titleText,
-				desc: descriptionText,
+				desc: descriptionText || '',
 				isShareable: true,
 				sendNotification: true,
 				uuid: selectedDocumentInfo?.uuid
