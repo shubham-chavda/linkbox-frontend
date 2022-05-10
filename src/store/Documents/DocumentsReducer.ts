@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { createSlice } from '@reduxjs/toolkit'
-import { Immutable } from "immer";
 import _ from "lodash";
+import { Immutable } from "immer";
+import { createSlice } from '@reduxjs/toolkit'
 
 // Define a type for the slice state
 interface IGlobalState {
@@ -22,8 +22,7 @@ export const initialState: Immutable<IGlobalState> = {
   selectedDocumentInfo: null,
   searchDocumentList: [],
   showMoreSearchDocs: false,
-  docInfoLoader:false,
-
+  docInfoLoader: false,
 };
 
 export const DocumentsReducer = createSlice({
@@ -41,7 +40,7 @@ export const DocumentsReducer = createSlice({
       ], 'uuid');
       state.showMoreDocs = meta.hasNextPage || false;
     },
-    setSearchDocumentList(state,action){
+    setSearchDocumentList(state, action) {
       const { data, meta } = action.payload;
       state.searchDocumentList = _.uniqBy([
         ...data,
@@ -59,7 +58,7 @@ export const DocumentsReducer = createSlice({
     updateDocumentInfo(state, action) { },
     toggleDocInfoLoader(state, action) {
       state.docInfoLoader = action.payload;
-    }, 
+    },
   }
 });
 

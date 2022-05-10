@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
@@ -86,6 +85,7 @@ const Home = (props: any) => {
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
+	const [loadDocument, setLoadDocument] = useState(false);
 
 	const initialPanes: initPanel = [
 		{
@@ -100,12 +100,10 @@ const Home = (props: any) => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
 	}, []);
 	useEffect(() => {
-		if (selectedDocumentInfo) {
+		if (!loadDocument && selectedDocumentInfo) {
+			setLoadDocument(true);
 			loadPdfDocumentByPath(
-				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
-					'upload/doc/',
-					''
-				)}`
+				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 		}
 		// else {
@@ -118,7 +116,7 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib',
+				path: "/webviewer/lib",//'https://lbweb.dev.brainvire.net/lib',
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
@@ -133,9 +131,42 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
-			// https://lbdocapi.dev.brainvire.net/collab
+			// const Core = instance.Core;
+			// Core.enableFullPDF();
+			// const documentViewer = new Core.DocumentViewer();
+			// documentViewer.setScrollViewElement(scrollView.current!);
+			// documentViewer.setViewerElement(viewer.current);
+			// documentViewer.setOptions({ enableAnnotations: true });
+			// setDocumentViewer(Core.documentViewer);
+			// setDocumentInstance(instance);
+			// setAnnotationManager(annotationManager);
+			// setAnnotations(Annotations);
+			// documentViewer.disableViewportRenderMode();
+			// const LayoutMode = instance.UI.LayoutMode;
+			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
-			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/copyIcon.svg',
+			// 		onClick: () => instance.UI.Feature.Copy
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/chatIcon.svg',
+			// 		onClick: () => instance.UI.Feature.NotesPanel
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/bookmarkIcon.svg',
+			// 		onClick: () => instance.Core.Bookmark
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/userStarIcon.svg'
+			// 	}
+			// ]);
+
 			const client = new CollabClient({
 				instance,
 				logLevel: CollabClient.LogLevels.DEBUG,
@@ -143,40 +174,33 @@ const Home = (props: any) => {
 				url: 'https://lbnotifapi.dev.brainvire.net',
 				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
 			});
-			let session = await client.getUserSession();
-			console.log('session --->', session)
-			if (!session) {
-				const token = window.localStorage.getItem('token');
-				// console.log("client --------->", client);
+			const token = window.localStorage.getItem('token');
+			// console.log("client --------->", client);
 
-				console.log('token ------>', token);
+			// documentViewer.loadAsync()
+			console.log('token ------>', token);
 
-				session = await client.loginWithToken(token || "");
-				console.log("new session ------->", session);
-				// await client.setContext({ userId: session.id, createdBy: session.id });
-				if (!session) {
-					notification.error({
-						message: 'Login is failed Please refresh page....'
-					});
-					return false;
-				}
-				await client.setCustomHeaders({
-					authorization: token || ''
-				});
+			const responseLogin = await client.loginWithToken(token || '');
+			console.log('responseLogin ------->', responseLogin);
+			// const docContext = await client.setContext({ id: responseLogin.id });
+			// console.log('doc --------->', docContext);
+			if (!responseLogin) {
+				// notification.error({
+				// 	message: 'Login is failed Please refresh page....'
+				// });
+				return false;
 			}
 
-			const doc = await session.getDocument(selectedDocumentInfo.id);
-			console.log("doc ------->", doc);
-			await doc.view(documentPath);
-			// const docContext = await client.setContext({ id: responseLogin.id });
-			// const document = await responseLogin.createDocument({
-			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
-			// 	isPublic: true,
-			// 	name: 'my_document.pdf'
-			// })
-			console.log('isAuthor', doc.isAuthor)
-			console.log('isMember', doc.isMember())
-			// await doc.inviteUsers([responseLogin.id])
+			await client.setCustomHeaders({ authorization: token || '' });
+			// console.log("documentID ---------->", documentID);
+			const doc = await responseLogin.getDocument(selectedDocumentInfo.id || '');
+			console.log('doc ------->', doc);
+			// const viewDoc = await doc.view(documentPath);
+			// console.log("viewDoc ------->", viewDoc);
+
+			console.log('isAuthor', doc.isAuthor);
+			console.log('isMember', doc.isMember());
+
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
@@ -186,43 +210,6 @@ const Home = (props: any) => {
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
-
-			const Core = instance.Core;
-			Core.enableFullPDF();
-			const documentViewer = new Core.DocumentViewer();
-			documentViewer.setScrollViewElement(scrollView.current!);
-			documentViewer.setViewerElement(viewer.current);
-			documentViewer.setOptions({ enableAnnotations: true });
-			setDocumentViewer(Core.documentViewer);
-			setDocumentInstance(instance);
-			setAnnotationManager(annotationManager);
-			setAnnotations(Annotations);
-			documentViewer.disableViewportRenderMode();
-			const LayoutMode = instance.UI.LayoutMode;
-			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-
-			instance.UI.textPopup.update([
-				{
-					type: 'actionButton',
-					img: '/Icons/copyIcon.svg',
-					onClick: () => instance.UI.Feature.Copy
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/chatIcon.svg',
-					onClick: () => instance.UI.Feature.NotesPanel
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/bookmarkIcon.svg',
-					onClick: () => instance.Core.Bookmark
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/userStarIcon.svg'
-				}
-			]);
-
 		});
 	};
 
@@ -257,26 +244,26 @@ const Home = (props: any) => {
 
 	const startEditingContent = () => {
 		const contentEditTool = documentViewer.getTool(
-			window.Core.Tools.ToolNames.CONTENT_EDIT
+			documentInstance.Core.Tools.ToolNames.CONTENT_EDIT
 		);
 		documentViewer.setToolMode(contentEditTool);
 	};
 
 	const createRectangle = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.RECTANGLE)
 		);
 	};
 
 	const selectTool = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.EDIT)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.EDIT)
 		);
 	};
 
 	const createRedaction = () => {
 		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
+			documentViewer.getTool(documentInstance.Core.Tools.ToolNames.REDACTION)
 		);
 	};
 
@@ -291,7 +278,7 @@ const Home = (props: any) => {
 	};
 
 	const applyEditModal = () => {
-		window.Core.ContentEdit.updateDocumentContent(
+		documentInstance.Core.ContentEdit.updateDocumentContent(
 			editBoxAnnotation,
 			editBoxCurrentValue
 		);
@@ -335,11 +322,12 @@ const Home = (props: any) => {
 			selectedAnnotation &&
 			selectedAnnotation.isContentEditPlaceholder() &&
 			selectedAnnotation.getContentEditType() ===
-			window.Core.ContentEdit.Types.TEXT
+			documentInstance.Core.ContentEdit.Types.TEXT
 		) {
-			const content = await window.Core.ContentEdit.getDocumentContent(
-				selectedAnnotation
-			);
+			const content =
+				await documentInstance.Core.ContentEdit.getDocumentContent(
+					selectedAnnotation
+				);
 			setEditBoxAnnotation(selectedAnnotation);
 			setEditBoxCurrentValue(content);
 		} else {
@@ -375,6 +363,11 @@ const Home = (props: any) => {
 			ambientString: true // return ambient string as part of the result
 		};
 
+		// if (!string) {
+		// 	documentViewer.clearSearchResults();
+		// 	return false;
+		// }
+		console.log('searchPattern ------>', searchPattern);
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
@@ -492,7 +485,9 @@ const Home = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
+	// isLoading: state.getIn(['global', 'globalLoading'])
 	isLoading: state.global.globalLoading
 });
 export default connect(mapStateToProps)(Home);
