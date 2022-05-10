@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
@@ -487,7 +488,6 @@ const Home = (props: any) => {
 };
 
 const mapStateToProps = (state: any) => ({
-	// isLoading: state.getIn(['global', 'globalLoading'])
 	isLoading: state.global.globalLoading
 });
 export default connect(mapStateToProps)(Home);
