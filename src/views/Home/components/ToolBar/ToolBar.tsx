@@ -83,13 +83,13 @@ const ToolBar = ({
 
 	const decrementPageCount = () => {
 		if (pageCount > 1) {
-			setPageCount((prev) => prev - 1);
+			setPageCount(prev => prev - 1);
 			documentViewer.setCurrentPage(pageCount - 1);
 		}
 	};
 	const incrementPageCount = () => {
 		if (pageCount <= maxCount) {
-			setPageCount((prev) => prev + 1);
+			setPageCount(prev => prev + 1);
 			documentViewer.setCurrentPage(pageCount + 1);
 		} else {
 			setPageCount(maxCount);
@@ -198,7 +198,7 @@ const ToolBar = ({
 						<input
 							className="border-none"
 							value={pageCount}
-							onChange={(e) => setPageCount(parseInt(e.target.value))}
+							onChange={e => setPageCount(parseInt(e.target.value))}
 							style={{ width: '25px' }}
 						/>
 						<span>of</span>
@@ -271,7 +271,7 @@ const ToolBar = ({
 					/>
 				</Tooltip>
 			)}
-			<VideoIcon alt="video" className="icon22" />
+			{/* <VideoIcon alt="video" className="icon22" />
 			<CallIcon alt="call" className="icon22" />
 			<SizeChangeIcon
 				onClick={() => toggleFullScreen()}
