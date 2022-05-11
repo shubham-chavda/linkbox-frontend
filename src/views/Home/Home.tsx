@@ -128,9 +128,8 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-					? '/webviewer/lib' : "https://lbweb.dev.brainvire.net/lib",
-				initialDoc: documentPath,
+				path: "/webviewer/lib/",//"https://lbweb.dev.brainvire.net/lib",
+				initialDoc: [documentPath, "https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"],
 				fullAPI: true,
 				disabledElements: [
 					'header',
@@ -226,30 +225,31 @@ const Home = (props: any) => {
 				});
 			});
 
+
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
 
-			// instance.UI.textPopup.update([
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/copyIcon.svg',
-			// 		onClick: () => instance.UI.Feature.Copy
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/chatIcon.svg',
-			// 		onClick: () => instance.UI.Feature.NotesPanel
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/bookmarkIcon.svg',
-			// 		onClick: () => instance.Core.Bookmark
-			// 	},
-			// 	{
-			// 		type: 'actionButton',
-			// 		img: '/Icons/userStarIcon.svg'
-			// 	}
-			// ]);
+			instance.UI.textPopup.update([
+				{
+					type: 'actionButton',
+					img: '/Icons/copyIcon.svg',
+					onClick: () => instance.UI.Feature.Copy
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/chatIcon.svg',
+					onClick: () => instance.UI.Feature.NotesPanel
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/bookmarkIcon.svg',
+					onClick: () => instance.Core.Bookmark
+				},
+				{
+					type: 'actionButton',
+					img: '/Icons/userStarIcon.svg'
+				}
+			]);
 		});
 	};
 
@@ -290,15 +290,11 @@ const Home = (props: any) => {
 	};
 
 	const createRectangle = () => {
-		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.RECTANGLE)
-		);
+		documentInstance.setToolMode("Pan");
 	};
 
 	const selectTool = () => {
-		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.EDIT)
-		);
+		documentInstance.setToolMode("AnnotationEdit");
 	};
 
 	const createRedaction = () => {
