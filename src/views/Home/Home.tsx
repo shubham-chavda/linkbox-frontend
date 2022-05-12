@@ -275,7 +275,6 @@ const Home = (props: any) => {
 	};
 
 	const setCustomZoomLevel = (zoomPercentages: number) => {
-		console.log("zoomPercentages --------->", zoomPercentages);
 		documentViewer.zoomTo(zoomPercentages);
 	};
 
