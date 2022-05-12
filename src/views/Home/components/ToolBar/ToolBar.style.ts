@@ -1,20 +1,17 @@
 import { Input, Row, Select } from 'antd';
 import styled from 'styled-components';
 
-const { Option } = Select;
-
 export const ToolBarContainer = styled(Row)`
   width:100%;
   padding:0 18px;
 `;
 
-
 export const SearchButton = styled(Input)`
   border-radius:24px;
   width: 180px;
-  padding:10px;
-  background:#F5F7F9;
-  border:none;
+  padding: 10px;
+  background: #F5F7F9;
+  border: none;
   && .ant-input-affix-wrapper, input.ant-input{
     background:#F5F7F9;
     padding-left: 12px;
@@ -38,13 +35,14 @@ export const SelectContainer = styled(Select)`
   text-align: center;
   height: 1.5rem;
 `;
+
 export const PaginationContainer = styled.div`
   border:1px solid #F2F2F2;
   border-radius:12px;
   padding:10px;
   width:130px;
-  
 `;
+
 export const IconBG = styled.div`
   background:#170944;
   padding:10px;
