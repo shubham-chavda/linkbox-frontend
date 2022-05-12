@@ -19,6 +19,7 @@ import {
 	PostButton,
 	ReplyButton
 } from './Comment.style';
+import _ from 'lodash';
 import AddComment from './components/AddComment';
 import nameInitials from 'name-initials';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
@@ -52,7 +53,7 @@ export default function CommentSection({
 
 			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
 				console.log("annotationManager.getSelectedAnnotations ======>", annot);
-				onSendCommentEvent("cndjncjd")
+				// onSendCommentEvent("cndjncjd")
 				ids[annot.Id] = true;
 			});
 			if (isOpen) {
@@ -67,12 +68,13 @@ export default function CommentSection({
 	}, []);
 
 	useEffect(() => {
-		console.log("updatedAnnotation --------->", updatedAnnotation);
-	}, [updatedAnnotation])
+		const measurementAnnotation = annotationManager.getAnnotationsList();
+		const NotesArray = _.filter(measurementAnnotation, { Subject: 'Note' });
+		console.log("NotesArray ---------->", NotesArray);
+		console.log("measurementAnnotation -------->", measurementAnnotation);
+	}, [])
 
 	const onSendCommentEvent = (text: any) => {
-		// const stateAnnotation = new annotations.StickyAnnotation();
-		// stateAnnotation.setContents("contents");
 		console.log("onSendCommentEvent ==========>", text);
 		annotationManager.setNoteContents(updatedAnnotation[0], text);
 	}

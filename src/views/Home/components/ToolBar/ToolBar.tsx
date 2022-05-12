@@ -49,6 +49,7 @@ interface IToolBarProps {
 	toggleFullScreen: any;
 	searchResults: any;
 	printPdf: any;
+	exportAnnotation: any;
 }
 
 const ToolBar = ({
@@ -65,6 +66,7 @@ const ToolBar = ({
 	onChangeSearchInput,
 	toggleFullScreen,
 	printPdf,
+	exportAnnotation,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -273,7 +275,11 @@ const ToolBar = ({
 				</Tooltip>
 			)}
 			<VideoIcon alt="video" className="icon22" />
-			<CallIcon alt="call" className="icon22" />
+			<CallIcon
+				alt="call"
+				className="icon22"
+				onClick={() => exportAnnotation()}
+			/>
 			<SizeChangeIcon
 				onClick={() => toggleFullScreen()}
 				alt="size"

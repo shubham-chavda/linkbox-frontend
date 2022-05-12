@@ -160,6 +160,10 @@ const Home = (props: any) => {
 				// }
 			});
 
+			// const selectedAnnotation = await annotationManager.getSelectedAnnotations()
+
+			// getSelectedText
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -173,6 +177,24 @@ const Home = (props: any) => {
 			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+
+
+			const page = documentViewer.getCurrentPage();
+			console.log("page ------->", page);
+			// const text = documentViewer.getSelectedText(page);
+
+			// if (!!text) {
+			// 	console.log("text ------------>", text);
+			// }
+
+
+			// documentViewer.addEventListener('textSelected', (startQuad, allQuads) => {
+			// 	console.log("startQuad, allQuads ---------->", startQuad, allQuads);
+			// 	// the startQuad and allQuads will have the X and Y values you want
+			// });
+
+
+
 			// const totalPageCount = documentViewer.getPageCount();
 			// console.log("totalPageCount -------->", totalPageCount);
 			// documentLoaded
@@ -329,6 +351,12 @@ const Home = (props: any) => {
 		});
 	};
 
+	const exportAnnotation = () => {
+		annotationManager.exportAnnotations({ links: false, widgets: false }).then((xfdfString: any) => {
+			console.log("xfdfstring ---------->", xfdfString);
+		})
+	}
+
 	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
 	};
@@ -481,6 +509,7 @@ const Home = (props: any) => {
 								onChangeSearchInput={onChangeSearchInput}
 								toggleFullScreen={toggleFullScreen}
 								printPdf={printPdf}
+								exportAnnotation={exportAnnotation}
 							/>
 						</Row>
 						<ContentSection>
