@@ -45,9 +45,14 @@ import { ExpandAltOutlined } from '@ant-design/icons';
 import Comment from '../../components/Comment';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { getDocumentInfo } from '../../store/Documents/DocumentsReducer';
+import {
+	getDocumentInfo,
+	setTabPanes
+} from '../../store/Documents/DocumentsReducer';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import history from '../../history';
+import TabManager from '../../helper/tabManager';
 const { DOC_URL } = process.env;
 
 declare global {
@@ -57,9 +62,10 @@ declare global {
 }
 
 const Home = (props: any) => {
+	const { tabPanes } = props;
+
 	const dispatch = useAppDispatch();
 	const { id: documentID } = useParams();
-	const { isLoading } = props;
 
 	const documentList = useAppSelector(
 		(RootState) => RootState.documents.documentList
@@ -73,7 +79,7 @@ const Home = (props: any) => {
 	const searchTerm = useRef(null);
 
 	const [maxCount, setMaxCount] = useState(10);
-	const [activeKey, setActiveKey] = useState('1');
+	const [activeKey, setActiveKey] = useState('');
 	const [collapsed, setCollapsed] = useState(false);
 
 	const [documentViewer, setDocumentViewer] = useState<any>(null);
@@ -88,17 +94,17 @@ const Home = (props: any) => {
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [updatedAnnotation, setUpdatedAnnotation] = useState<any>(null);
 	const [documentInstance, setDocumentInstance] = useState<any>(null);
-	const [initialPanes, setInitialPanes] = useState([
-		{
-			title: selectedDocumentInfo ? selectedDocumentInfo.name : null,
-			content: 'Content of Tab 1',
-			key: '1'
-		}
-	]);
-	// const initialPanes: initPanel = ;
+	// const [initialPanes, setInitialPanes] = useState([
+	// 	{
+	// 		title: selectedDocumentInfo ? selectedDocumentInfo.name : null,
+	// 		content: selectedDocumentInfo?.docUrl,
+	// 		key: '1'
+	// 	}
+	// ]);
+
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
-	}, []);
+	}, [documentID]);
 	useEffect(() => {
 		if (selectedDocumentInfo) {
 			loadPdfDocumentByPath(
@@ -107,15 +113,18 @@ const Home = (props: any) => {
 					''
 				)}`
 			);
-			setInitialPanes([
-				{
-					title: selectedDocumentInfo
-						? selectedDocumentInfo.name
-						: 'PdfTron default',
-					content: 'Content of Tab 1',
-					key: '1'
-				}
-			]);
+			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
+			dispatch(
+				setTabPanes([
+					{
+						title: selectedDocumentInfo
+							? selectedDocumentInfo.name
+							: 'PdfTron default',
+						content: selectedDocumentInfo?.docUrl,
+						key: selectedDocumentInfo?.uuid
+					}
+				])
+			);
 		}
 		// else {
 		// 	loadPdfDocumentByPath(
@@ -134,9 +143,9 @@ const Home = (props: any) => {
 					'header',
 					'toolsHeader',
 					'searchPanel',
-					'contextMenuPopup',
+					'contextMenuPopup'
 					// 'notesPanel',
-				],
+				]
 				// css: '/test.css'
 			},
 			viewer.current
@@ -198,8 +207,8 @@ const Home = (props: any) => {
 			await doc.view(documentPath);
 
 			if (!doc.isAuthor) {
-				const canJoin = await doc.canJoin()
-				console.log('canJoin ---> ', canJoin)
+				const canJoin = await doc.canJoin();
+				console.log('canJoin ---> ', canJoin);
 				if (canJoin) doc.join();
 			}
 
@@ -224,6 +233,17 @@ const Home = (props: any) => {
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
+			// const a = instance.UI.addEventListener('TAB_ADDED', (tab) => {')
+			// const a = await instance.UI.TabManager(
+			// 	'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1',
+			// 	{
+			// 		extension: 'pdf',
+			// 		load: true,
+			// 		saveCurrent: true
+			// 	}
+			// );
+
+			// const a = instance.UI.TabManager.addEventListener()
 
 			instance.UI.textPopup.update([
 				{
@@ -286,11 +306,11 @@ const Home = (props: any) => {
 	};
 
 	const createRectangle = () => {
-		documentInstance.setToolMode("Pan");
+		documentInstance.setToolMode('Pan');
 	};
 
 	const selectTool = () => {
-		documentInstance.setToolMode("AnnotationEdit");
+		documentInstance.setToolMode('AnnotationEdit');
 	};
 
 	const createRedaction = () => {
@@ -368,6 +388,7 @@ const Home = (props: any) => {
 
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
+		history.navigate?.(`/document-detail/${currentKey}`);
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
@@ -403,17 +424,18 @@ const Home = (props: any) => {
 			<MainContainer>
 				{/* Header part start */}
 				<HeaderContainer>
-					<HeaderHome className="height-full" span={1}>
+					<HeaderHome
+						className="height-full"
+						onClick={() => history.navigate?.('/documents')}
+						span={1}
+					>
 						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
 
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<FileTabBar
-							onTabChange={onTabChange}
-							initialPanes={initialPanes}
-						/>
+						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} />
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}
@@ -522,6 +544,6 @@ const Home = (props: any) => {
 };
 
 const mapStateToProps = (state: any) => ({
-	isLoading: state.global.globalLoading
+	tabPanes: state.documents.tabPanes
 });
 export default connect(mapStateToProps)(Home);

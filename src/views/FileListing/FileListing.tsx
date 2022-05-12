@@ -82,11 +82,22 @@ const FileListing: React.FC = (props: any) => {
 		searchString.length > 2 ? searchData : documentListData
 	);
 	useEffect(() => {
+		console.log('🚀🚀🚀 docClicked ------->', docClicked);
+	}, [docClicked]);
+	useEffect(() => {
 		setDocumentList(searchString.length > 2 ? searchData : documentListData);
 		setShowMoreButton(
 			searchString.length > 2 ? showMoreSearchDocs : showMoreDocs
 		);
-	}, [documentListData, searchData, searchString.length]);
+		console.log('payload--last', documentListData, 'payload--selast');
+	}, [props]);
+
+	// useEffect(() => {
+	// 	if (documentListData !== documentList) {
+	// 		setDocumentList(props.documentListData);
+	// 	}
+	// 	console.log('payload--last',props.documentListData,'payload--selast',)
+	//   }, [documentListData]);
 
 	useEffect(() => {
 		const data = {
@@ -98,10 +109,10 @@ const FileListing: React.FC = (props: any) => {
 	}, [assendingOrder, pageNo, searchString.length > 2]);
 
 	useEffect(() => {
-		// setCurrentDocument(documentList[0])
 		if (documentList[0]) {
-			dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
+			//dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
+		console.log('docss----', documentList);
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));

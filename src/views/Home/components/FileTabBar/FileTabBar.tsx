@@ -12,18 +12,23 @@ interface IFileTabBar {
 	onTabChange: (activeKey: string) => void;
 }
 const FileTabBar: React.FC<IFileTabBar> = (props) => {
-	const newTabIndex = 0;
+	const { initialPanes, onTabChange } = props;
+
 	const [activeKey, setActiveKey] = useState('');
 	const [panes, setPanes] = useState<initPanel | null>();
 
 	useEffect(() => {
-		setPanes(props.initialPanes);
-		setActiveKey(props.initialPanes[0].key);
-	}, [props.initialPanes]);
+		setPanes(initialPanes);
+		setActiveKey(initialPanes[0]?.key);
+	}, [initialPanes]);
 
 	const onChange = (activeKey: string) => {
+		console.log(
+			'🚀 ~ file: FileTabBar.tsx ~ line 25 ~ onChange ~ activeKey',
+			activeKey
+		);
 		setActiveKey(activeKey);
-		props.onTabChange(activeKey);
+		onTabChange(activeKey);
 	};
 
 	const onEdit = (

@@ -34,6 +34,3 @@ export const SiderMenu = styled(Menu)`
 	}
 `;
 
-export const AvatarImg = styled(Avatar)`
-	border:1px solid gray;
-`;

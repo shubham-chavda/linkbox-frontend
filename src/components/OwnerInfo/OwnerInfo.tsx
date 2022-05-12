@@ -7,7 +7,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
 import { connect } from 'react-redux';
-
+import nameInitials from 'name-initials';
 interface IOwnerInfo {
 	fileListing: boolean;
 	ownerData?: any;
@@ -45,6 +45,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 				uuid: selectedDocumentInfo?.uuid
 			};
 			dispatch(updateDocumentInfo(payload));
+			console.log('payload--Ownerpage', payload);
 		}
 	};
 
@@ -53,12 +54,15 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			<Row className="flex items-center ">
 				<Col span={18} className="flex items-center fluid">
 					<Avatar
+						style={{ backgroundColor: '#25CA69' }}
+						// src="https://joeschmoe.io/api/v1/random"
+						alt="Name"
 						size={35}
 						className="mr2"
-						style={{ border: '1px solid gray' }}
-						src={'https://joeschmoe.io/api/v1/random'}
-					/>
-					<Name>{user?.fullName || 'Robert__fox_'}</Name>
+					>
+						{nameInitials(user?.fullName || '-')}
+					</Avatar>
+					<Name>{user?.fullName || '-'}</Name>
 				</Col>
 
 				<Col span={5}>
