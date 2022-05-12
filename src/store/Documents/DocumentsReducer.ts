@@ -12,6 +12,7 @@ interface IGlobalState {
 	selectedDocuments: any[];
 	selectedDocumentInfo: any;
 	searchDocumentList: any[];
+	tabPanes: Array<any>;
 }
 
 // Define the initial state using that type
@@ -22,7 +23,8 @@ export const initialState: Immutable<IGlobalState> = {
 	selectedDocumentInfo: null,
 	searchDocumentList: [],
 	showMoreSearchDocs: false,
-	docInfoLoader: false
+	docInfoLoader: false,
+	tabPanes:[],
 };
 
 export const DocumentsReducer = createSlice({
@@ -50,12 +52,12 @@ export const DocumentsReducer = createSlice({
 			state.selectedDocuments = [action.payload];
 		},
 		updateDocumentInfo(state, action) {
-			let data_one = [action.payload];
-			let data_two = [...state.documentList];
+			const data_one = [action.payload];
+			const data_two = [...state.documentList];
 
 			console.log('data_one', ...state.documentList);
-			let data = [...state.documentList];
-			for (var i in state.documentList) {
+			const data = [...state.documentList];
+			for (const i in state.documentList) {
 				if (state.documentList[i].uuid == action.payload.uuid) {
 					state.documentList[i].name = action.payload.name;
 					break;
@@ -65,6 +67,14 @@ export const DocumentsReducer = createSlice({
 		},
 		toggleDocInfoLoader(state, action) {
 			state.docInfoLoader = action.payload;
+		},
+		setTabPanes(state, action) {
+			const isExist = state.tabPanes.find((item) => item.key === action.payload[0].key);
+            console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist", isExist)
+			if(!isExist){
+				state.tabPanes.push(...action.payload)
+				console.log("🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes", state.tabPanes,action.payload)
+			}
 		}
 	}
 });
@@ -78,7 +88,8 @@ export const {
 	updateDocumentInfo,
 	setSelectedDocuments,
 	setSearchDocumentList,
-	toggleDocInfoLoader
+	toggleDocInfoLoader,
+	setTabPanes
 } = DocumentsReducer.actions;
 
 export default DocumentsReducer.reducer;

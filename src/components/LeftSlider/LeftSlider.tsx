@@ -1,13 +1,19 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'antd';
-import { AvatarImg, Sider, SiderMenu } from './LeftSlider.style';
+import { Avatar, Menu } from 'antd';
+import { Sider, SiderMenu } from './LeftSlider.style';
 
 import { BellIcon, ChatIcon } from '../../assets';
 import { logOut } from '../../store/global/globalReducer';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { connect } from 'react-redux';
+import nameInitials from 'name-initials';
 
-const LeftSlider = () => {
+interface ILeftSlider {
+	user: any;
+}
+const LeftSlider = (props: ILeftSlider) => {
+	const { user } = props;
 	// state = {
 	// 	isCollapsed: false,
 	// 	selectedMenu: "dashboard",
@@ -35,12 +41,20 @@ const LeftSlider = () => {
 
 	const dispatch = useAppDispatch();
 	const menu = (
+		// <AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
 		<Fragment>
 			<Menu.Item
 				key="/"
 				onClick={() => dispatch(logOut())}
 				icon={
-					<AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
+					<Avatar
+						style={{ backgroundColor: '#25CA69', color: 'white' }}
+						// src="https://joeschmoe.io/api/v1/random"
+						alt="name"
+						size={30}
+					>
+						{nameInitials(user?.fullName || '-')}
+					</Avatar>
 				}
 			>
 				<Link to="/">Logout</Link>
@@ -81,8 +95,8 @@ const LeftSlider = () => {
 // LeftSlider.propTypes = {
 
 // };
+const mapStateToProps = (state: any) => ({
+	user: state.global.user
+});
 
-// const mapStateToProps = state => ({
-// });
-
-export default LeftSlider;
+export default connect(mapStateToProps)(LeftSlider);

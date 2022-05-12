@@ -37,7 +37,7 @@ const MemberList: React.FC = () => {
 								<Avatar
 									style={{ backgroundColor: '#25CA69' }}
 									// src="https://joeschmoe.io/api/v1/random"
-									alt="John Doe"
+									alt="name"
 									size={45}
 								>
 									{nameInitials('John Doe')}
