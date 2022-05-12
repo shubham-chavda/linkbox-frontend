@@ -154,8 +154,8 @@ const ToolBar = ({
 				</>
 				<RightOutlined
 					{...IncDecContainerProps}
-					disabled={searchResults.length === currentSearchResultOn}
 					onClick={() => jumpToSearchResult(1)}
+					disabled={searchResults.length === currentSearchResultOn}
 				/>
 			</PaginationContainer>
 		);

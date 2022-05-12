@@ -197,15 +197,13 @@ const FileListing: React.FC = (props: any) => {
 								</Button>
 							</div>
 							<div
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
 								className="flex items-center"
+								style={{ borderLeft: '1px solid #e3ecf3' }}
 							>
 								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
 								<Button
-									className="ml1 color-light-gray"
 									type="link"
+									className="ml1 color-light-gray"
 									onClick={() => setIsUploadModalOpen((prev) => !prev)}
 								>
 									<CloudUploadOutlined
@@ -430,6 +428,7 @@ const FileListing: React.FC = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
 	showMoreDocs: state.documents.showMoreDocs,
 	showMoreSearchDocs: state.documents.showMoreSearchDocs,
@@ -438,4 +437,5 @@ const mapStateToProps = (state: any) => ({
 	isGlobalLoading: state.global.globalLoading,
 	docInfoLoader: state.documents.docInfoLoader
 });
+
 export default connect(mapStateToProps)(FileListing);

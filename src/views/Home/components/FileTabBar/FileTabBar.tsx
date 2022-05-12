@@ -7,10 +7,12 @@ import history from '../../../../history';
 import { initPanel } from '../../../../types/Home.interface';
 
 const { TabPane } = Tabs;
+
 interface IFileTabBar {
 	initialPanes: initPanel;
 	onTabChange: (activeKey: string) => void;
-}
+};
+
 const FileTabBar: React.FC<IFileTabBar> = (props) => {
 	const { initialPanes, onTabChange } = props;
 

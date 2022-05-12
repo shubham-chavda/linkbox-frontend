@@ -52,6 +52,7 @@ export default function CommentSection({
 
 			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
 				console.log("annotationManager.getSelectedAnnotations ======>", annot);
+				onSendCommentEvent("cndjncjd")
 				ids[annot.Id] = true;
 			});
 			if (isOpen) {
@@ -70,10 +71,10 @@ export default function CommentSection({
 	}, [updatedAnnotation])
 
 	const onSendCommentEvent = (text: any) => {
-		const stateAnnotation = new annotations.StickyAnnotation();
-		stateAnnotation.setContents("contents");
+		// const stateAnnotation = new annotations.StickyAnnotation();
+		// stateAnnotation.setContents("contents");
 		console.log("onSendCommentEvent ==========>", text);
-		annotationManager.setNoteContents(updatedAnnotation, text);
+		annotationManager.setNoteContents(updatedAnnotation[0], text);
 	}
 
 	return !isComment ? (

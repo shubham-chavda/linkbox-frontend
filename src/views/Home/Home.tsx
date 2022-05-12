@@ -49,10 +49,9 @@ import {
 	getDocumentInfo,
 	setTabPanes
 } from '../../store/Documents/DocumentsReducer';
-import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import history from '../../history';
-import TabManager from '../../helper/tabManager';
 const { DOC_URL } = process.env;
 
 declare global {
@@ -78,7 +77,7 @@ const Home = (props: any) => {
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
 
-	const [maxCount, setMaxCount] = useState(10);
+	const [maxCount, setMaxCount] = useState(1);
 	const [activeKey, setActiveKey] = useState('');
 	const [collapsed, setCollapsed] = useState(false);
 
@@ -152,6 +151,15 @@ const Home = (props: any) => {
 		).then(async (instance) => {
 			const { Annotations, Search, annotationManager } = instance.Core;
 
+			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
+				setUpdatedAnnotation(annotations);
+				console.log("annotations ----->", annotations);
+				console.log("action ----->", action);
+				// if (action !== "modify") {
+				// 	annotationManager.setNoteContents(annotations[0], "static annotation");
+				// }
+			});
+
 			const Core = instance.Core;
 			Core.enableFullPDF();
 			const documentViewer = new Core.DocumentViewer();
@@ -165,7 +173,9 @@ const Home = (props: any) => {
 			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-
+			// const totalPageCount = documentViewer.getPageCount();
+			// console.log("totalPageCount -------->", totalPageCount);
+			// documentLoaded
 			instance.UI.enableFeatures([instance.UI.Feature.MultiTab]);
 
 			// annotationManager.setNoteContents(annotations, text);
@@ -173,66 +183,65 @@ const Home = (props: any) => {
 			// https://lbdocapi.dev.brainvire.net/collab
 
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
-			const client = new CollabClient({
-				instance,
-				logLevel: CollabClient.LogLevels.DEBUG,
-				filterLogsByTag: CollabClient.LogTags.AUTH,
-				url: 'https://lbnotifapi.dev.brainvire.net',
-				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
-			});
-			let session = await client.getUserSession();
-			console.log('session --->', session);
-			if (!session) {
-				const token = window.localStorage.getItem('token');
-				// console.log("client --------->", client);
+			// const client = new CollabClient({
+			// 	instance,
+			// 	logLevel: CollabClient.LogLevels.DEBUG,
+			// 	filterLogsByTag: CollabClient.LogTags.AUTH,
+			// 	url: 'https://lbnotifapi.dev.brainvire.net',
+			// 	subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
+			// });
+			// let session = await client.getUserSession();
+			// console.log('session --->', session);
+			// if (!session) {
+			// 	const token = window.localStorage.getItem('token');
+			// 	// console.log("client --------->", client);
 
-				console.log('token ------>', token);
+			// 	console.log('token ------>', token);
 
-				session = await client.loginWithToken(token || '');
-				console.log('new session ------->', session);
-				// await client.setContext({ userId: session.id, createdBy: session.id });
-				if (!session) {
-					notification.error({
-						message: 'Login is failed Please refresh page....'
-					});
-					return false;
-				}
-				await client.setCustomHeaders({
-					authorization: token || ''
-				});
-			}
+			// 	session = await client.loginWithToken(token || '');
+			// 	console.log('new session ------->', session);
+			// 	// await client.setContext({ userId: session.id, createdBy: session.id });
+			// 	if (!session) {
+			// 		notification.error({
+			// 			message: 'Login is failed Please refresh page....'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	await client.setCustomHeaders({
+			// 		authorization: token || ''
+			// 	});
+			// }
 
-			const doc = await session.getDocument(selectedDocumentInfo.id);
-			console.log('doc ------->', doc);
-			await doc.view(documentPath);
+			// const doc = await session.getDocument(selectedDocumentInfo.id);
+			// console.log('doc ------->', doc);
+			// await doc.view(documentPath);
+			// const totalPageCount = documentViewer.getPageCount();
+			// console.log("totalPageCount -------->", totalPageCount);
+			// setMaxCount(totalPageCount);
 
-			if (!doc.isAuthor) {
-				const canJoin = await doc.canJoin();
-				console.log('canJoin ---> ', canJoin);
-				if (canJoin) doc.join();
-			}
+			// if (!doc.isAuthor) {
+			// 	const canJoin = await doc.canJoin();
+			// 	console.log('canJoin ---> ', canJoin);
+			// 	if (canJoin) doc.join();
+			// }
 
-			console.log('isAuthor', doc.isAuthor);
-			console.log('isMember', doc.isMember());
-			// await doc.inviteUsers([responseLogin.id])
-			client.EventManager.subscribe('annotationAdded', (annotation) => {
-				console.log('annotation ---------->', annotation);
-				setUpdatedAnnotation(updatedAnnotation);
-				annotation.subscribe('onChange', (updatedAnnotation) => {
-					console.log('annotation changed', updatedAnnotation);
-					// if (updatedAnnotation.contents) {
-					// 	setCommentOpen(true);
-					// 	setRightSiderClicks('comment');
-					// }
-				});
-			});
+			// console.log('isAuthor', doc.isAuthor);
+			// console.log('isMember', doc.isMember());
+			// // await doc.inviteUsers([responseLogin.id])
+			// client.EventManager.subscribe('annotationAdded', (annotation) => {
+			// 	console.log('annotation ---------->', annotation);
+			// 	setUpdatedAnnotation(updatedAnnotation);
+			// 	annotation.subscribe('onChange', (updatedAnnotation) => {
+			// 		console.log('annotation changed', updatedAnnotation);
+			// 	});
+			// });
 
 			// client.EventManager.subscribe('annotationChanged', (annotation) => {
 			// 	console.log('annotation changed ---------->', annotation);
 			// });
 
-			const style = instance.UI.iframeWindow.document.documentElement.style;
-			style.setProperty(`--document-background-color`, 'white');
+			// const style = instance.UI.iframeWindow.document.documentElement.style;
+			// style.setProperty(`--document-background-color`, 'white');
 			// const a = instance.UI.addEventListener('TAB_ADDED', (tab) => {')
 			// const a = await instance.UI.TabManager(
 			// 	'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1',
@@ -245,27 +254,27 @@ const Home = (props: any) => {
 
 			// const a = instance.UI.TabManager.addEventListener()
 
-			instance.UI.textPopup.update([
-				{
-					type: 'actionButton',
-					img: '/Icons/copyIcon.svg',
-					onClick: () => instance.UI.Feature.Copy
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/chatIcon.svg',
-					onClick: () => instance.UI.Feature.NotesPanel
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/bookmarkIcon.svg',
-					onClick: () => instance.Core.Bookmark
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/userStarIcon.svg'
-				}
-			]);
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/copyIcon.svg',
+			// 		onClick: () => instance.UI.Feature.Copy
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/chatIcon.svg',
+			// 		onClick: () => instance.UI.Feature.NotesPanel
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/bookmarkIcon.svg',
+			// 		onClick: () => instance.Core.Bookmark
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/userStarIcon.svg'
+			// 	}
+			// ]);
 		});
 	};
 
@@ -298,45 +307,12 @@ const Home = (props: any) => {
 		documentViewer.zoomTo(zoomPercentages);
 	};
 
-	const startEditingContent = () => {
-		const contentEditTool = documentViewer.getTool(
-			window.Core.Tools.ToolNames.CONTENT_EDIT
-		);
-		documentViewer.setToolMode(contentEditTool);
-	};
-
 	const createRectangle = () => {
 		documentInstance.setToolMode('Pan');
 	};
 
 	const selectTool = () => {
 		documentInstance.setToolMode('AnnotationEdit');
-	};
-
-	const createRedaction = () => {
-		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
-		);
-	};
-
-	const applyRedactions = async () => {
-		const annotationManager = documentViewer.getAnnotationManager();
-		annotationManager.enableRedaction();
-		await annotationManager.applyRedactions();
-	};
-
-	const richTextEditorChangeHandler = (value: any) => {
-		setEditBoxCurrentValue(value);
-	};
-
-	const applyEditModal = () => {
-		window.Core.ContentEdit.updateDocumentContent(
-			editBoxAnnotation,
-			editBoxCurrentValue
-		);
-
-		setEditBoxAnnotation(null);
-		setEditBoxCurrentValue(null);
 	};
 
 	const changeLayOutMode = (isSingle?: boolean) => {

@@ -27,7 +27,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
 
 	return (
-		<Row className={`mb2 `} style={{ paddingLeft: '10px' }}>
+		<Row className={`mb2`} style={{ paddingLeft: '10px' }}>
 			<Col span={3}>
 				<Avatar src="https://joeschmoe.io/api/v1/random" alt="Han Solo" />
 			</Col>
