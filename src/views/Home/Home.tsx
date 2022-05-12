@@ -47,7 +47,6 @@ import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { getDocumentInfo } from '../../store/Documents/DocumentsReducer';
 import { useParams } from 'react-router-dom';
-import Spinner from '../../components/Spinner/Spinner';
 import { connect } from 'react-redux';
 const { DOC_URL } = process.env;
 
@@ -129,7 +128,7 @@ const Home = (props: any) => {
 		WebViewer(
 			{
 				path: "/webviewer/lib/",//"https://lbweb.dev.brainvire.net/lib",
-				initialDoc: [documentPath, "https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf"],
+				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
 					'header',
@@ -158,10 +157,9 @@ const Home = (props: any) => {
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
-			// Annotations.Annotation
-			// getContents
+			instance.UI.enableFeatures([instance.UI.Feature.MultiTab]);
 
-			// annotationManager.setNoteContents(annotations, text)
+			// annotationManager.setNoteContents(annotations, text);
 
 			// https://lbdocapi.dev.brainvire.net/collab
 
@@ -204,20 +202,15 @@ const Home = (props: any) => {
 				console.log('canJoin ---> ', canJoin)
 				if (canJoin) doc.join();
 			}
-			// const docContext = await client.setContext({ id: responseLogin.id });
-			// const document = await responseLogin.createDocument({
-			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
-			// 	isPublic: true,
-			// 	name: 'my_document.pdf'
-			// })
+
 			console.log('isAuthor', doc.isAuthor);
 			console.log('isMember', doc.isMember());
 			// await doc.inviteUsers([responseLogin.id])
 			client.EventManager.subscribe('annotationAdded', (annotation) => {
 				console.log('annotation ---------->', annotation);
+				setUpdatedAnnotation(updatedAnnotation);
 				annotation.subscribe('onChange', (updatedAnnotation) => {
 					console.log('annotation changed', updatedAnnotation);
-					setUpdatedAnnotation(updatedAnnotation);
 					// if (updatedAnnotation.contents) {
 					// 	setCommentOpen(true);
 					// 	setRightSiderClicks('comment');
@@ -225,6 +218,9 @@ const Home = (props: any) => {
 				});
 			});
 
+			// client.EventManager.subscribe('annotationChanged', (annotation) => {
+			// 	console.log('annotation changed ---------->', annotation);
+			// });
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
@@ -270,7 +266,7 @@ const Home = (props: any) => {
 		annotationManager.drawAnnotationsFromList(newAnnotations);
 	};
 
-	const zoomOut = (zoomPercentages?: number) => {
+	const zoomOut = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
 
@@ -279,6 +275,7 @@ const Home = (props: any) => {
 	};
 
 	const setCustomZoomLevel = (zoomPercentages: number) => {
+		console.log("zoomPercentages --------->", zoomPercentages);
 		documentViewer.zoomTo(zoomPercentages);
 	};
 
@@ -414,7 +411,10 @@ const Home = (props: any) => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<FileTabBar initialPanes={initialPanes} onTabChange={onTabChange} />
+						<FileTabBar
+							onTabChange={onTabChange}
+							initialPanes={initialPanes}
+						/>
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}
@@ -521,6 +521,7 @@ const Home = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
 	isLoading: state.global.globalLoading
 });

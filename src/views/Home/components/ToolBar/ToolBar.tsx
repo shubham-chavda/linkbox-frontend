@@ -28,10 +28,12 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col, Tooltip } from 'antd';
+import { Col, Tooltip, Select } from 'antd';
+import { Popover } from 'react-tiny-popover';
+
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
 import MemberListPopup from './components/MemberListPopup/MemberListPopup';
-import { Popover } from 'react-tiny-popover';
+const { Option } = Select;
 
 interface IToolBarProps {
 	zoomIn: any;
@@ -97,11 +99,9 @@ const ToolBar = ({
 			setPageCount(maxCount);
 		}
 	};
-	const onChangeZoomLevel = (value: string) => {
-		console.log('documentViewer.getZoomLevel() ========>', value);
-		// setZoomLevel(+value);
-		setCustomZoomLevel(value);
-		// setZoomLevel(documentViewer.getZoomLevel() * 100);
+	const onChangeZoomLevel = (value: any) => {
+		setZoomLevel(value);
+		setCustomZoomLevel(value / 100);
 	};
 
 	const refreshZoomLevel = () => {
@@ -167,11 +167,10 @@ const ToolBar = ({
 
 			<Col>
 				<Popover
+					content={options}
 					isOpen={isPopoverOpen}
 					containerStyle={{ top: '14%', left: '5%' }}
-					// positions={['bottom']}
 					onClickOutside={() => setIsPopoverOpen(false)}
-					content={options}
 				>
 					<SearchButtonFilled
 						value={searchValue}
@@ -225,17 +224,17 @@ const ToolBar = ({
 					/>
 					<>
 						<SelectContainer
-							className="flex items-center"
 							bordered={false}
 							disabled={false}
-							suffixIcon={<DownOutlined style={{ color: 'black' }} />}
+							className={"flex items-center"}
 							value={`${Math.floor(zoomLevel)}%`}
-							onChange={() => onChangeZoomLevel}
+							onChange={(value) => onChangeZoomLevel(value)}
+							suffixIcon={<DownOutlined style={{ color: 'black' }} />}
 						>
-							<option value={100}>100%</option>
-							<option value={125}>125%</option>
-							<option value={150}>150%</option>
-							<option value={175}>175%</option>
+							<Option value={100}>100%</Option>
+							<Option value={125}>125%</Option>
+							<Option value={150}>150%</Option>
+							<Option value={175}>175%</Option>
 						</SelectContainer>
 					</>
 					<PlusCircleOutlined

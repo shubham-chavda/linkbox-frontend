@@ -1,10 +1,10 @@
-import { Spin, Tabs } from 'antd';
-import { add } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { initPanel } from '../../../../types/Home.interface';
+import { Spin, Tabs } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+
 import { Tab } from './FileTabBar.style';
 import history from '../../../../history';
-import { LoadingOutlined } from '@ant-design/icons';
+import { initPanel } from '../../../../types/Home.interface';
 
 const { TabPane } = Tabs;
 interface IFileTabBar {
@@ -40,21 +40,6 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 			}
 		}
 	};
-
-	// add = () => {
-
-	// 	const activeKey = `newTab${this.newTabIndex++}`;
-	// 	const newPanes = [...panes];
-	// 	newPanes.push({
-	// 		title: 'New Tab',
-	// 		content: 'Content of new Tab',
-	// 		key: activeKey
-	// 	});
-	// 	this.setState({
-	// 		panes: newPanes,
-	// 		activeKey
-	// 	});
-	// };
 
 	const remove = (targetKey: string) => {
 		let newActiveKey = activeKey;
@@ -92,9 +77,9 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 		>
 			{panes?.map((pane) => (
 				<TabPane
-					tab={pane.title || <Spin indicator={antIcon} size="small" />}
-					key={pane.key}
 					closable={true}
+					key={pane.key}
+					tab={pane.title || <Spin indicator={antIcon} size="small" />}
 				/>
 			))}
 		</Tab>

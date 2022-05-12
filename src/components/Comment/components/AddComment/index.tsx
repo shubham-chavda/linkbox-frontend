@@ -5,8 +5,9 @@ import CommentInputOptions from '../CommentInputOptions/CommentInputOptions';
 import { CommentInputDiv, InputBox } from './AddComment.style';
 
 import VoiceRecording from '../VoiceRecording';
-import EmojiPickerComponent from '../../../EmojiPicker';
 import UploadImage from '../../../UploadImage';
+import EmojiPickerComponent from '../../../EmojiPicker';
+
 interface IAddComment {
 	cancelReply: any;
 }
@@ -17,6 +18,7 @@ interface IEmojiPicker {
 	originalUnified?: string;
 	unified?: string;
 }
+
 const AddComment: React.FC<IAddComment> = (props) => {
 	const { cancelReply } = props;
 	const [inputValue, setInputValue] = useState('');
@@ -76,7 +78,7 @@ const AddComment: React.FC<IAddComment> = (props) => {
 						>
 							Cancel
 						</Button>
-						<PostButton className="font-12  ml1 px3" shape="round">
+						<PostButton className="font-12 ml1 px3" shape="round">
 							Post
 						</PostButton>
 					</div>

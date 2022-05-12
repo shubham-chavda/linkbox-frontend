@@ -32,7 +32,11 @@ type CommentSectionTypes = {
 }
 
 export default function CommentSection({
-	isOpen, annotationManager, annotations, updatedAnnotation }: CommentSectionTypes) {
+	isOpen,
+	annotationManager,
+	annotations,
+	updatedAnnotation,
+}: CommentSectionTypes) {
 	// const { isOpen, annotationManager, annotations, updatedAnnotation } = props;
 
 	const [isComment, setIsComment] = useState(true);
@@ -61,7 +65,13 @@ export default function CommentSection({
 		return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
 	}, []);
 
+	useEffect(() => {
+		console.log("updatedAnnotation --------->", updatedAnnotation);
+	}, [updatedAnnotation])
+
 	const onSendCommentEvent = (text: any) => {
+		const stateAnnotation = new annotations.StickyAnnotation();
+		stateAnnotation.setContents("contents");
 		console.log("onSendCommentEvent ==========>", text);
 		annotationManager.setNoteContents(updatedAnnotation, text);
 	}
