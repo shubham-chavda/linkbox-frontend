@@ -106,7 +106,7 @@ const Home = (props: any) => {
 			'🚀 ~ file: Home.tsx ~ line 108 ~ Home ~ documentInstance',
 			documentInstance
 		);
-		// if (documentInstance) getTabsEvent();
+		if (documentInstance) getTabsEvent();
 	}, [documentInstance]);
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
@@ -188,14 +188,15 @@ const Home = (props: any) => {
 					console.log("quads, selectedText, pageNumber ---->", quads, selectedText, pageNumber);
 					if (selectedText && quads.length) {
 						// quads
-						const highlight = new Annotations.TextHighlightAnnotation();
+						const highlight = new Annotations.TextMarkupAnnotation();
 						highlight.PageNumber = pageNumber;
 						highlight.X = quads[0].x1;
 						highlight.Y = quads[0].y1;
-						highlight.Height = quads[0].x2 - quads[0].x1;
-						highlight.Width = quads[0].y2 - quads[0].y1;
+						highlight.Height = quads[0].x1 - quads[0].x2;
+						highlight.Width = quads[0].y1 - quads[0].y2;
 						highlight.StrokeColor = new Annotations.Color(255, 255, 0);
-						highlight.Quads = [quads];
+						// highlight.Quads = [quads];
+						console.log("highlight --------->", highlight);
 
 						annotationManager.addAnnotation(highlight);
 						annotationManager.drawAnnotations(pageNumber);
@@ -591,4 +592,5 @@ const Home = (props: any) => {
 const mapStateToProps = (state: any) => ({
 	tabPanes: state.documents.tabPanes
 });
+
 export default connect(mapStateToProps)(Home);
