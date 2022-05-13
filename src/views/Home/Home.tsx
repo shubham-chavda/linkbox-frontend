@@ -101,15 +101,15 @@ const Home = (props: any) => {
 	// 	}
 	// ]);
 
-	useEffect(() => {
-		dispatch(getDocumentInfo({ uuid: documentID }));
-	}, [documentID]);
+	// useEffect(() => {
+	// 	dispatch(getDocumentInfo({ uuid: documentID }));
+	// }, [documentID]);
+
 	useEffect(() => {
 		if (selectedDocumentInfo) {
-			console.log("selectedDocumentInfo -------->", DOC_URL);
 			loadPdfDocumentByPath(
-				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
+				// 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
 			// dispatch(
@@ -135,7 +135,6 @@ const Home = (props: any) => {
 		WebViewer(
 			{
 				path: "/webviewer/lib",
-				//"https://lbweb.dev.brainvire.net/lib",
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
@@ -149,7 +148,7 @@ const Home = (props: any) => {
 			},
 			viewer.current
 		).then(async (instance) => {
-			const { Annotations, Search, annotationManager, documentViewer } = instance.Core;
+			const { Annotations, annotationManager, documentViewer } = instance.Core;
 			const Core = instance.Core;
 
 			// documentViewer.addEventListener('documentLoaded', () => {
@@ -159,20 +158,24 @@ const Home = (props: any) => {
 			// 	});
 			// });
 
-			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
-				setUpdatedAnnotation(annotations);
-				console.log("annotations ----->", annotations);
-				console.log("action ----->", action);
-			});
+			// annotationManager.addEventListener('annotationChanged', (annotations, action) => {
+			// 	setUpdatedAnnotation(annotations);
+			// 	console.log("annotations ----->", annotations);
+			// 	console.log("action ----->", action);
+			// });
 
-			Core.enableFullPDF();
-			documentViewer.setOptions({ enableAnnotations: true });
-			setDocumentViewer(Core.documentViewer);
-			setDocumentInstance(instance);
-			setAnnotationManager(annotationManager);
-			setAnnotations(Annotations);
-			const LayoutMode = instance.UI.LayoutMode;
-			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+			// http://localhost:8080/webviewer/lib/ui/
+
+			//%22https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf%22
+
+			// Core.enableFullPDF();
+			// documentViewer.setOptions({ enableAnnotations: true });
+			// setDocumentViewer(Core.documentViewer);
+			// setDocumentInstance(instance);
+			// setAnnotationManager(annotationManager);
+			// setAnnotations(Annotations);
+			// const LayoutMode = instance.UI.LayoutMode;
+			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
 			// annotationManager.setNoteContents(annotations, text);
 
