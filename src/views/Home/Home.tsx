@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import {
@@ -53,7 +54,6 @@ import { useParams } from 'react-router-dom';
 import Spinner from '../../components/Spinner/Spinner';
 import { connect } from 'react-redux';
 import history from '../../history';
-import TabManager from '../../helper/tabManager';
 const { DOC_URL } = process.env;
 
 declare global {
@@ -102,19 +102,41 @@ const Home = (props: any) => {
 	// 		key: '1'
 	// 	}
 	// ]);
-
+	useEffect(() => {
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 108 ~ Home ~ documentInstance',
+			documentInstance
+		);
+		// if (documentInstance) getTabsEvent();
+	}, [documentInstance]);
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
 	}, [documentID]);
 	useEffect(() => {
+		const docUrlList = tabPanes.map((tabPane: any) => {
+			return `${DOC_URL}document/fetch/${tabPane.content}`;
+		});
+		// https://lbdocapi.dev.brainvire.net/v1/document/fetch/local-doc-a3b-6dab4d92-ac25-47da-bca9-2354349c85d4.pdf
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 120 ~ docUrlList ~ docUrlList',
+			docUrlList
+		);
+		const dummy = [
+			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
+			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+		];
+		loadPdfDocumentByPath(docUrlList);
+		// if (docUrlList.length) addTabEvent(docUrlList);
+	}, [tabPanes]);
+
+	useEffect(() => {
 		if (selectedDocumentInfo) {
-			loadPdfDocumentByPath(
-				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
-					'upload/doc/',
-					''
-				)}`
-			);
-			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
+			// loadPdfDocumentByPath(
+			// 	`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
+			// 		'upload/doc/',
+			// 		''
+			// 	)}`
+			// );
 			dispatch(
 				setTabPanes([
 					{
@@ -134,12 +156,12 @@ const Home = (props: any) => {
 		// }
 	}, [selectedDocumentInfo]);
 
-	const loadPdfDocumentByPath = (documentPath: string) => {
+	const loadPdfDocumentByPath = (documentPath: any) => {
 		WebViewer(
 			{
 				path: '/webviewer/lib/', //"https://lbweb.dev.brainvire.net/lib",
 				initialDoc: [
-					documentPath,
+					// ...documentPath
 					'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
 				],
 				fullAPI: true,
@@ -154,21 +176,31 @@ const Home = (props: any) => {
 			},
 			viewer.current
 		).then(async (instance) => {
-			const { Annotations, Search, annotationManager } = instance.Core;
+			const { Annotations, Search, annotationManager, documentViewer } =
+				instance.Core;
 
 			const Core = instance.Core;
 			Core.enableFullPDF();
-			const documentViewer = new Core.DocumentViewer();
-			documentViewer.setScrollViewElement(scrollView.current!);
-			documentViewer.setViewerElement(viewer.current);
-			documentViewer.setOptions({ enableAnnotations: true });
+			const documentViewerCore = new Core.DocumentViewer();
+			documentViewerCore.setScrollViewElement(scrollView.current!);
+			documentViewerCore.setViewerElement(viewer.current);
+			documentViewerCore.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
 			setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
 			setAnnotations(Annotations);
-			documentViewer.disableViewportRenderMode();
+			// documentViewerCore.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+
+			console.log('🚀🚀🚀 ~ file: Home.tsx ~ line 195 ~ ).then ~ tabs');
+			const tabs = documentInstance.UI.TabManager.getTabs();
+			console.log('🚀 ~ file: Home.tsx ~ line 195 ~ ).then ~ tabs', tabs);
+			// documentViewerCore.addEventListener('documentLoaded', () => {
+			// 	console.log('documentLoaded -------->');
+
+			// 	const tabs = documentInstance.UI.TabManager.getTabs();
+			// });
 
 			// Annotations.Annotation
 			// getContents
@@ -239,18 +271,16 @@ const Home = (props: any) => {
 
 			const style = instance.UI.iframeWindow.document.documentElement.style;
 			style.setProperty(`--document-background-color`, 'white');
-			// const a = instance.UI.addEventListener('TAB_ADDED', (tab) => {')
-			// const a = await instance.UI.TabManager(
-			// 	'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1',
-			// 	{
-			// 		extension: 'pdf',
-			// 		load: true,
-			// 		saveCurrent: true
-			// 	}
-			// );
 
-			// const a = instance.UI.TabManager.addEventListener()
-
+			instance.UI.addEventListener(instance.UI.Events.DOCUMENT_LOADED, (e) => {
+				console.log(
+					'🚀 ~ file: Home.tsx ~ line 265 ~ instance.UI.addEventListener ~ TAB_ADDED',
+					e
+				);
+				const { detail } = e;
+				console.log(detail.src); // Source of the new tab
+				console.log(detail.options); // Document load options
+			});
 			instance.UI.textPopup.update([
 				{
 					type: 'actionButton',
@@ -424,7 +454,29 @@ const Home = (props: any) => {
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
-
+	const getTabsEvent = () => {
+		console.log('🚀  getTabsEvent', getTabsEvent);
+		const tabs = documentInstance.UI.TabManager.getTabs();
+		console.log('🚀 ~ file: Home.tsx ~ line 434 ~ getTabsEvent ~ tabs', tabs);
+	};
+	const addTabEvent = (DocUrlList: string) => {
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 423 ~ addTabEvent ~ DocURL',
+			DocUrlList,
+			documentInstance
+		);
+		const options = {
+			extension: 'pdf',
+			filename: 'file1.pdf', // Used as the name of the tab
+			load: true, // Defaults to true
+			saveCurrent: false // Defaults to true
+		};
+		documentInstance.UI.TabManager.addTab(DocUrlList, options).then(function (
+			newTabId: any
+		) {
+			console.log('🚀🚀🚀🚀🚀', newTabId);
+		});
+	};
 	return (
 		<>
 			<MainContainer>
