@@ -106,24 +106,23 @@ const Home = (props: any) => {
 	}, [documentID]);
 	useEffect(() => {
 		if (selectedDocumentInfo) {
+			console.log("selectedDocumentInfo -------->", DOC_URL);
 			loadPdfDocumentByPath(
-				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
-					'upload/doc/',
-					''
-				)}`
+				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
-			dispatch(
-				setTabPanes([
-					{
-						title: selectedDocumentInfo
-							? selectedDocumentInfo.name
-							: 'PdfTron default',
-						content: selectedDocumentInfo?.docUrl,
-						key: selectedDocumentInfo?.uuid
-					}
-				])
-			);
+			// dispatch(
+			// 	setTabPanes([
+			// 		{
+			// 			title: selectedDocumentInfo
+			// 				? selectedDocumentInfo.name
+			// 				: 'PdfTron default',
+			// 			content: selectedDocumentInfo?.docUrl,
+			// 			key: selectedDocumentInfo?.uuid
+			// 		}
+			// 	])
+			// );
 		}
 		// else {
 		// 	loadPdfDocumentByPath(
@@ -135,7 +134,8 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
-				path: "/webviewer/lib/",//"https://lbweb.dev.brainvire.net/lib",
+				path: "/webviewer/lib",
+				//"https://lbweb.dev.brainvire.net/lib",
 				initialDoc: documentPath,
 				fullAPI: true,
 				disabledElements: [
@@ -144,61 +144,35 @@ const Home = (props: any) => {
 					'searchPanel',
 					'contextMenuPopup'
 					// 'notesPanel',
-				]
+				],
 				// css: '/test.css'
 			},
 			viewer.current
 		).then(async (instance) => {
-			const { Annotations, Search, annotationManager } = instance.Core;
+			const { Annotations, Search, annotationManager, documentViewer } = instance.Core;
+			const Core = instance.Core;
+
+			// documentViewer.addEventListener('documentLoaded', () => {
+			// 	console.log("documentLoaded -------->");
+			// 	documentViewer.addEventListener('textSelected', (quads, selectedText, pageNumber) => {
+			// 		console.log("quads, selectedText, pageNumber ---->", quads, selectedText, pageNumber);
+			// 	});
+			// });
 
 			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
 				setUpdatedAnnotation(annotations);
 				console.log("annotations ----->", annotations);
 				console.log("action ----->", action);
-				// if (action !== "modify") {
-				// 	annotationManager.setNoteContents(annotations[0], "static annotation");
-				// }
 			});
 
-			// const selectedAnnotation = await annotationManager.getSelectedAnnotations()
-
-			// getSelectedText
-
-			const Core = instance.Core;
 			Core.enableFullPDF();
-			const documentViewer = new Core.DocumentViewer();
-			documentViewer.setScrollViewElement(scrollView.current!);
-			documentViewer.setViewerElement(viewer.current);
 			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(Core.documentViewer);
 			setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
 			setAnnotations(Annotations);
-			documentViewer.disableViewportRenderMode();
 			const LayoutMode = instance.UI.LayoutMode;
 			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-
-
-			const page = documentViewer.getCurrentPage();
-			console.log("page ------->", page);
-			// const text = documentViewer.getSelectedText(page);
-
-			// if (!!text) {
-			// 	console.log("text ------------>", text);
-			// }
-
-
-			// documentViewer.addEventListener('textSelected', (startQuad, allQuads) => {
-			// 	console.log("startQuad, allQuads ---------->", startQuad, allQuads);
-			// 	// the startQuad and allQuads will have the X and Y values you want
-			// });
-
-
-
-			// const totalPageCount = documentViewer.getPageCount();
-			// console.log("totalPageCount -------->", totalPageCount);
-			// documentLoaded
-			instance.UI.enableFeatures([instance.UI.Feature.MultiTab]);
 
 			// annotationManager.setNoteContents(annotations, text);
 
@@ -352,9 +326,10 @@ const Home = (props: any) => {
 	};
 
 	const exportAnnotation = () => {
-		annotationManager.exportAnnotations({ links: false, widgets: false }).then((xfdfString: any) => {
-			console.log("xfdfstring ---------->", xfdfString);
-		})
+		annotationManager.exportAnnotations({ links: false, widgets: false })
+			.then((xfdfString: any) => {
+				console.log("xfdfstring ---------->", xfdfString);
+			})
 	}
 
 	const toggleFullScreen = async () => {

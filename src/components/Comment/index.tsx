@@ -69,9 +69,9 @@ export default function CommentSection({
 
 	useEffect(() => {
 		const measurementAnnotation = annotationManager.getAnnotationsList();
+		console.log("measurementAnnotation -------->", measurementAnnotation);
 		const NotesArray = _.filter(measurementAnnotation, { Subject: 'Note' });
 		console.log("NotesArray ---------->", NotesArray);
-		console.log("measurementAnnotation -------->", measurementAnnotation);
 	}, [])
 
 	const onSendCommentEvent = (text: any) => {
