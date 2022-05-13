@@ -190,6 +190,10 @@ const Home = (props: any) => {
 						// quads
 						const highlight = new Annotations.TextHighlightAnnotation();
 						highlight.PageNumber = pageNumber;
+						highlight.X = quads[0].x1;
+						highlight.Y = quads[0].y1;
+						highlight.Height = quads[0].x2 - quads[0].x1;
+						highlight.Width = quads[0].y2 - quads[0].y1;
 						highlight.StrokeColor = new Annotations.Color(255, 255, 0);
 						highlight.Quads = [quads];
 

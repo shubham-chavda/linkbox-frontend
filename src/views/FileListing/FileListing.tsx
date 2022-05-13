@@ -112,7 +112,7 @@ const FileListing: React.FC = (props: any) => {
 		if (documentList[0]) {
 			//dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
-		console.log('docss----', documentList);
+		console.log('docs----', documentList);
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));

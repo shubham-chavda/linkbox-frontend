@@ -86,7 +86,7 @@ const FileUpload = (props: FileUploadTypes) => {
 								<ButtonFilled
 									className="ml1"
 									ref={fileInputField}
-									// onClick={() => handleNewFileUpload}
+								// onClick={() => handleNewFileUpload}
 								>
 									Upload
 								</ButtonFilled>
