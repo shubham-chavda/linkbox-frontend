@@ -4,6 +4,7 @@ import { AppNavigate } from './components/App/AppNavigate';
 import { ProtectedRoutes } from './components/App/ProtectedRoutes';
 import NotFound from './components/NotFound';
 import Home from './views/Home/Home';
+import LeftMenu from './views/LeftMenus/LeftMenu';
 import Login from './views/Login/Login';
 import FileListing from './views/FileListing/FileListing';
 import history from './history';
@@ -28,6 +29,7 @@ const App: React.FC = () => {
 					{/* <Route path="/" element={<FileListing />} /> */}
 					<Route path="/" element={<Navigate to="/documents" />} />
 					<Route path="/documents" element={<FileListing />} />
+					<Route path="/profile" element={<LeftMenu />} />
 					<Route path="/document-detail/:id" element={<Home />} />
 					<Route path="*" element={<NotFound />} />
 				</Route>

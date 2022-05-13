@@ -1,11 +1,17 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent, Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'antd';
-import { AvatarImg, Sider, SiderMenu } from './LeftSlider.style';
+import { Menu, Modal, Button, Row, Col, Avatar, Divider } from 'antd';
+import { AvatarImg, Sider, SiderMenu, StyledModal } from './LeftSlider.style';
 
 import { BellIcon, ChatIcon } from '../../assets';
 import { logOut } from '../../store/global/globalReducer';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import {
+	UserOutlined,
+	SettingOutlined,
+	CustomerServiceOutlined,
+	LogoutOutlined
+} from '@ant-design/icons';
 
 const LeftSlider = () => {
 	// state = {
@@ -34,17 +40,120 @@ const LeftSlider = () => {
 	// const {location} = this.props;
 
 	const dispatch = useAppDispatch();
+	const [visible, setVisible] = React.useState(false);
+
+	const [confirmLoading, setConfirmLoading] = React.useState(false);
+	const [modalText, setModalText] = React.useState('Content of the modal');
+
+	const showModal = () => {
+		setVisible(true);
+	};
+
+	const handleOk = () => {
+		setModalText('The modal will be closed after two seconds');
+		setConfirmLoading(true);
+		setTimeout(() => {
+			setVisible(false);
+			setConfirmLoading(false);
+		}, 2000);
+	};
+
+	const handleCancel = () => {
+		console.log('Clicked cancel button');
+		setVisible(false);
+	};
+	const renderModal = () => {
+		return (
+			<StyledModal
+				visible={visible}
+				onOk={handleOk}
+				style={{ top: 43, left: -600 }}
+				closable={false}
+				bodyStyle={{
+					borderRadius: 16,
+					paddingTop: 10,
+					paddingBottom: 10,
+					paddingLeft: 20
+				}}
+				zIndex={1}
+				width={270}
+				footer={null}
+				confirmLoading={confirmLoading}
+				onCancel={handleCancel}
+				mask={false}
+			>
+				<Row style={{ display: 'flex', flexDirection: 'row' }}>
+					<Avatar size={40} src={'https://joeschmoe.io/api/v1/random'} />
+					<div style={{ marginLeft: 10 }}>
+						<text style={{ fontSize: 12 }}>jacob_Jones</text>
+						<div
+							style={{
+								background: 'rgba(19, 121, 255, 0.08)',
+								boxSizing: 'border-box',
+								width: 60,
+								borderRadius: 50
+							}}
+						>
+							<text
+								style={{
+									fontFamily: 'Poppins',
+									fontSize: 12,
+									color: '#1379FF',
+									marginLeft: 11
+								}}
+							>
+								user
+							</text>
+						</div>
+					</div>
+				</Row>
+				<Divider style={{ margin: 8 }} />
+				<Row style={{ borderRadius: 5 }}>
+					<div style={{ alignSelf: 'center' }}>
+						<SettingOutlined style={{ fontSize: 16 }} />
+						<text style={{ marginLeft: 15, textAlign: 'center' }}>
+							<Link style={{ color: 'black' }} to="/profile/">
+								Settings & policy
+							</Link>
+						</text>
+					</div>
+				</Row>
+				<Divider style={{ margin: 8 }} />
+				<Row style={{ borderRadius: 5 }}>
+					<div style={{ alignSelf: 'center' }}>
+						<CustomerServiceOutlined style={{ fontSize: 16 }} />
+						<text style={{ marginLeft: 15 }}>Help & Support</text>
+					</div>
+				</Row>
+				<Divider style={{ margin: 8 }} />
+				<Row
+					style={{ borderRadius: 5, marginTop: 30 }}
+					onClick={() => dispatch(logOut())}
+				>
+					<div style={{ alignSelf: 'center' }}>
+						<LogoutOutlined style={{ fontSize: 16 }} />
+						<text style={{ marginLeft: 15 }}>Log out</text>
+					</div>
+				</Row>
+			</StyledModal>
+		);
+	};
+
 	const menu = (
 		<Fragment>
+			{renderModal()}
+
 			<Menu.Item
 				key="/"
-				onClick={() => dispatch(logOut())}
+				style={{ backgroundColor: 'white' }}
+				onClick={
+					showModal
+					// dispatch(logOut())
+				}
 				icon={
 					<AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
 				}
-			>
-				<Link to="/">Logout</Link>
-			</Menu.Item>
+			></Menu.Item>
 
 			<Menu.Item
 				key="/messages/"

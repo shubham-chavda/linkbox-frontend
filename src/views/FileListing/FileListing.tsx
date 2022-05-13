@@ -67,6 +67,7 @@ const FileListing: React.FC = (props: any) => {
 	const [docClicked, setDocClicked] = useState(0);
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [searchString, setSearchString] = useState('');
+	const [docNameCopy, setDocNameCopy] = useState('');
 	const [assendingOrder, setAssendingOrder] = useState<boolean>(true);
 	const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 	const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
@@ -183,8 +184,7 @@ const FileListing: React.FC = (props: any) => {
 								<Button
 									className="ml1 color-light-gray"
 									type="link"
-									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}
-								>
+									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}>
 									<FolderOutlined
 										style={{ fontSize: '16px', color: 'black' }}
 									/>
@@ -318,8 +318,11 @@ const FileListing: React.FC = (props: any) => {
 													<div
 														key={index}
 														style={{ width: '160px' }}
-														onClick={() =>
+														onClick={() =>{
+															setDocNameCopy(document.name)
 															handleDocClick(index, document?.isFolder)
+														}
+															
 														}
 														className={`${
 															docClicked !== index ? 'hover-blue' : ''
@@ -401,6 +404,7 @@ const FileListing: React.FC = (props: any) => {
 									<OwnerInfo
 										fileListing={true}
 										ownerData={documentList[docClicked]}
+										
 									/>
 								</OwnerInfoContainer>
 							</Row>

@@ -6,15 +6,15 @@ import { DescriptionBox, InputBox, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
-import { connect } from 'react-redux';
+
 
 interface IOwnerInfo {
 	fileListing: boolean;
 	ownerData?: any;
-	user: any;
+
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing, user } = props;
+	const { fileListing } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -23,30 +23,41 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 
 	const [isEdit, setIsEdit] = useState(false);
 	const [titleText, setTitleText] = useState('');
+	const [titleTextCopy, setTitleTextCopy] = useState('');
 	const [descriptionText, setDescriptionText] = useState('');
 
+
 	useEffect(() => {
-		console.log('selectedDocumentInfo- ------>', selectedDocumentInfo);
+		console.log('selectedDocumentInfo- ------>', selectedDocumentInfo,props.ownerData);
 		setTitleText(selectedDocumentInfo?.name);
 		setDescriptionText(selectedDocumentInfo?.desc);
 	}, [selectedDocumentInfo]);
 
 	useEffect(() => {
 		updateDocument();
+		
 	}, [isEdit]);
+	// useEffect(()=>{
+	// 	if(props.docname){
+	// 		setTitleTextCopy(props.docname)	
+	// 	}
+	// },[props.docname])
 
 	const updateDocument = () => {
-		if (!isEdit && (titleText || descriptionText)) {
-			const payload = {
+		if (!isEdit && titleText && descriptionText) {
+			var payload = {
 				name: titleText,
-				desc: descriptionText || '',
+				desc: descriptionText,
 				isShareable: true,
 				sendNotification: true,
 				uuid: selectedDocumentInfo?.uuid
-			};
+			}
+			// setTitleTextCopy(payload.name)
 			dispatch(updateDocumentInfo(payload));
+			
 			console.log('payload--Ownerpage',payload)
 		}
+		
 	};
 
 	return (
@@ -59,14 +70,18 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 						style={{ border: '1px solid gray' }}
 						src={'https://joeschmoe.io/api/v1/random'}
 					/>
-					<Name>{user?.fullName || 'Robert__fox_'}</Name>
+					<Name>{'Robert__fox_'}</Name>
 				</Col>
 
 				<Col span={5}>
 					{fileListing ? (
 						<Button
 							type={'link'}
-							onClick={() => setIsEdit(!isEdit)}
+							onClick={() => {
+								console.log('titleTextCopy',titleTextCopy,'titleText',titleText)
+								
+								setIsEdit(!isEdit)}
+							}
 							icon={
 								<EditIcon
 									alt="edit"
@@ -80,15 +95,23 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 					)}
 				</Col>
 				<Row className="mt2">
+			
+				
+			
 					<InputBox
 						style={{ width: '95%' }}
 						bordered={false}
 						readOnly={!isEdit}
 						value={titleText}
 						className="font-12 hide-scrollbar mb1"
-						onChange={(e) => setTitleText(e.target.value)}
+						onChange={(e) => 
+							setTitleText(e.target.value)
+							 }
 						placeholder="Write Title"
 					/>
+
+				
+							
 				</Row>
 				<Row>
 					<DescriptionBox
@@ -106,7 +129,5 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		</>
 	);
 };
-const mapStateToProps = (state: any) => ({
-	user: state.global.user
-});
-export default connect(mapStateToProps)(OwnerInfo);
+
+export default OwnerInfo;
