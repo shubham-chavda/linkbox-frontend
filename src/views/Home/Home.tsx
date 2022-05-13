@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React, { useEffect, useState, useRef } from 'react';
 import LeftSlider from '../../components/LeftSlider/LeftSlider';
 import {
@@ -100,16 +101,47 @@ const Home = (props: any) => {
 	// 		key: '1'
 	// 	}
 	// ]);
-
+	useEffect(() => {
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 108 ~ Home ~ documentInstance',
+			documentInstance
+		);
+		// if (documentInstance) getTabsEvent();
+	}, [documentInstance]);
+	useEffect(() => {
+		dispatch(getDocumentInfo({ uuid: documentID }));
+	}, [documentID]);
 	// useEffect(() => {
-	// 	dispatch(getDocumentInfo({ uuid: documentID }));
-	// }, [documentID]);
+	// 	const docUrlList = tabPanes.map((tabPane: any) => {
+	// 		return `${DOC_URL}document/fetch/${tabPane.content}`;
+	// 	});
+	// 	console.log("docUrlList ------->", docUrlList);
+	// 	loadPdfDocumentByPath(docUrlList);
+	// 	// if (docUrlList.length) addTabEvent(docUrlList);
+	// }, [tabPanes]);
 
 	useEffect(() => {
 		if (selectedDocumentInfo) {
+			// loadPdfDocumentByPath(
+			// 	`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl.replace(
+			// 		'upload/doc/',
+			// 		''
+			// 	)}`
+			// );
+			// dispatch(
+			// 	setTabPanes([
+			// 		{
+			// 			title: selectedDocumentInfo
+			// 				? selectedDocumentInfo.name
+			// 				: 'PdfTron default',
+			// 			content: selectedDocumentInfo?.docUrl,
+			// 			key: selectedDocumentInfo?.uuid
+			// 		}
+			// 	])
+			// );
 			loadPdfDocumentByPath(
-				// 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
+				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
 			// dispatch(
@@ -131,48 +163,60 @@ const Home = (props: any) => {
 		// }
 	}, [selectedDocumentInfo]);
 
-	const loadPdfDocumentByPath = (documentPath: string) => {
-		WebViewer(
-			{
-				path: "/webviewer/lib",
-				initialDoc: documentPath,
-				fullAPI: true,
-				disabledElements: [
-					'header',
-					'toolsHeader',
-					'searchPanel',
-					'contextMenuPopup'
-					// 'notesPanel',
-				],
-				// css: '/test.css'
-			},
-			viewer.current
-		).then(async (instance) => {
+	const loadPdfDocumentByPath = (documentPath: any) => {
+		WebViewer({
+			path: '/webviewer/lib/',
+			fullAPI: true,
+			extension: ['pdf'],
+			disabledElements: [
+				'header',
+				'toolsHeader',
+				'searchPanel',
+				'contextMenuPopup'
+				// 'notesPanel',
+			]
+			// css: '/test.css'
+		}, viewer.current).then(async (instance) => {
 			const { Annotations, annotationManager, documentViewer } = instance.Core;
+			instance.UI.loadDocument(documentPath);
 			const Core = instance.Core;
 
-			// documentViewer.addEventListener('documentLoaded', () => {
-			// 	console.log("documentLoaded -------->");
-			// 	documentViewer.addEventListener('textSelected', (quads, selectedText, pageNumber) => {
-			// 		console.log("quads, selectedText, pageNumber ---->", quads, selectedText, pageNumber);
-			// 	});
-			// });
+			documentViewer.addEventListener('documentLoaded', async () => {
+				console.log("documentLoaded -------->");
 
-			// annotationManager.addEventListener('annotationChanged', (annotations, action) => {
-			// 	setUpdatedAnnotation(annotations);
-			// 	console.log("annotations ----->", annotations);
-			// 	console.log("action ----->", action);
-			// });
+				documentViewer.addEventListener('textSelected', (quads, selectedText, pageNumber) => {
+					console.log("quads, selectedText, pageNumber ---->", quads, selectedText, pageNumber);
+					if (selectedText && quads.length) {
+						// quads
+						const highlight = new Annotations.TextHighlightAnnotation();
+						highlight.PageNumber = pageNumber;
+						highlight.StrokeColor = new Annotations.Color(255, 255, 0);
+						highlight.Quads = [quads];
 
-			// http://localhost:8080/webviewer/lib/ui/
+						annotationManager.addAnnotation(highlight);
+						annotationManager.drawAnnotations(pageNumber);
+						// annotationManager.setNoteContents(quads[0], "new comment");	
+					}
+				});
+				const tabsList = await instance.UI.TabManager.getActiveTab();
+				console.log("tabsList ---------->", tabsList);
+			});
 
-			//%22https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf%22
+			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
+				setUpdatedAnnotation(annotations);
+				console.log("annotations ----->", annotations);
+				console.log("action ----->", action);
+				if (action === 'add') {
+					console.log("inside add comment");
+					annotationManager.setNoteContents(annotations[0], "new comment");
+				}
+			});
 
 			// Core.enableFullPDF();
 			// documentViewer.setOptions({ enableAnnotations: true });
 			// setDocumentViewer(Core.documentViewer);
 			// setDocumentInstance(instance);
-			// setAnnotationManager(annotationManager);
+			setAnnotationManager(annotationManager);
 			// setAnnotations(Annotations);
 			// const LayoutMode = instance.UI.LayoutMode;
 			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
@@ -242,15 +286,6 @@ const Home = (props: any) => {
 			// const style = instance.UI.iframeWindow.document.documentElement.style;
 			// style.setProperty(`--document-background-color`, 'white');
 			// const a = instance.UI.addEventListener('TAB_ADDED', (tab) => {')
-			// const a = await instance.UI.TabManager(
-			// 	'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1',
-			// 	{
-			// 		extension: 'pdf',
-			// 		load: true,
-			// 		saveCurrent: true
-			// 	}
-			// );
-
 			// const a = instance.UI.TabManager.addEventListener()
 
 			// instance.UI.textPopup.update([
@@ -329,11 +364,12 @@ const Home = (props: any) => {
 	};
 
 	const exportAnnotation = () => {
-		annotationManager.exportAnnotations({ links: false, widgets: false })
+		annotationManager
+			.exportAnnotations({ links: false, widgets: false })
 			.then((xfdfString: any) => {
-				console.log("xfdfstring ---------->", xfdfString);
-			})
-	}
+				console.log('xfdfstring ---------->', xfdfString);
+			});
+	};
 
 	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
@@ -370,7 +406,7 @@ const Home = (props: any) => {
 
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
-		history.navigate?.(`/document-detail/${currentKey}`);
+		// history.navigate?.(`/document-detail/${currentKey}`);
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
@@ -400,7 +436,29 @@ const Home = (props: any) => {
 		documentInstance.UI.addSearchListener(searchListener);
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
-
+	const getTabsEvent = () => {
+		console.log('🚀  getTabsEvent', getTabsEvent);
+		const tabs = documentInstance.UI.TabManager.getTabs();
+		console.log('🚀 ~ file: Home.tsx ~ line 434 ~ getTabsEvent ~ tabs', tabs);
+	};
+	const addTabEvent = (DocUrlList: string) => {
+		console.log(
+			'🚀 ~ file: Home.tsx ~ line 423 ~ addTabEvent ~ DocURL',
+			DocUrlList,
+			documentInstance
+		);
+		const options = {
+			extension: 'pdf',
+			filename: 'file1.pdf', // Used as the name of the tab
+			load: true, // Defaults to true
+			saveCurrent: false // Defaults to true
+		};
+		documentInstance.UI.TabManager.addTab(DocUrlList, options).then(function (
+			newTabId: any
+		) {
+			console.log('🚀🚀🚀🚀🚀', newTabId);
+		});
+	};
 	return (
 		<>
 			<MainContainer>
@@ -408,7 +466,7 @@ const Home = (props: any) => {
 				<HeaderContainer>
 					<HeaderHome
 						className="height-full"
-						onClick={() => history.navigate?.('/documents')}
+						// onClick={() => history.navigate?.('/documents')}
 						span={1}
 					>
 						<HomeIcon alt="home" className="icon22" />

@@ -47,25 +47,25 @@ export default function CommentSection({
 	const [selectedNoteIds, setSelectedNoteIds] = useState({});
 
 
-	useEffect(() => {
-		const onAnnotationSelected = () => {
-			const ids: any = {};
+	// useEffect(() => {
+	// 	const onAnnotationSelected = () => {
+	// 		const ids: any = {};
 
-			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
-				console.log("annotationManager.getSelectedAnnotations ======>", annot);
-				// onSendCommentEvent("cndjncjd")
-				ids[annot.Id] = true;
-			});
-			if (isOpen) {
-				setSelectedNoteIds(ids);
-				// setScrollToSelectedAnnot(true);
-			}
-		};
-		onAnnotationSelected();
+	// 		annotationManager.getSelectedAnnotations().forEach((annot: any) => {
+	// 			console.log("annotationManager.getSelectedAnnotations ======>", annot);
+	// 			// onSendCommentEvent("cndjncjd")
+	// 			ids[annot.Id] = true;
+	// 		});
+	// 		if (isOpen) {
+	// 			setSelectedNoteIds(ids);
+	// 			// setScrollToSelectedAnnot(true);
+	// 		}
+	// 	};
+	// 	onAnnotationSelected();
 
-		annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
-		return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
-	}, []);
+	// 	annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
+	// 	return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
+	// }, []);
 
 	useEffect(() => {
 		const measurementAnnotation = annotationManager.getAnnotationsList();
