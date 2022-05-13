@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import history from './history';
 import Home from './views/Home/Home';
+import LeftMenu from './views/LeftMenus/LeftMenu';
 import Login from './views/Login/Login';
 import NotFound from './components/NotFound';
 import { useAppDispatch } from './hooks/useAppDispatch';
@@ -30,6 +31,7 @@ const App: React.FC = () => {
 					{/* <Route path="/" element={<FileListing />} /> */}
 					<Route path="/" element={<Navigate to="/documents" />} />
 					<Route path="/documents" element={<FileListing />} />
+					<Route path="/profile" element={<LeftMenu />} />
 					<Route path="/document-detail/:id" element={<Home />} />
 					<Route path="*" element={<NotFound />} />
 				</Route>
