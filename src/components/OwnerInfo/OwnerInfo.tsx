@@ -6,15 +6,16 @@ import { DescriptionBox, InputBox, Name, Tag } from './OwnerInfo.style';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { updateDocumentInfo } from '../../store/Documents/DocumentsReducer';
-
-
+import { connect } from 'react-redux';
+import nameInitials from 'name-initials';
 interface IOwnerInfo {
 	fileListing: boolean;
 	ownerData?: any;
+	user:any
 
 }
 const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
-	const { fileListing } = props;
+	const { fileListing,user } = props;
 
 	const dispatch = useAppDispatch();
 	const selectedDocumentInfo = useAppSelector(
@@ -54,8 +55,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			}
 			// setTitleTextCopy(payload.name)
 			dispatch(updateDocumentInfo(payload));
-			
-			console.log('payload--Ownerpage',payload)
+			console.log('payload--Ownerpage', payload);
 		}
 		
 	};
@@ -65,12 +65,15 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			<Row className="flex items-center ">
 				<Col span={18} className="flex items-center fluid">
 					<Avatar
+						style={{ backgroundColor: '#25CA69' }}
+						// src="https://joeschmoe.io/api/v1/random"
+						alt="Name"
 						size={35}
 						className="mr2"
-						style={{ border: '1px solid gray' }}
-						src={'https://joeschmoe.io/api/v1/random'}
-					/>
-					<Name>{'Robert__fox_'}</Name>
+					>
+						{nameInitials(user?.fullName || '-')}
+					</Avatar>
+					<Name>{user?.fullName || '-'}</Name>
 				</Col>
 
 				<Col span={5}>
@@ -129,5 +132,8 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 		</>
 	);
 };
+const mapStateToProps = (state: any) => ({
+	user: state.global.user
+});
+export default connect(mapStateToProps)(OwnerInfo);
 
-export default OwnerInfo;

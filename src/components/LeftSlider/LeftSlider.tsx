@@ -2,7 +2,6 @@ import React, { PureComponent, Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Modal, Button, Row, Col, Avatar, Divider } from 'antd';
 import { AvatarImg, Sider, SiderMenu, StyledModal } from './LeftSlider.style';
-
 import { BellIcon, ChatIcon } from '../../assets';
 import { logOut } from '../../store/global/globalReducer';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -12,8 +11,14 @@ import {
 	CustomerServiceOutlined,
 	LogoutOutlined
 } from '@ant-design/icons';
+import { connect } from 'react-redux';
+import nameInitials from 'name-initials';
 
-const LeftSlider = () => {
+interface ILeftSlider {
+	user: any;
+}
+const LeftSlider = (props: ILeftSlider) => {
+	const { user } = props;
 	// state = {
 	// 	isCollapsed: false,
 	// 	selectedMenu: "dashboard",
@@ -140,6 +145,7 @@ const LeftSlider = () => {
 	};
 
 	const menu = (
+		// <AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
 		<Fragment>
 			{renderModal()}
 
@@ -151,7 +157,14 @@ const LeftSlider = () => {
 					// dispatch(logOut())
 				}
 				icon={
-					<AvatarImg src={'https://joeschmoe.io/api/v1/random'} size={30} />
+					<Avatar
+						style={{ backgroundColor: '#25CA69', color: 'white' }}
+						// src="https://joeschmoe.io/api/v1/random"
+						alt="name"
+						size={30}
+					>
+						{nameInitials(user?.fullName || '-')}
+					</Avatar>
 				}
 			></Menu.Item>
 
@@ -190,8 +203,8 @@ const LeftSlider = () => {
 // LeftSlider.propTypes = {
 
 // };
+const mapStateToProps = (state: any) => ({
+	user: state.global.user
+});
 
-// const mapStateToProps = state => ({
-// });
-
-export default LeftSlider;
+export default connect(mapStateToProps)(LeftSlider);

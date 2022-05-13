@@ -1,5 +1,5 @@
-import { Avatar, Button, Col, Comment, Input, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Avatar, Button, Col, Row } from 'antd';
 import {
 	DeleteIcon,
 	EditIcon,
