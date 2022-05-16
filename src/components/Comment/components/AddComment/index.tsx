@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Row } from 'antd';
+import { Avatar, Button, Col, notification, Row } from 'antd';
 import React, { useState } from 'react';
 import { PostButton } from '../../Comment.style';
 import CommentInputOptions from '../CommentInputOptions/CommentInputOptions';
@@ -10,6 +10,7 @@ import EmojiPickerComponent from '../../../EmojiPicker';
 
 interface IAddComment {
 	cancelReply: any;
+	addComment: any;
 }
 interface IEmojiPicker {
 	activeSkinTone?: string;
@@ -19,12 +20,21 @@ interface IEmojiPicker {
 	unified?: string;
 }
 
-const AddComment: React.FC<IAddComment> = (props) => {
-	const { cancelReply } = props;
+const AddComment: React.FC<IAddComment> = ({ cancelReply, addComment }) => {
 	const [inputValue, setInputValue] = useState('');
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
-	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
+	const [enableUploadImage, setEnableUploadImage] = useState(false);
+
+	const addCommentValidation = () => {
+		if (inputValue.trim().length) {
+			addComment(inputValue)
+		} else {
+			notification.error({
+				message: "Please enter comment"
+			});
+		}
+	}
 
 	return (
 		<Row className={`mb2`} style={{ paddingLeft: '10px' }}>
@@ -78,7 +88,11 @@ const AddComment: React.FC<IAddComment> = (props) => {
 						>
 							Cancel
 						</Button>
-						<PostButton className="font-12 ml1 px3" shape="round">
+						<PostButton
+							shape="round"
+							className="font-12 ml1 px3"
+							onClick={() => addCommentValidation()}
+						>
 							Post
 						</PostButton>
 					</div>
