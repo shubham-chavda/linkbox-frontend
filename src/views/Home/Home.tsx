@@ -67,10 +67,10 @@ const Home = (props: any) => {
 	const { id: documentID } = useParams();
 
 	const documentList = useAppSelector(
-		RootState => RootState.documents.documentList
+		(RootState) => RootState.documents.documentList
 	);
 	const selectedDocumentInfo = useAppSelector(
-		RootState => RootState.documents.selectedDocumentInfo
+		(RootState) => RootState.documents.selectedDocumentInfo
 	);
 	const [rightSiderClicks, setRightSiderClicks] = useState('info');
 	const viewer: any = useRef(null);
@@ -151,8 +151,8 @@ const Home = (props: any) => {
 			// 	])
 			// );
 			loadPdfDocumentByPath(
-				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
+				// 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
 			// dispatch(
@@ -190,7 +190,7 @@ const Home = (props: any) => {
 				// css: '/test.css'
 			},
 			viewer.current
-		).then(async instance => {
+		).then(async (instance) => {
 			const { Annotations, annotationManager, documentViewer } = instance.Core;
 			instance.UI.loadDocument(documentPath);
 			const Core = instance.Core;
@@ -225,6 +225,10 @@ const Home = (props: any) => {
 						}
 					}
 				);
+				const quads = documentViewer.getSelectedTextQuads(
+					documentViewer.getCurrentPage()
+				);
+				console.log('quads ---------->', quads);
 				//const tabsList = await instance.UI.TabManager.getActiveTab();
 				//console.log('tabsList ---------->', tabsList);
 			});
@@ -244,7 +248,7 @@ const Home = (props: any) => {
 
 			// Core.enableFullPDF();
 			// documentViewer.setOptions({ enableAnnotations: true });
-			// setDocumentViewer(Core.documentViewer);
+			setDocumentViewer(documentViewer);
 			// setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
 			// setAnnotations(Annotations);
@@ -472,6 +476,10 @@ const Home = (props: any) => {
 		setRightSiderClicks(e.target.id);
 	};
 
+	const openChatView = () => {
+		setRightSiderClicks('comment');
+	};
+
 	const onChangeSearchInput = async (string: any) => {
 		const searchPattern = string;
 		const searchOptions = {
@@ -503,7 +511,7 @@ const Home = (props: any) => {
 			load: true, // Defaults to true
 			saveCurrent: false // Defaults to true
 		};
-		documentInstance.UI.TabManager.addTab(DocUrlList, options).then(function(
+		documentInstance.UI.TabManager.addTab(DocUrlList, options).then(function (
 			newTabId: any
 		) {
 			console.log('🚀🚀🚀🚀🚀', newTabId);
@@ -608,6 +616,7 @@ const Home = (props: any) => {
 								toggleFullScreen={toggleFullScreen}
 								printPdf={printPdf}
 								exportAnnotation={exportAnnotation}
+								openChatView={openChatView}
 							/>
 						</Row>
 						<ContentSection>
@@ -633,6 +642,7 @@ const Home = (props: any) => {
 								<Comment
 									isOpen={commentOpen}
 									annotations={annotations}
+									documentViewer={documentViewer}
 									updatedAnnotation={updatedAnnotation}
 									annotationManager={annotationManager}
 								/>

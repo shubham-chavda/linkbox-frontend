@@ -28,7 +28,7 @@ import {
 	SizeChangeIcon,
 	VideoIcon
 } from '../../../../assets';
-import { Col, Tooltip, Select } from 'antd';
+import { Col, Tooltip, Select, notification } from 'antd';
 import { Popover } from 'react-tiny-popover';
 
 import { SearchButtonFilled } from '../../../../styles/Layout.style';
@@ -50,6 +50,7 @@ interface IToolBarProps {
 	searchResults: any;
 	printPdf: any;
 	exportAnnotation: any;
+	openChatView: () => void;
 }
 
 const ToolBar = ({
@@ -66,7 +67,8 @@ const ToolBar = ({
 	onChangeSearchInput,
 	toggleFullScreen,
 	printPdf,
-	exportAnnotation
+	exportAnnotation,
+	openChatView
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -116,6 +118,21 @@ const ToolBar = ({
 		setIsSingleLayout(!isSingleLayout);
 		changeLayOutMode(isSingleLayout);
 	};
+
+	const addNewComment = () => {
+		const quads = documentViewer.getSelectedTextQuads(
+			documentViewer.getCurrentPage()
+		);
+		if (quads && quads.length) {
+			openChatView();
+		} else {
+			notification.error({
+				message: 'Please select text for add comment'
+			});
+		}
+		console.log('quads ----------->', quads);
+	};
+
 	const handleSearchChange = (e: any) => {
 		onChangeSearchInput(e.target.value);
 		setSearchValue(e.target.value);
@@ -297,7 +314,7 @@ const ToolBar = ({
 			<IconBG className="flex items-center">
 				<ChatIcon2
 					color="white"
-					// onClick={() => downloadPfd()}
+					onClick={() => addNewComment()}
 					alt="copy"
 					className="icon22"
 				/>
