@@ -24,7 +24,7 @@ export const initialState: Immutable<IGlobalState> = {
 	searchDocumentList: [],
 	showMoreSearchDocs: false,
 	docInfoLoader: false,
-	tabPanes:[],
+	tabPanes: []
 };
 
 export const DocumentsReducer = createSlice({
@@ -69,11 +69,20 @@ export const DocumentsReducer = createSlice({
 			state.docInfoLoader = action.payload;
 		},
 		setTabPanes(state, action) {
-			const isExist = state.tabPanes.find((item) => item.key === action.payload[0].key);
-            console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist", isExist)
-			if(!isExist){
-				state.tabPanes.push(...action.payload)
-				console.log("🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes", state.tabPanes,action.payload)
+			const isExist = state.tabPanes.find(
+				item => item.key === action.payload[0].key
+			);
+			console.log(
+				'🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist',
+				isExist
+			);
+			if (!isExist) {
+				state.tabPanes.push(...action.payload);
+				console.log(
+					'🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes',
+					state.tabPanes,
+					action.payload
+				);
 			}
 		}
 	}

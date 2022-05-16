@@ -9,9 +9,10 @@ const { TabPane } = Tabs;
 interface IFileTabBar {
 	initialPanes: initPanel;
 	onTabChange: (activeKey: string) => void;
+	closable:any
 }
 const FileTabBar: React.FC<IFileTabBar> = (props) => {
-	const { initialPanes, onTabChange } = props;
+	const { initialPanes, onTabChange,closable } = props;
 
 	const [activeKey, setActiveKey] = useState('');
 	const [panes, setPanes] = useState<initPanel | null>();
@@ -98,7 +99,7 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 				<TabPane
 					tab={pane.title || <Spin indicator={antIcon} size="small" />}
 					key={pane.key}
-					closable={true}
+					closable={closable}
 				/>
 			))}
 		</Tab>

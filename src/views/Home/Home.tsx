@@ -27,7 +27,6 @@ import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import MemberList from './components/MemberList/MemberList';
 import FileTabBar from './components/FileTabBar/FileTabBar';
 import ToolBar from './components/ToolBar/ToolBar';
-
 import { initPanel } from '../../types/Home.interface';
 import {
 	CenterColumn,
@@ -114,7 +113,8 @@ const Home = (props: any) => {
 					''
 				)}`
 			);
-			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
+			console.log('test---',tabPanes)
+			 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
 			dispatch(
 				setTabPanes([
 					{
@@ -133,7 +133,6 @@ const Home = (props: any) => {
 		// 	);
 		// }
 	}, [selectedDocumentInfo]);
-
 	const loadPdfDocumentByPath = (documentPath: string) => {
 		WebViewer(
 			{
@@ -274,7 +273,6 @@ const Home = (props: any) => {
 			]);
 		});
 	};
-
 	const searchListener = (searchPattern: any, options: any, results: any) => {
 		console.log('results ------->', results);
 
@@ -291,50 +289,40 @@ const Home = (props: any) => {
 		annotationManager.addAnnotations(newAnnotations);
 		annotationManager.drawAnnotationsFromList(newAnnotations);
 	};
-
 	const zoomOut = (zoomPercentages?: number) => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
-
 	const zoomIn = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
 	};
-
 	const setCustomZoomLevel = (zoomPercentages: number) => {
 		documentViewer.zoomTo(zoomPercentages);
 	};
-
 	const startEditingContent = () => {
 		const contentEditTool = documentViewer.getTool(
 			window.Core.Tools.ToolNames.CONTENT_EDIT
 		);
 		documentViewer.setToolMode(contentEditTool);
 	};
-
 	const createRectangle = () => {
 		documentInstance.setToolMode('Pan');
 	};
-
 	const selectTool = () => {
 		documentInstance.setToolMode('AnnotationEdit');
 	};
-
 	const createRedaction = () => {
 		documentViewer.setToolMode(
 			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
 		);
 	};
-
 	const applyRedactions = async () => {
 		const annotationManager = documentViewer.getAnnotationManager();
 		annotationManager.enableRedaction();
 		await annotationManager.applyRedactions();
 	};
-
 	const richTextEditorChangeHandler = (value: any) => {
 		setEditBoxCurrentValue(value);
 	};
-
 	const applyEditModal = () => {
 		window.Core.ContentEdit.updateDocumentContent(
 			editBoxAnnotation,
@@ -344,32 +332,27 @@ const Home = (props: any) => {
 		setEditBoxAnnotation(null);
 		setEditBoxCurrentValue(null);
 	};
-
 	const changeLayOutMode = (isSingle?: boolean) => {
 		const LayoutMode = documentInstance.UI.LayoutMode;
 		documentInstance.UI.setLayoutMode(
 			isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single
 		);
 	};
-
 	const downloadPfd = async () => {
 		await documentInstance.UI.downloadPdf({
 			includeAnnotations: true,
 			flatten: true
 		});
 	};
-
 	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
 	};
-
 	const printPdf = async () => {
 		await documentInstance.UI.print({
 			includeAnnotations: true,
 			flatten: true
 		});
 	};
-
 	const editSelectedBox = async () => {
 		const selectedAnnotations = documentViewer
 			.getAnnotationManager()
@@ -391,7 +374,6 @@ const Home = (props: any) => {
 			alert('Text edit box is not selected');
 		}
 	};
-
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
 		history.navigate?.(`/document-detail/${currentKey}`);
@@ -441,7 +423,7 @@ const Home = (props: any) => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} />
+						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} closable={true} />
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}

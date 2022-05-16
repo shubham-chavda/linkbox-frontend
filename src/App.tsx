@@ -13,9 +13,7 @@ import { useAppSelector } from './hooks/useAppSelector';
 import { getUserDetails } from './store/global/globalReducer';
 const App: React.FC = () => {
 	const dispatch = useAppDispatch();
-
 	const isUserExist = useAppSelector((state) => state.global.user);
-
 	useEffect(() => {
 		if (window.localStorage.getItem('token')) {
 			if (!isUserExist) dispatch(getUserDetails());

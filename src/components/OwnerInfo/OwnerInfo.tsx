@@ -18,26 +18,18 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 	const { fileListing,user } = props;
 
 	const dispatch = useAppDispatch();
-	const selectedDocumentInfo = useAppSelector(
-		(RootState) => RootState.documents.selectedDocumentInfo
-	);
-
+	const selectedDocumentInfo = useAppSelector((RootState) => RootState.documents.selectedDocumentInfo);
 	const [isEdit, setIsEdit] = useState(false);
 	const [titleText, setTitleText] = useState('');
 	const [titleTextCopy, setTitleTextCopy] = useState('');
 	const [descriptionText, setDescriptionText] = useState('');
-
-
 	useEffect(() => {
 		console.log('selectedDocumentInfo- ------>', selectedDocumentInfo,props.ownerData);
 		setTitleText(selectedDocumentInfo?.name);
 		setDescriptionText(selectedDocumentInfo?.desc);
 	}, [selectedDocumentInfo]);
 
-	useEffect(() => {
-		updateDocument();
-		
-	}, [isEdit]);
+	useEffect(() => {updateDocument()},[isEdit]);
 	// useEffect(()=>{
 	// 	if(props.docname){
 	// 		setTitleTextCopy(props.docname)	
@@ -55,10 +47,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			}
 			// setTitleTextCopy(payload.name)
 			dispatch(updateDocumentInfo(payload));
-			console.log('payload--Ownerpage', payload);
-		}
-		
-	};
+			console.log('payload--Ownerpage', payload)}};
 
 	return (
 		<>
@@ -98,9 +87,6 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 					)}
 				</Col>
 				<Row className="mt2">
-			
-				
-			
 					<InputBox
 						style={{ width: '95%' }}
 						bordered={false}
@@ -111,10 +97,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 							setTitleText(e.target.value)
 							 }
 						placeholder="Write Title"
-					/>
-
-				
-							
+					/>			
 				</Row>
 				<Row>
 					<DescriptionBox
@@ -131,6 +114,7 @@ const OwnerInfo: React.FC<IOwnerInfo> = (props) => {
 			</Row>
 		</>
 	);
+	
 };
 const mapStateToProps = (state: any) => ({
 	user: state.global.user
