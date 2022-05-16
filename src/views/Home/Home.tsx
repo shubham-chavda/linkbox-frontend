@@ -50,9 +50,8 @@ import {
 	getDocumentInfo,
 	setTabPanes
 } from '../../store/Documents/DocumentsReducer';
-import { useParams } from 'react-router-dom';
-import Spinner from '../../components/Spinner/Spinner';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import history from '../../history';
 const { DOC_URL } = process.env;
 
@@ -79,7 +78,7 @@ const Home = (props: any) => {
 	const scrollView = useRef(null);
 	const searchTerm = useRef(null);
 
-	const [maxCount, setMaxCount] = useState(10);
+	const [maxCount, setMaxCount] = useState(1);
 	const [activeKey, setActiveKey] = useState('');
 	const [collapsed, setCollapsed] = useState(false);
 
@@ -107,27 +106,19 @@ const Home = (props: any) => {
 			'🚀 ~ file: Home.tsx ~ line 108 ~ Home ~ documentInstance',
 			documentInstance
 		);
-		// if (documentInstance) getTabsEvent();
+		if (documentInstance) getTabsEvent();
 	}, [documentInstance]);
 	useEffect(() => {
 		dispatch(getDocumentInfo({ uuid: documentID }));
 	}, [documentID]);
-	useEffect(() => {
-		const docUrlList = tabPanes.map((tabPane: any) => {
-			return `${DOC_URL}document/fetch/${tabPane.content}`;
-		});
-		// https://lbdocapi.dev.brainvire.net/v1/document/fetch/local-doc-a3b-6dab4d92-ac25-47da-bca9-2354349c85d4.pdf
-		console.log(
-			'🚀 ~ file: Home.tsx ~ line 120 ~ docUrlList ~ docUrlList',
-			docUrlList
-		);
-		const dummy = [
-			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
-			'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-		];
-		loadPdfDocumentByPath(docUrlList);
-		// if (docUrlList.length) addTabEvent(docUrlList);
-	}, [tabPanes]);
+	// useEffect(() => {
+	// 	const docUrlList = tabPanes.map((tabPane: any) => {
+	// 		return `${DOC_URL}document/fetch/${tabPane.content}`;
+	// 	});
+	// 	console.log("docUrlList ------->", docUrlList);
+	// 	loadPdfDocumentByPath(docUrlList);
+	// 	// if (docUrlList.length) addTabEvent(docUrlList);
+	// }, [tabPanes]);
 
 	useEffect(() => {
 		if (selectedDocumentInfo) {
@@ -137,17 +128,33 @@ const Home = (props: any) => {
 			// 		''
 			// 	)}`
 			// );
-			dispatch(
-				setTabPanes([
-					{
-						title: selectedDocumentInfo
-							? selectedDocumentInfo.name
-							: 'PdfTron default',
-						content: selectedDocumentInfo?.docUrl,
-						key: selectedDocumentInfo?.uuid
-					}
-				])
+			// dispatch(
+			// 	setTabPanes([
+			// 		{
+			// 			title: selectedDocumentInfo
+			// 				? selectedDocumentInfo.name
+			// 				: 'PdfTron default',
+			// 			content: selectedDocumentInfo?.docUrl,
+			// 			key: selectedDocumentInfo?.uuid
+			// 		}
+			// 	])
+			// );
+			loadPdfDocumentByPath(
+				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
+			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
+			// dispatch(
+			// 	setTabPanes([
+			// 		{
+			// 			title: selectedDocumentInfo
+			// 				? selectedDocumentInfo.name
+			// 				: 'PdfTron default',
+			// 			content: selectedDocumentInfo?.docUrl,
+			// 			key: selectedDocumentInfo?.uuid
+			// 		}
+			// 	])
+			// );
 		}
 		// else {
 		// 	loadPdfDocumentByPath(
@@ -159,12 +166,9 @@ const Home = (props: any) => {
 	const loadPdfDocumentByPath = (documentPath: any) => {
 		WebViewer(
 			{
-				path: '/webviewer/lib/', //"https://lbweb.dev.brainvire.net/lib",
-				initialDoc: [
-					// ...documentPath
-					'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-				],
+				path: '/webviewer/lib/',
 				fullAPI: true,
+				extension: ['pdf'],
 				disabledElements: [
 					'header',
 					'toolsHeader',
@@ -176,132 +180,154 @@ const Home = (props: any) => {
 			},
 			viewer.current
 		).then(async (instance) => {
-			const { Annotations, Search, annotationManager, documentViewer } =
-				instance.Core;
-
+			const { Annotations, annotationManager, documentViewer } = instance.Core;
+			instance.UI.loadDocument(documentPath);
 			const Core = instance.Core;
-			Core.enableFullPDF();
-			const documentViewerCore = new Core.DocumentViewer();
-			documentViewerCore.setScrollViewElement(scrollView.current!);
-			documentViewerCore.setViewerElement(viewer.current);
-			documentViewerCore.setOptions({ enableAnnotations: true });
-			setDocumentViewer(Core.documentViewer);
-			setDocumentInstance(instance);
+
+			documentViewer.addEventListener('documentLoaded', async () => {
+				console.log('documentLoaded -------->');
+
+				documentViewer.addEventListener(
+					'textSelected',
+					(quads, selectedText, pageNumber) => {
+						console.log(
+							'quads, selectedText, pageNumber ---->',
+							quads,
+							selectedText,
+							pageNumber
+						);
+						if (selectedText && quads.length) {
+							// quads
+							const highlight = new Annotations.TextMarkupAnnotation();
+							highlight.PageNumber = pageNumber;
+							highlight.X = quads[0].x1;
+							highlight.Y = quads[0].y1;
+							highlight.Height = quads[0].x1 - quads[0].x2;
+							highlight.Width = quads[0].y1 - quads[0].y2;
+							highlight.StrokeColor = new Annotations.Color(255, 255, 0);
+							// highlight.Quads = [quads];
+							console.log('highlight --------->', highlight);
+
+							annotationManager.addAnnotation(highlight);
+							annotationManager.drawAnnotations(pageNumber);
+							// annotationManager.setNoteContents(quads[0], "new comment");
+						}
+					}
+				);
+				const tabsList = await instance.UI.TabManager.getActiveTab();
+				console.log('tabsList ---------->', tabsList);
+			});
+
+			annotationManager.addEventListener(
+				'annotationChanged',
+				(annotations, action) => {
+					setUpdatedAnnotation(annotations);
+					console.log('annotations ----->', annotations);
+					console.log('action ----->', action);
+					if (action === 'add') {
+						console.log('inside add comment');
+						annotationManager.setNoteContents(annotations[0], 'new comment');
+					}
+				}
+			);
+
+			// Core.enableFullPDF();
+			// documentViewer.setOptions({ enableAnnotations: true });
+			// setDocumentViewer(Core.documentViewer);
+			// setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
-			setAnnotations(Annotations);
-			// documentViewerCore.disableViewportRenderMode();
-			const LayoutMode = instance.UI.LayoutMode;
-			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
+			// setAnnotations(Annotations);
+			// const LayoutMode = instance.UI.LayoutMode;
+			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
-			console.log('🚀🚀🚀 ~ file: Home.tsx ~ line 195 ~ ).then ~ tabs');
-			const tabs = documentInstance.UI.TabManager.getTabs();
-			console.log('🚀 ~ file: Home.tsx ~ line 195 ~ ).then ~ tabs', tabs);
-			// documentViewerCore.addEventListener('documentLoaded', () => {
-			// 	console.log('documentLoaded -------->');
-
-			// 	const tabs = documentInstance.UI.TabManager.getTabs();
-			// });
-
-			// Annotations.Annotation
-			// getContents
-
-			// annotationManager.setNoteContents(annotations, text)
+			// annotationManager.setNoteContents(annotations, text);
 
 			// https://lbdocapi.dev.brainvire.net/collab
 
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
-			const client = new CollabClient({
-				instance,
-				logLevel: CollabClient.LogLevels.DEBUG,
-				filterLogsByTag: CollabClient.LogTags.AUTH,
-				url: 'https://lbnotifapi.dev.brainvire.net',
-				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
-			});
-			let session = await client.getUserSession();
-			console.log('session --->', session);
-			if (!session) {
-				const token = window.localStorage.getItem('token');
-				// console.log("client --------->", client);
+			// const client = new CollabClient({
+			// 	instance,
+			// 	logLevel: CollabClient.LogLevels.DEBUG,
+			// 	filterLogsByTag: CollabClient.LogTags.AUTH,
+			// 	url: 'https://lbnotifapi.dev.brainvire.net',
+			// 	subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
+			// });
+			// let session = await client.getUserSession();
+			// console.log('session --->', session);
+			// if (!session) {
+			// 	const token = window.localStorage.getItem('token');
+			// 	// console.log("client --------->", client);
 
-				console.log('token ------>', token);
+			// 	console.log('token ------>', token);
 
-				session = await client.loginWithToken(token || '');
-				console.log('new session ------->', session);
-				// await client.setContext({ userId: session.id, createdBy: session.id });
-				if (!session) {
-					notification.error({
-						message: 'Login is failed Please refresh page....'
-					});
-					return false;
-				}
-				await client.setCustomHeaders({
-					authorization: token || ''
-				});
-			}
+			// 	session = await client.loginWithToken(token || '');
+			// 	console.log('new session ------->', session);
+			// 	// await client.setContext({ userId: session.id, createdBy: session.id });
+			// 	if (!session) {
+			// 		notification.error({
+			// 			message: 'Login is failed Please refresh page....'
+			// 		});
+			// 		return false;
+			// 	}
+			// 	await client.setCustomHeaders({
+			// 		authorization: token || ''
+			// 	});
+			// }
 
-			const doc = await session.getDocument(selectedDocumentInfo.id);
-			console.log('doc ------->', doc);
-			await doc.view(documentPath);
+			// const doc = await session.getDocument(selectedDocumentInfo.id);
+			// console.log('doc ------->', doc);
+			// await doc.view(documentPath);
+			// const totalPageCount = documentViewer.getPageCount();
+			// console.log("totalPageCount -------->", totalPageCount);
+			// setMaxCount(totalPageCount);
 
-			if (!doc.isAuthor) {
-				const canJoin = await doc.canJoin();
-				console.log('canJoin ---> ', canJoin);
-				if (canJoin) doc.join();
-			}
-			// const docContext = await client.setContext({ id: responseLogin.id });
-			// const document = await responseLogin.createDocument({
-			// 	document: 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf',
-			// 	isPublic: true,
-			// 	name: 'my_document.pdf'
-			// })
-			console.log('isAuthor', doc.isAuthor);
-			console.log('isMember', doc.isMember());
-			// await doc.inviteUsers([responseLogin.id])
-			client.EventManager.subscribe('annotationAdded', (annotation) => {
-				console.log('annotation ---------->', annotation);
-				annotation.subscribe('onChange', (updatedAnnotation) => {
-					console.log('annotation changed', updatedAnnotation);
-					setUpdatedAnnotation(updatedAnnotation);
-					// if (updatedAnnotation.contents) {
-					// 	setCommentOpen(true);
-					// 	setRightSiderClicks('comment');
-					// }
-				});
-			});
+			// if (!doc.isAuthor) {
+			// 	const canJoin = await doc.canJoin();
+			// 	console.log('canJoin ---> ', canJoin);
+			// 	if (canJoin) doc.join();
+			// }
 
-			const style = instance.UI.iframeWindow.document.documentElement.style;
-			style.setProperty(`--document-background-color`, 'white');
+			// console.log('isAuthor', doc.isAuthor);
+			// console.log('isMember', doc.isMember());
+			// // await doc.inviteUsers([responseLogin.id])
+			// client.EventManager.subscribe('annotationAdded', (annotation) => {
+			// 	console.log('annotation ---------->', annotation);
+			// 	setUpdatedAnnotation(updatedAnnotation);
+			// 	annotation.subscribe('onChange', (updatedAnnotation) => {
+			// 		console.log('annotation changed', updatedAnnotation);
+			// 	});
+			// });
 
-			instance.UI.addEventListener(instance.UI.Events.DOCUMENT_LOADED, (e) => {
-				console.log(
-					'🚀 ~ file: Home.tsx ~ line 265 ~ instance.UI.addEventListener ~ TAB_ADDED',
-					e
-				);
-				const { detail } = e;
-				console.log(detail.src); // Source of the new tab
-				console.log(detail.options); // Document load options
-			});
-			instance.UI.textPopup.update([
-				{
-					type: 'actionButton',
-					img: '/Icons/copyIcon.svg',
-					onClick: () => instance.UI.Feature.Copy
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/chatIcon.svg',
-					onClick: () => instance.UI.Feature.NotesPanel
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/bookmarkIcon.svg',
-					onClick: () => instance.Core.Bookmark
-				},
-				{
-					type: 'actionButton',
-					img: '/Icons/userStarIcon.svg'
-				}
-			]);
+			// client.EventManager.subscribe('annotationChanged', (annotation) => {
+			// 	console.log('annotation changed ---------->', annotation);
+			// });
+
+			// const style = instance.UI.iframeWindow.document.documentElement.style;
+			// style.setProperty(`--document-background-color`, 'white');
+			// const a = instance.UI.addEventListener('TAB_ADDED', (tab) => {')
+			// const a = instance.UI.TabManager.addEventListener()
+
+			// instance.UI.textPopup.update([
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/copyIcon.svg',
+			// 		onClick: () => instance.UI.Feature.Copy
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/chatIcon.svg',
+			// 		onClick: () => instance.UI.Feature.NotesPanel
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/bookmarkIcon.svg',
+			// 		onClick: () => instance.Core.Bookmark
+			// 	},
+			// 	{
+			// 		type: 'actionButton',
+			// 		img: '/Icons/userStarIcon.svg'
+			// 	}
+			// ]);
 		});
 	};
 
@@ -322,7 +348,7 @@ const Home = (props: any) => {
 		annotationManager.drawAnnotationsFromList(newAnnotations);
 	};
 
-	const zoomOut = (zoomPercentages?: number) => {
+	const zoomOut = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
 
@@ -334,45 +360,12 @@ const Home = (props: any) => {
 		documentViewer.zoomTo(zoomPercentages);
 	};
 
-	const startEditingContent = () => {
-		const contentEditTool = documentViewer.getTool(
-			window.Core.Tools.ToolNames.CONTENT_EDIT
-		);
-		documentViewer.setToolMode(contentEditTool);
-	};
-
 	const createRectangle = () => {
 		documentInstance.setToolMode('Pan');
 	};
 
 	const selectTool = () => {
 		documentInstance.setToolMode('AnnotationEdit');
-	};
-
-	const createRedaction = () => {
-		documentViewer.setToolMode(
-			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
-		);
-	};
-
-	const applyRedactions = async () => {
-		const annotationManager = documentViewer.getAnnotationManager();
-		annotationManager.enableRedaction();
-		await annotationManager.applyRedactions();
-	};
-
-	const richTextEditorChangeHandler = (value: any) => {
-		setEditBoxCurrentValue(value);
-	};
-
-	const applyEditModal = () => {
-		window.Core.ContentEdit.updateDocumentContent(
-			editBoxAnnotation,
-			editBoxCurrentValue
-		);
-
-		setEditBoxAnnotation(null);
-		setEditBoxCurrentValue(null);
 	};
 
 	const changeLayOutMode = (isSingle?: boolean) => {
@@ -387,6 +380,14 @@ const Home = (props: any) => {
 			includeAnnotations: true,
 			flatten: true
 		});
+	};
+
+	const exportAnnotation = () => {
+		annotationManager
+			.exportAnnotations({ links: false, widgets: false })
+			.then((xfdfString: any) => {
+				console.log('xfdfstring ---------->', xfdfString);
+			});
 	};
 
 	const toggleFullScreen = async () => {
@@ -424,7 +425,7 @@ const Home = (props: any) => {
 
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
-		history.navigate?.(`/document-detail/${currentKey}`);
+		// history.navigate?.(`/document-detail/${currentKey}`);
 	};
 	const openRightSider = () => {
 		setCollapsed(false);
@@ -484,7 +485,7 @@ const Home = (props: any) => {
 				<HeaderContainer>
 					<HeaderHome
 						className="height-full"
-						onClick={() => history.navigate?.('/documents')}
+						// onClick={() => history.navigate?.('/documents')}
 						span={1}
 					>
 						<HomeIcon alt="home" className="icon22" />
@@ -563,6 +564,7 @@ const Home = (props: any) => {
 								onChangeSearchInput={onChangeSearchInput}
 								toggleFullScreen={toggleFullScreen}
 								printPdf={printPdf}
+								exportAnnotation={exportAnnotation}
 							/>
 						</Row>
 						<ContentSection>
@@ -600,7 +602,9 @@ const Home = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
 	tabPanes: state.documents.tabPanes
 });
+
 export default connect(mapStateToProps)(Home);

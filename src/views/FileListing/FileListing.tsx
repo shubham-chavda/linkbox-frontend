@@ -113,7 +113,7 @@ const FileListing: React.FC = (props: any) => {
 		if (documentList[0]) {
 			//dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
-		console.log('docss----', documentList);
+		console.log('docs----', documentList);
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));
@@ -197,15 +197,13 @@ const FileListing: React.FC = (props: any) => {
 								</Button>
 							</div>
 							<div
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
 								className="flex items-center"
+								style={{ borderLeft: '1px solid #e3ecf3' }}
 							>
 								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
 								<Button
-									className="ml1 color-light-gray"
 									type="link"
+									className="ml1 color-light-gray"
 									onClick={() => setIsUploadModalOpen((prev) => !prev)}
 								>
 									<CloudUploadOutlined
@@ -216,7 +214,7 @@ const FileListing: React.FC = (props: any) => {
 									{isUploadModalOpen && (
 										<span
 											className="ml1 font-13 color-sd2"
-											// onClick={() => setIsUploadModalOpen(false)}
+										// onClick={() => setIsUploadModalOpen(false)}
 										>
 											X
 										</span>
@@ -226,13 +224,11 @@ const FileListing: React.FC = (props: any) => {
 							</div>
 							<div
 								className="flex items-center"
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
+								style={{ borderLeft: '1px solid #e3ecf3' }}
 							>
 								<Button
-									className="ml1 color-light-gray flex items-center"
 									type="link"
+									className="ml1 color-light-gray flex items-center"
 									onClick={() => setAssendingOrder(!assendingOrder)}
 								>
 									<FilterDocIcon className="mr2" />
@@ -257,8 +253,8 @@ const FileListing: React.FC = (props: any) => {
 						<RightHeaderContainer className="flex-start">
 							<Col
 								span={4}
-								className="height-full flex justify-center items-center"
 								style={{ borderRight: '1px solid #ECF2F7' }}
+								className="height-full flex justify-center items-center"
 							>
 								<BookmarkIcon alt="bookmark" className="icon22" />
 							</Col>
@@ -320,15 +316,11 @@ const FileListing: React.FC = (props: any) => {
 													<div
 														key={index}
 														style={{ width: '160px' }}
-														onClick={() =>{
+														onClick={() => {
 															setDocNameCopy(document.name)
 															handleDocClick(index, document?.isFolder)
-														}
-															
-														}
-														className={`${
-															docClicked !== index ? 'hover-blue' : ''
-														}`}
+														}}
+														className={`${docClicked !== index ? 'hover-blue' : ''}`}
 													>
 														{/* if document object is folder */}
 														{document?.isFolder ? (
@@ -406,7 +398,7 @@ const FileListing: React.FC = (props: any) => {
 									<OwnerInfo
 										fileListing={true}
 										ownerData={documentList[docClicked]}
-										
+
 									/>
 								</OwnerInfoContainer>
 							</Row>
@@ -421,7 +413,7 @@ const FileListing: React.FC = (props: any) => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-								// onChange={onChange}
+							// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
@@ -437,6 +429,7 @@ const FileListing: React.FC = (props: any) => {
 		</>
 	);
 };
+
 const mapStateToProps = (state: any) => ({
 	showMoreDocs: state.documents.showMoreDocs,
 	showMoreSearchDocs: state.documents.showMoreSearchDocs,
@@ -445,4 +438,5 @@ const mapStateToProps = (state: any) => ({
 	isGlobalLoading: state.global.globalLoading,
 	docInfoLoader: state.documents.docInfoLoader
 });
+
 export default connect(mapStateToProps)(FileListing);

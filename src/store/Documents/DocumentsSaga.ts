@@ -2,7 +2,11 @@ import { notification } from "antd";
 import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
-import { getDocumentInfo, getDocumentList, setDocumentInfo, setDocumentList, setSearchDocumentList, setSelectedDocuments, toggleDocInfoLoader, updateDocumentInfo, uploadDocument } from "./DocumentsReducer";
+import {
+	getDocumentInfo, getDocumentList, setDocumentInfo,
+	setDocumentList, setSearchDocumentList, setSelectedDocuments,
+	toggleDocInfoLoader, updateDocumentInfo, uploadDocument,
+} from "./DocumentsReducer";
 
 type GetDocumentsListType = {
 	payload: { pageNo: number; sortBy: string, q?: string };
@@ -16,17 +20,14 @@ function* GetDocumentsListFunc(action: GetDocumentsListType): Generator<StrictEf
 		let response: any = "";
 		if (payload.q) {
 			response = yield call(apis.documents.getDocumentsListBySearch, payload);
-			
-			if (response?.data?.data)
-				yield put(setSearchDocumentList(response?.data));
+			if (response?.data?.data) yield put(setSearchDocumentList(response?.data));
 		} else {
 			response = yield call(apis.documents.getDocumentsList, payload);
-			
-			if (response?.data?.data)
-				yield put(setDocumentList(response?.data));
+			if (response?.data?.data) yield put(setDocumentList(response?.data));
 		}
 		console.log("response ------->", response)
-		if(response?.data){yield put(setDocumentInfo(response?.data.data[0]));
+		if (response?.data) {
+			yield put(setDocumentInfo(response?.data.data[0]));
 		}
 		// notification.success({
 		// 	message: 'Documents list successsfully received',
@@ -118,7 +119,7 @@ type UpdateDocumentInfoType = {
 
 function* UpdateDocumentInfoFunc(action: UpdateDocumentInfoType): Generator<StrictEffect, void, any> {
 	const { payload } = action;
-    console.log("🚀 ~ file: DocumentsSaga.ts ~ line 120 ~ function*UpdateDocumentInfoFunc ~ payload", payload)
+	console.log("🚀 ~ file: DocumentsSaga.ts ~ line 120 ~ function*UpdateDocumentInfoFunc ~ payload", payload)
 	try {
 		const apis = init();
 		yield put(toggleDocInfoLoader(true));
