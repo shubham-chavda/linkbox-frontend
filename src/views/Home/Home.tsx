@@ -140,8 +140,8 @@ const Home = (props: any) => {
 			// 	])
 			// );
 			loadPdfDocumentByPath(
-				'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
-				// `${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
+				// 'https://pdftron.s3.amazonaws.com/downloads/pl/webviewer-demo.pdf'
+				`${DOC_URL}document/fetch/${selectedDocumentInfo?.docUrl}`
 			);
 			// 'http://localhost:8080/document-detail/0ffbfa0a-6e32-4729-a745-bdd42bd55fb1'
 			// dispatch(
@@ -198,13 +198,13 @@ const Home = (props: any) => {
 						);
 						if (selectedText && quads.length) {
 							// quads
-							const highlight = new Annotations.TextMarkupAnnotation();
+							const highlight = new Annotations.TextHighlightAnnotation();
 							highlight.PageNumber = pageNumber;
 							highlight.X = quads[0].x1;
 							highlight.Y = quads[0].y1;
 							highlight.Height = quads[0].x1 - quads[0].x2;
 							highlight.Width = quads[0].y1 - quads[0].y2;
-							highlight.StrokeColor = new Annotations.Color(255, 255, 0);
+							highlight.StrokeColor = new Annotations.Color(122, 155, 120);
 							// highlight.Quads = [quads];
 							console.log('highlight --------->', highlight);
 
@@ -214,6 +214,10 @@ const Home = (props: any) => {
 						}
 					}
 				);
+				const quads = documentViewer.getSelectedTextQuads(
+					documentViewer.getCurrentPage()
+				);
+				console.log('quads ---------->', quads);
 				const tabsList = await instance.UI.TabManager.getActiveTab();
 				console.log('tabsList ---------->', tabsList);
 			});
@@ -233,7 +237,7 @@ const Home = (props: any) => {
 
 			// Core.enableFullPDF();
 			// documentViewer.setOptions({ enableAnnotations: true });
-			// setDocumentViewer(Core.documentViewer);
+			setDocumentViewer(documentViewer);
 			// setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
 			// setAnnotations(Annotations);
@@ -441,6 +445,10 @@ const Home = (props: any) => {
 		setRightSiderClicks(e.target.id);
 	};
 
+	const openChatView = () => {
+		setRightSiderClicks('comment');
+	};
+
 	const onChangeSearchInput = async (string: any) => {
 		const searchPattern = string;
 		const searchOptions = {
@@ -565,6 +573,7 @@ const Home = (props: any) => {
 								toggleFullScreen={toggleFullScreen}
 								printPdf={printPdf}
 								exportAnnotation={exportAnnotation}
+								openChatView={openChatView}
 							/>
 						</Row>
 						<ContentSection>
@@ -590,6 +599,7 @@ const Home = (props: any) => {
 								<Comment
 									isOpen={commentOpen}
 									annotations={annotations}
+									documentViewer={documentViewer}
 									updatedAnnotation={updatedAnnotation}
 									annotationManager={annotationManager}
 								/>

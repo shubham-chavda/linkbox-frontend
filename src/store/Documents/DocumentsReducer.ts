@@ -24,7 +24,7 @@ export const initialState: Immutable<IGlobalState> = {
 	searchDocumentList: [],
 	showMoreSearchDocs: false,
 	docInfoLoader: false,
-	tabPanes:[],
+	tabPanes: [],
 };
 
 export const DocumentsReducer = createSlice({
@@ -32,8 +32,8 @@ export const DocumentsReducer = createSlice({
 	// `createSlice` will infer the state type from the `initialState` argument
 	initialState,
 	reducers: {
-		uploadDocument(state, action) {},
-		getDocumentList(state, action) {},
+		uploadDocument(state, action) { },
+		getDocumentList(state, action) { },
 		setDocumentList(state, action) {
 			const { data, meta } = action.payload;
 			state.documentList = _.uniqBy([...data, ...state.documentList], 'uuid');
@@ -44,7 +44,7 @@ export const DocumentsReducer = createSlice({
 			state.searchDocumentList = _.uniqBy([...data], 'uuid');
 			state.showMoreSearchDocs = meta.hasNextPage || false;
 		},
-		getDocumentInfo(state, action) {},
+		getDocumentInfo(state, action) { },
 		setDocumentInfo(state, action) {
 			state.selectedDocumentInfo = action.payload;
 		},
@@ -70,10 +70,10 @@ export const DocumentsReducer = createSlice({
 		},
 		setTabPanes(state, action) {
 			const isExist = state.tabPanes.find((item) => item.key === action.payload[0].key);
-            console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist", isExist)
-			if(!isExist){
+			console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist", isExist)
+			if (!isExist) {
 				state.tabPanes.push(...action.payload)
-				console.log("🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes", state.tabPanes,action.payload)
+				console.log("🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes", state.tabPanes, action.payload)
 			}
 		}
 	}

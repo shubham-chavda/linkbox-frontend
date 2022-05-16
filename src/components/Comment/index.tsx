@@ -29,7 +29,8 @@ type CommentSectionTypes = {
 	isOpen: any,
 	annotationManager: any,
 	annotations: any,
-	updatedAnnotation: any
+	updatedAnnotation: any,
+	documentViewer: any,
 }
 
 export default function CommentSection({
@@ -37,6 +38,7 @@ export default function CommentSection({
 	annotationManager,
 	annotations,
 	updatedAnnotation,
+	documentViewer,
 }: CommentSectionTypes) {
 	// const { isOpen, annotationManager, annotations, updatedAnnotation } = props;
 
@@ -44,6 +46,7 @@ export default function CommentSection({
 	const [isReply, setIsReply] = useState(false);
 	const [isDelete, setIsDelete] = useState(false);
 
+	const [commentList, setCommetList] = useState<any>([]);
 	const [selectedNoteIds, setSelectedNoteIds] = useState({});
 
 
@@ -72,11 +75,18 @@ export default function CommentSection({
 		console.log("measurementAnnotation -------->", measurementAnnotation);
 		const NotesArray = _.filter(measurementAnnotation, { Subject: 'Note' });
 		console.log("NotesArray ---------->", NotesArray);
+		setCommetList(NotesArray || []);
 	}, [])
 
 	const onSendCommentEvent = (text: any) => {
 		console.log("onSendCommentEvent ==========>", text);
 		annotationManager.setNoteContents(updatedAnnotation[0], text);
+	}
+
+	const addComment = (inputText: string) => {
+		const quads = documentViewer.getSelectedTextQuads(documentViewer.getCurrentPage());
+		console.log("quads ----------->", quads);
+		annotationManager.setNoteContents(quads[0], inputText);
 	}
 
 	return !isComment ? (
@@ -105,23 +115,30 @@ export default function CommentSection({
 				onSendComment={onSendCommentEvent}
 			>
 				<div className="nested ml3">
-					{[...Array(2)].map((_, index) => (
+					{commentList && commentList.map((comment: any, index: number) => (
 						<Comments
-							className="nested"
 							key={index}
 							index={index}
-							setIsReply={() => setIsReply((prev) => !prev)}
+							className="nested"
 							isDelete={() => setIsDelete(true)}
 							onSendComment={onSendCommentEvent}
+							setIsReply={() => setIsReply((prev) => !prev)}
 						/>
 					))}
-					{isReply && <AddComment cancelReply={() => setIsReply(false)} />}
+					{isReply &&
+						<AddComment
+							addComment={addComment}
+							cancelReply={() => setIsReply(false)}
+						/>
+					}
 				</div>
 			</Comments>
-			{/* <Comments
-				index={11}
-				setIsReply={() => setIsReply((prev) => !prev)}
-			></Comments> */}
+			{!commentList.length ?
+				<AddComment
+					addComment={addComment}
+					cancelReply={() => setIsReply(false)}
+				/> : null
+			}
 		</div>
 	);
 }

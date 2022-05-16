@@ -3,9 +3,14 @@ import { all, call, put, StrictEffect, takeLatest } from "redux-saga/effects";
 import init from "../../apis";
 import { toggleLoader } from "../global/globalReducer";
 import {
-	getDocumentInfo, getDocumentList, setDocumentInfo,
-	setDocumentList, setSearchDocumentList, setSelectedDocuments,
-	toggleDocInfoLoader, updateDocumentInfo, uploadDocument,
+	getDocumentInfo,
+	getDocumentList,
+	setDocumentInfo,
+	setDocumentList,
+	setSearchDocumentList,
+	toggleDocInfoLoader,
+	updateDocumentInfo,
+	uploadDocument,
 } from "./DocumentsReducer";
 
 type GetDocumentsListType = {
@@ -151,6 +156,5 @@ export default function* DocumentsWatcher(): Generator<StrictEffect, void, any> 
 		yield takeLatest(getDocumentList.type, GetDocumentsListFunc),
 		yield takeLatest(getDocumentInfo.type, GetDocumentInfoFunc),
 		yield takeLatest(updateDocumentInfo.type, UpdateDocumentInfoFunc),
-
 	]);
 }
