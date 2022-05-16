@@ -41,7 +41,7 @@ import {
 	getDocumentList,
 	setSelectedDocuments
 } from '../../store/Documents/DocumentsReducer';
-
+import FileTabBar from '../Home/components/FileTabBar/FileTabBar';
 import UploadFileModal from './components/UploadFileModal';
 import CreateFolderModal from './components/CreateFolderModal';
 import { connect } from 'react-redux';
@@ -59,12 +59,14 @@ const FileListing: React.FC = (props: any) => {
 		searchData,
 		documentListData,
 		isGlobalLoading,
-		docInfoLoader
+		docInfoLoader,
+		tabPanes
 	} = props;
 	const dispatch = useAppDispatch();
 	console.log('searchData ------->', searchData);
 
 	const [docClicked, setDocClicked] = useState(0);
+	const [activeKey, setActiveKey] = useState('');
 	const [pageNo, setPageNo] = useState<number>(1);
 	const [searchString, setSearchString] = useState('');
 	const [docNameCopy, setDocNameCopy] = useState('');
@@ -113,10 +115,14 @@ const FileListing: React.FC = (props: any) => {
 		if (documentList[0]) {
 			//dispatch(getDocumentInfo({ uuid: documentList[0].uuid }));
 		}
-		console.log('docs----', documentList);
+		console.log('docss----', documentList);
 	}, [documentList]);
 	const getDocInfo = () => {
 		dispatch(setSelectedDocuments(documentList[0]));
+	};
+	const onTabChange = (currentKey: string) => {
+		setActiveKey(currentKey);
+		history.navigate?.(`/document-detail/${currentKey}`);
 	};
 	const handleDocClick = (index: number, isFolder: boolean) => {
 		dispatch(setSelectedDocuments(documentList[index]));
@@ -155,107 +161,20 @@ const FileListing: React.FC = (props: any) => {
 					<HeaderHome className="height-full" span={1}>
 						<HomeIcon alt="home" className="icon22" />
 					</HeaderHome>
-
-					{/* File Tab bar start */}
-
-					<HeaderFileTab span={18} className="flex">
-						<Col span={6} className="flex items-center">
-							{/* <Input
-								bordered={false}
-								style={{ width: 250 }}
-								placeholder="Search"
-								prefix={<SearchOutlined />}
-								onChange={onChange}
-							/> */}
-							<SearchButtonStyled
-								className="font-12 ml1"
-								onChange={onChange}
-								placeholder="Search"
-								prefix={<SearchOutlined />}
-							/>
-							{/* <FilterIcon alt="filter" className="icon16" /> */}
-						</Col>
-
-						<div className="fluid flex justify-end items-center">
-							<div
-								style={{
-									borderLeft: '1px solid #e3ecf3'
-								}}
-								className="flex items-center"
-							>
-								<Button
-									className="ml1 color-light-gray"
-									type="link"
-									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}>
-									<FolderOutlined
-										style={{ fontSize: '16px', color: 'black' }}
-									/>
-									<span style={{ color: '#C4CEDB' }}>Create Folder</span>
-									{/* {isCreateFolderModalOpen && (
-										<span className="ml1 font-13 color-sd2">X</span>
-									)} */}
-								</Button>
-							</div>
-							<div
-								className="flex items-center"
-								style={{ borderLeft: '1px solid #e3ecf3' }}
-							>
-								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
-								<Button
-									type="link"
-									className="ml1 color-light-gray"
-									onClick={() => setIsUploadModalOpen((prev) => !prev)}
-								>
-									<CloudUploadOutlined
-										style={{ fontSize: '16px', color: 'black' }}
-									/>
-									<span style={{ color: '#C4CEDB' }}>Upload document</span>
-
-									{isUploadModalOpen && (
-										<span
-											className="ml1 font-13 color-sd2"
-										// onClick={() => setIsUploadModalOpen(false)}
-										>
-											X
-										</span>
-									)}
-								</Button>
-								{/* </Upload> */}
-							</div>
-							<div
-								className="flex items-center"
-								style={{ borderLeft: '1px solid #e3ecf3' }}
-							>
-								<Button
-									type="link"
-									className="ml1 color-light-gray flex items-center"
-									onClick={() => setAssendingOrder(!assendingOrder)}
-								>
-									<FilterDocIcon className="mr2" />
-
-									<span style={{ color: '#C4CEDB' }}>Recently added</span>
-									<DropDownIcon
-										style={{
-											marginLeft: '20px',
-											transform: `rotate(${assendingOrder ? '180deg' : '0deg'})`
-										}}
-									/>
-								</Button>
-							</div>
-						</div>
+					<HeaderFileTab span={18} >
+						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} closable={false}/>
+						<Button
+						className="ml1 color-light-gray border-light-gray"
+						shape="round">
+						Store
+					</Button>
 					</HeaderFileTab>
-
-					{/* File Tab bar over */}
-
-					{/* Header top right Icon tab start */}
-
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">
 							<Col
 								span={4}
-								style={{ borderRight: '1px solid #ECF2F7' }}
 								className="height-full flex justify-center items-center"
-							>
+								style={{ borderRight: '1px solid #ECF2F7' }}>
 								<BookmarkIcon alt="bookmark" className="icon22" />
 							</Col>
 							<LeftIconGroup span={7} className="flex items-center">
@@ -273,18 +192,94 @@ const FileListing: React.FC = (props: any) => {
 							</RightIconGroup>
 						</RightHeaderContainer>
 					</Col>
-
+					{/* File Tab bar start */}
+					{/* File Tab bar over */}
+					{/* Header top right Icon tab start */}
 					{/* Header top right Icon tab over */}
 				</HeaderContainer>
 				{/* Header part Over */}
-
 				<Row>
 					{/* Left sider start */}
 					<LeftSliderContainer>
 						<LeftSlider />
 					</LeftSliderContainer>
-					{/* Left sider over */}
+					<HeaderFileTab span={18} className="flex" style={{marginTop:12}}>
+						<Col span={6} className="flex items-center">
+							{/* <Input
+								bordered={false}
+								style={{ width: 250 }}
+								placeholder="Search"
+								prefix={<SearchOutlined />}
+								onChange={onChange}
+							/> */}
+							<SearchButtonStyled
+								className="font-12 ml1"
+								onChange={onChange}
+								placeholder="Search"
+								prefix={<SearchOutlined style={{ fontSize: 17 }}/>}
+							/>
+							{/* <FilterIcon alt="filter" className="icon16" /> */}
+						</Col>
+						<div className="fluid flex justify-end items-center">
+							<div
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}} className="flex items-center">
+								<Button
+									className="ml1 color-light-gray"
+									type="link"
+									onClick={() => setIsCreateFolderModalOpen((prev) => !prev)}>
+									<FolderOutlined style={{ fontSize: '16px', color: 'black' }}/>
+									<span style={{ color: '#C4CEDB' }}>Create Folder</span>
+									{/* {isCreateFolderModalOpen && (
+										<span className="ml1 font-13 color-sd2">X</span>
+									)} */}
+								</Button>
+							</div>
+							<div
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}}
+								className="flex items-center">
+								{/* <Upload {...onUploadDocument} showUploadList={false}> */}
+								<Button
+									className="ml1 color-light-gray"
+									type="link"
+									onClick={() => setIsUploadModalOpen((prev) => !prev)}>
+									<CloudUploadOutlined
+										style={{ fontSize: '16px', color: 'black' }}/>
+									<span style={{ color: '#C4CEDB' }}>Upload document</span>
 
+									{isUploadModalOpen && (
+										<span
+											className="ml1 font-13 color-sd2"
+											// onClick={() => setIsUploadModalOpen(false)}
+											>
+											X
+										</span>
+									)}
+								</Button>
+								{/* </Upload> */}
+							</div>
+							<div
+								className="flex items-center"
+								style={{
+									borderLeft: '1px solid #e3ecf3'
+								}}>
+								<Button
+									className="ml1 color-light-gray flex items-center"
+									type="link"
+									onClick={() => setAssendingOrder(!assendingOrder)}>
+									<FilterDocIcon className="mr2" />
+
+									<span style={{ color: '#C4CEDB' }}>Recently added</span>
+									<DropDownIcon
+										style={{marginLeft: '20px',transform: `rotate(${assendingOrder ? '180deg' : '0deg'})`}}/>
+								</Button>
+							</div>
+						</div>
+					</HeaderFileTab>
+					{/* Left sider over */}
 					{/* Content part start */}
 					<CenterColumn
 						className="overflow-auto"
@@ -301,13 +296,12 @@ const FileListing: React.FC = (props: any) => {
 										closeModal={() => setIsUploadModalOpen(false)}
 									/>
 								)}
-
 								{/*---------------- File Listing ------- */}
 								{isGlobalLoading ? (
 									<Spinner />
 								) : (
 									<>
-										<p className="ml1" style={{ color: '#C5C9CE' }}>
+										<p className="ml1" style={{ color: '#C5C9CE',marginTop:'2%' }}>
 											Personal Documents
 										</p>
 										<Row>
@@ -316,12 +310,15 @@ const FileListing: React.FC = (props: any) => {
 													<div
 														key={index}
 														style={{ width: '160px' }}
-														onClick={() => {
+														onClick={() =>
+														{
 															setDocNameCopy(document.name)
 															handleDocClick(index, document?.isFolder)
 														}}
-														className={`${docClicked !== index ? 'hover-blue' : ''}`}
-													>
+														className={`${
+															docClicked !== index ? 'hover-blue' : ''
+														}`}
+														>
 														{/* if document object is folder */}
 														{document?.isFolder ? (
 															<DefaultPdf
@@ -348,8 +345,7 @@ const FileListing: React.FC = (props: any) => {
 														)}
 														<Tooltip
 															placement="top"
-															title={`${document.name || '---'}`}
-														>
+															title={`${document.name || '---'}`}>
 															<p
 																style={{
 																	width: '80%',
@@ -359,8 +355,7 @@ const FileListing: React.FC = (props: any) => {
 																			? '#25CA69'
 																			: 'currentColor'
 																}}
-																className="truncate pl2 font-12"
-															>
+																className="truncate pl2 font-12">
 																{document.name || '---'}
 															</p>
 														</Tooltip>
@@ -398,7 +393,7 @@ const FileListing: React.FC = (props: any) => {
 									<OwnerInfo
 										fileListing={true}
 										ownerData={documentList[docClicked]}
-
+										
 									/>
 								</OwnerInfoContainer>
 							</Row>
@@ -413,7 +408,7 @@ const FileListing: React.FC = (props: any) => {
 							<Checkbox
 								style={{ width: '90%' }}
 								className="py1 font-12 color-light-gray"
-							// onChange={onChange}
+								// onChange={onChange}
 							>
 								Allow location
 							</Checkbox>
@@ -429,14 +424,14 @@ const FileListing: React.FC = (props: any) => {
 		</>
 	);
 };
-
 const mapStateToProps = (state: any) => ({
 	showMoreDocs: state.documents.showMoreDocs,
 	showMoreSearchDocs: state.documents.showMoreSearchDocs,
 	searchData: state.documents.searchDocumentList,
 	documentListData: state.documents.documentList,
 	isGlobalLoading: state.global.globalLoading,
-	docInfoLoader: state.documents.docInfoLoader
-});
+	docInfoLoader: state.documents.docInfoLoader,
+	tabPanes: state.documents.tabPanes
 
+});
 export default connect(mapStateToProps)(FileListing);

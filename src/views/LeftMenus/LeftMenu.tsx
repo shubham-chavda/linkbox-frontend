@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
 import moment from 'moment';
 import {
@@ -85,7 +86,11 @@ const BlockedUser = [
 import { logOut } from '../../store/global/globalReducer';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import Password from 'antd/lib/input/Password';
-const LeftMenu = () => {
+interface ILeftSlider {
+	user: any;
+}
+const LeftMenu = (props: ILeftSlider) => {
+	const { user } = props;
 	const dispatch = useAppDispatch();
 
 	const [Menus, setMenus] = useState([
@@ -428,10 +433,10 @@ const LeftMenu = () => {
 								<Avatar size={80} src={'https://joeschmoe.io/api/v1/random'} />
 							</Row>
 							<Row style={{ justifyContent: 'center' }}>
-								<ProfileTitle>Jacob Jones</ProfileTitle>
+								<ProfileTitle>{user?.fullName || '-'}</ProfileTitle>
 							</Row>
 							<Row style={{ justifyContent: 'center' }}>
-								<text>Jacob_Jones</text>
+								<text>{user?.fullName || '-'}</text>
 							</Row>
 							<Row style={{ justifyContent: 'center', color: '#25ca69' }}>
 								<IntLevelText>Intraction level:</IntLevelText>
@@ -599,5 +604,8 @@ const LeftMenu = () => {
 		</MainContainer>
 	);
 };
+const mapStateToProps = (state: any) => ({
+	user: state.global.user
+});
 
-export default LeftMenu;
+export default connect(mapStateToProps)(LeftMenu);

@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
 import { Spin, Tabs } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-
+import React, { useEffect, useState } from 'react';
+import { initPanel } from '../../../../types/Home.interface';
 import { Tab } from './FileTabBar.style';
 import history from '../../../../history';
-import { initPanel } from '../../../../types/Home.interface';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
-
 interface IFileTabBar {
 	initialPanes: initPanel;
 	onTabChange: (activeKey: string) => void;
-};
-
+	closable:any
+}
 const FileTabBar: React.FC<IFileTabBar> = (props) => {
-	const { initialPanes, onTabChange } = props;
+	const { initialPanes, onTabChange,closable } = props;
 
 	const [activeKey, setActiveKey] = useState('');
 	const [panes, setPanes] = useState<initPanel | null>();
@@ -47,6 +45,21 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 			}
 		}
 	};
+
+	// add = () => {
+
+	// 	const activeKey = `newTab${this.newTabIndex++}`;
+	// 	const newPanes = [...panes];
+	// 	newPanes.push({
+	// 		title: 'New Tab',
+	// 		content: 'Content of new Tab',
+	// 		key: activeKey
+	// 	});
+	// 	this.setState({
+	// 		panes: newPanes,
+	// 		activeKey
+	// 	});
+	// };
 
 	const remove = (targetKey: string) => {
 		let newActiveKey = activeKey;
@@ -84,9 +97,9 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 		>
 			{panes?.map((pane) => (
 				<TabPane
-					closable={true}
-					key={pane.key}
 					tab={pane.title || <Spin indicator={antIcon} size="small" />}
+					key={pane.key}
+					closable={closable}
 				/>
 			))}
 		</Tab>

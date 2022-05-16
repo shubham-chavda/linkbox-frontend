@@ -28,7 +28,6 @@ import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import MemberList from './components/MemberList/MemberList';
 import FileTabBar from './components/FileTabBar/FileTabBar';
 import ToolBar from './components/ToolBar/ToolBar';
-
 import { initPanel } from '../../types/Home.interface';
 import {
 	CenterColumn,
@@ -198,13 +197,13 @@ const Home = (props: any) => {
 						);
 						if (selectedText && quads.length) {
 							// quads
-							const highlight = new Annotations.TextHighlightAnnotation();
+							const highlight = new Annotations.TextMarkupAnnotation();
 							highlight.PageNumber = pageNumber;
 							highlight.X = quads[0].x1;
 							highlight.Y = quads[0].y1;
 							highlight.Height = quads[0].x1 - quads[0].x2;
 							highlight.Width = quads[0].y1 - quads[0].y2;
-							highlight.StrokeColor = new Annotations.Color(122, 155, 120);
+							highlight.StrokeColor = new Annotations.Color(255, 255, 0);
 							// highlight.Quads = [quads];
 							console.log('highlight --------->', highlight);
 
@@ -334,7 +333,6 @@ const Home = (props: any) => {
 			// ]);
 		});
 	};
-
 	const searchListener = (searchPattern: any, options: any, results: any) => {
 		console.log('results ------->', results);
 
@@ -355,21 +353,46 @@ const Home = (props: any) => {
 	const zoomOut = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() + 0.25);
 	};
-
 	const zoomIn = () => {
 		documentViewer.zoomTo(documentViewer.getZoomLevel() - 0.25);
 	};
-
 	const setCustomZoomLevel = (zoomPercentages: number) => {
 		documentViewer.zoomTo(zoomPercentages);
+	};
+	const startEditingContent = () => {
+		const contentEditTool = documentViewer.getTool(
+			window.Core.Tools.ToolNames.CONTENT_EDIT
+		);
+		documentViewer.setToolMode(contentEditTool);
 	};
 
 	const createRectangle = () => {
 		documentInstance.setToolMode('Pan');
 	};
-
 	const selectTool = () => {
 		documentInstance.setToolMode('AnnotationEdit');
+	};
+	const createRedaction = () => {
+		documentViewer.setToolMode(
+			documentViewer.getTool(window.Core.Tools.ToolNames.REDACTION)
+		);
+	};
+	const applyRedactions = async () => {
+		const annotationManager = documentViewer.getAnnotationManager();
+		annotationManager.enableRedaction();
+		await annotationManager.applyRedactions();
+	};
+	const richTextEditorChangeHandler = (value: any) => {
+		setEditBoxCurrentValue(value);
+	};
+	const applyEditModal = () => {
+		window.Core.ContentEdit.updateDocumentContent(
+			editBoxAnnotation,
+			editBoxCurrentValue
+		);
+
+		setEditBoxAnnotation(null);
+		setEditBoxCurrentValue(null);
 	};
 
 	const changeLayOutMode = (isSingle?: boolean) => {
@@ -378,7 +401,6 @@ const Home = (props: any) => {
 			isSingle ? LayoutMode.FacingContinuous : LayoutMode.Single
 		);
 	};
-
 	const downloadPfd = async () => {
 		await documentInstance.UI.downloadPdf({
 			includeAnnotations: true,
@@ -397,14 +419,12 @@ const Home = (props: any) => {
 	const toggleFullScreen = async () => {
 		await documentInstance.UI.toggleFullScreen();
 	};
-
 	const printPdf = async () => {
 		await documentInstance.UI.print({
 			includeAnnotations: true,
 			flatten: true
 		});
 	};
-
 	const editSelectedBox = async () => {
 		const selectedAnnotations = documentViewer
 			.getAnnotationManager()
@@ -426,7 +446,6 @@ const Home = (props: any) => {
 			alert('Text edit box is not selected');
 		}
 	};
-
 	const onTabChange = (currentKey: string) => {
 		setActiveKey(currentKey);
 		// history.navigate?.(`/document-detail/${currentKey}`);
@@ -502,7 +521,11 @@ const Home = (props: any) => {
 					{/* File Tab bar start */}
 
 					<HeaderFileTab span={18}>
-						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} />
+						<FileTabBar
+							initialPanes={tabPanes}
+							onTabChange={onTabChange}
+							closable={true}
+						/>
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}

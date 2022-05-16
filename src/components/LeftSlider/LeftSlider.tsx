@@ -90,7 +90,7 @@ const LeftSlider = (props: ILeftSlider) => {
 				<Row style={{ display: 'flex', flexDirection: 'row' }}>
 					<Avatar size={40} src={'https://joeschmoe.io/api/v1/random'} />
 					<div style={{ marginLeft: 10 }}>
-						<text style={{ fontSize: 12 }}>jacob_Jones</text>
+						<text style={{ fontSize: 12 }}>{user?.fullName || '-'}</text>
 						<div
 							style={{
 								background: 'rgba(19, 121, 255, 0.08)',
@@ -186,6 +186,7 @@ const LeftSlider = (props: ILeftSlider) => {
 
 	return (
 		<Sider theme="light" collapsed={true}>
+		
 			{/* <StrongName>{isCollapsed ? "LB" : "LinkBox"}</StrongName> */}
 			<SiderMenu
 				theme="light"

@@ -73,7 +73,7 @@ export const DocumentsReducer = createSlice({
 			console.log("🚀🚀🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ isExist", isExist)
 			if (!isExist) {
 				state.tabPanes.push(...action.payload)
-				console.log("🚀 ~ file: DocumentsReducer.ts ~ line 73 ~ setTabPanes ~ state.tabPanes", state.tabPanes, action.payload)
+				
 			}
 		}
 	}
