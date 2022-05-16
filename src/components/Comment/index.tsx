@@ -19,6 +19,7 @@ import {
 	PostButton,
 	ReplyButton
 } from './Comment.style';
+import _ from 'lodash';
 import AddComment from './components/AddComment';
 import nameInitials from 'name-initials';
 import CommentInputOptions from './components/CommentInputOptions/CommentInputOptions';
@@ -32,7 +33,11 @@ type CommentSectionTypes = {
 }
 
 export default function CommentSection({
-	isOpen, annotationManager, annotations, updatedAnnotation }: CommentSectionTypes) {
+	isOpen,
+	annotationManager,
+	annotations,
+	updatedAnnotation,
+}: CommentSectionTypes) {
 	// const { isOpen, annotationManager, annotations, updatedAnnotation } = props;
 
 	const [isComment, setIsComment] = useState(true);
@@ -42,28 +47,36 @@ export default function CommentSection({
 	const [selectedNoteIds, setSelectedNoteIds] = useState({});
 
 
+	// useEffect(() => {
+	// 	const onAnnotationSelected = () => {
+	// 		const ids: any = {};
+
+	// 		annotationManager.getSelectedAnnotations().forEach((annot: any) => {
+	// 			console.log("annotationManager.getSelectedAnnotations ======>", annot);
+	// 			// onSendCommentEvent("cndjncjd")
+	// 			ids[annot.Id] = true;
+	// 		});
+	// 		if (isOpen) {
+	// 			setSelectedNoteIds(ids);
+	// 			// setScrollToSelectedAnnot(true);
+	// 		}
+	// 	};
+	// 	onAnnotationSelected();
+
+	// 	annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
+	// 	return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
+	// }, []);
+
 	useEffect(() => {
-		const onAnnotationSelected = () => {
-			const ids: any = {};
-
-			annotationManager.getSelectedAnnotations().forEach((annot: any) => {
-				console.log("annotationManager.getSelectedAnnotations ======>", annot);
-				ids[annot.Id] = true;
-			});
-			if (isOpen) {
-				setSelectedNoteIds(ids);
-				// setScrollToSelectedAnnot(true);
-			}
-		};
-		onAnnotationSelected();
-
-		annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
-		return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
-	}, []);
+		const measurementAnnotation = annotationManager.getAnnotationsList();
+		console.log("measurementAnnotation -------->", measurementAnnotation);
+		const NotesArray = _.filter(measurementAnnotation, { Subject: 'Note' });
+		console.log("NotesArray ---------->", NotesArray);
+	}, [])
 
 	const onSendCommentEvent = (text: any) => {
 		console.log("onSendCommentEvent ==========>", text);
-		annotationManager.setNoteContents(updatedAnnotation, text);
+		annotationManager.setNoteContents(updatedAnnotation[0], text);
 	}
 
 	return !isComment ? (

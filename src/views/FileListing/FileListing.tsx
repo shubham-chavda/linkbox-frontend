@@ -163,7 +163,11 @@ const FileListing: React.FC = (props: any) => {
 					</HeaderHome>
 					<HeaderFileTab span={18} >
 						<FileTabBar initialPanes={tabPanes} onTabChange={onTabChange} closable={false}/>
-						
+						<Button
+						className="ml1 color-light-gray border-light-gray"
+						shape="round">
+						Store
+					</Button>
 					</HeaderFileTab>
 					<Col span={5}>
 						<RightHeaderContainer className="flex-start">

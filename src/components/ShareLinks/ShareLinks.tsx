@@ -15,18 +15,19 @@ const ShareLinks = (props: IShareLinks) => {
 	const { selectedDocumentInfo } = props;
 	const [isShareable, setIsShareable] = React.useState(false);
 	const [isSendNotification, setIsSendNotification] = React.useState(false);
+
 	useEffect(() => {
 		setIsShareable(selectedDocumentInfo?.isShareable);
 		setIsSendNotification(selectedDocumentInfo?.sendNotification);
 	}, [selectedDocumentInfo]);
 
 	const copyLink = () => {
-		if (selectedDocumentInfo?.isShareable) {
-			navigator.clipboard.writeText(
-				`${window.location.origin}/document-detail/${selectedDocumentInfo.uuid}`
-			);
-			message.success('Document link Copied 🎉');
-		} else message.info('Document is not Shareable');
+		// if (selectedDocumentInfo?.isShareable) {
+		// 	navigator.clipboard.writeText(
+		// 		`${window.location.origin}/document-detail/${selectedDocumentInfo.uuid}`
+		// 	);
+		// 	message.success('Document link Copied 🎉');
+		// } else message.info('Document is not Shareable');
 	};
 	const setCheckState = (e: any) => {
 		const idsArray = e.target.id.split(/(\s+)/);
@@ -55,8 +56,8 @@ const ShareLinks = (props: IShareLinks) => {
 						labelInValue
 						bordered
 						placeholder="Genre"
-						// dropdownStyle={{}}
-						// onChange={handleChange}
+					// dropdownStyle={{}}
+					// onChange={handleChange}
 					>
 						<Select.Option value="General">General (100)</Select.Option>
 						<Select.Option value="Confidential">
@@ -67,8 +68,8 @@ const ShareLinks = (props: IShareLinks) => {
 						labelInValue
 						bordered
 						placeholder="Privacy"
-						// dropdownStyle={{}}
-						// onChange={handleChange}
+					// dropdownStyle={{}}
+					// onChange={handleChange}
 					>
 						<Select.Option value="Medium">Medium</Select.Option>
 						<Select.Option value="High">High</Select.Option>

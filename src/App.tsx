@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AppNavigate } from './components/App/AppNavigate';
-import { ProtectedRoutes } from './components/App/ProtectedRoutes';
-import NotFound from './components/NotFound';
+
+import history from './history';
 import Home from './views/Home/Home';
 import LeftMenu from './views/LeftMenus/LeftMenu';
 import Login from './views/Login/Login';
-import FileListing from './views/FileListing/FileListing';
-import history from './history';
+import NotFound from './components/NotFound';
 import { useAppDispatch } from './hooks/useAppDispatch';
 import { useAppSelector } from './hooks/useAppSelector';
+import FileListing from './views/FileListing/FileListing';
+import { AppNavigate } from './components/App/AppNavigate';
 import { getUserDetails } from './store/global/globalReducer';
+import { ProtectedRoutes } from './components/App/ProtectedRoutes';
+
 const App: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const isUserExist = useAppSelector((state) => state.global.user);
@@ -19,6 +21,7 @@ const App: React.FC = () => {
 			if (!isUserExist) dispatch(getUserDetails());
 		} else history.navigate?.('/login');
 	}, []);
+
 	return (
 		<BrowserRouter>
 			<AppNavigate />
@@ -31,7 +34,6 @@ const App: React.FC = () => {
 					<Route path="/document-detail/:id" element={<Home />} />
 					<Route path="*" element={<NotFound />} />
 				</Route>
-
 				<Route path="/login" element={<Login />} />
 			</Routes>
 		</BrowserRouter>
