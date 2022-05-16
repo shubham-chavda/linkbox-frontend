@@ -7,12 +7,12 @@ export const MemberCount = styled.div`
 	color: #c4cedb;
 `;
 export const SearchButtonStyled = styled(Input)`
+	height: 48px;
 	border-radius: 24px;
-	width: 180px;
+	width: 210px;
 	/* padding:10px; */
 	background: #f5f7f9;
 	border: none;
-	height: 35px;
 	&& .ant-input-affix-wrapper,
 	input.ant-input {
 		background: #f5f7f9;

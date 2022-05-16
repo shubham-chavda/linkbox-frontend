@@ -95,12 +95,17 @@ const FileTabBar: React.FC<IFileTabBar> = (props) => {
 			activeKey={activeKey}
 			onEdit={onEdit}
 		>
+	
+	
 			{panes?.map((pane) => (
+				<>
 				<TabPane
+				style={{color:'black'}}
 					tab={pane.title || <Spin indicator={antIcon} size="small" />}
 					key={pane.key}
 					closable={closable}
 				/>
+				</>
 			))}
 		</Tab>
 	);

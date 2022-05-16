@@ -109,7 +109,7 @@ const ShareLinks = (props: IShareLinks) => {
 					Deactivate Shareable link
 				</Checkbox>
 				<Button
-					className="color-light-gray border-light-gray"
+					className="color-light-gray border-light-gray mt1"
 					shape="round"
 					style={{ width: '100%' }}
 					type="ghost"
@@ -121,7 +121,7 @@ const ShareLinks = (props: IShareLinks) => {
 			<Checkbox
 				id="setIsSendNotification sendNotification"
 				checked={isSendNotification}
-				className="pt1 pl1 font-12 color-light-gray"
+				className="pt1 pl1 font-12 color-light-gray mt1"
 				onChange={setCheckState}
 			>
 				Notification

@@ -66,7 +66,7 @@ const ToolBar = ({
 	onChangeSearchInput,
 	toggleFullScreen,
 	printPdf,
-	exportAnnotation,
+	exportAnnotation
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -89,13 +89,13 @@ const ToolBar = ({
 
 	const decrementPageCount = () => {
 		if (pageCount > 1) {
-			setPageCount((prev) => prev - 1);
+			setPageCount(prev => prev - 1);
 			documentViewer.setCurrentPage(pageCount - 1);
 		}
 	};
 	const incrementPageCount = () => {
 		if (pageCount <= maxCount) {
-			setPageCount((prev) => prev + 1);
+			setPageCount(prev => prev + 1);
 			documentViewer.setCurrentPage(pageCount + 1);
 		} else {
 			setPageCount(maxCount);
@@ -201,7 +201,7 @@ const ToolBar = ({
 						<input
 							className="border-none"
 							value={pageCount}
-							onChange={(e) => setPageCount(parseInt(e.target.value))}
+							onChange={e => setPageCount(parseInt(e.target.value))}
 							style={{ width: '25px' }}
 						/>
 						<span>of</span>
@@ -228,9 +228,9 @@ const ToolBar = ({
 						<SelectContainer
 							bordered={false}
 							disabled={false}
-							className={"flex items-center"}
+							className={'flex items-center'}
 							value={`${Math.floor(zoomLevel)}%`}
-							onChange={(value) => onChangeZoomLevel(value)}
+							onChange={value => onChangeZoomLevel(value)}
 							suffixIcon={<DownOutlined style={{ color: 'black' }} />}
 						>
 							<Option value={100}>100%</Option>
@@ -292,11 +292,7 @@ const ToolBar = ({
 				className="icon22"
 				onClick={() => downloadPfd()}
 			/>
-			<PrintIcon
-				alt="print"
-				className="icon22"
-				onClick={() => printPdf()}
-			/>
+			<PrintIcon alt="print" className="icon22" onClick={() => printPdf()} />
 
 			<IconBG className="flex items-center">
 				<ChatIcon2

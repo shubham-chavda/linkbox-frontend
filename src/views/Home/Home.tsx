@@ -23,7 +23,7 @@ import {
 	InfoIcon,
 	UserStarIcon
 } from '../../assets';
-import { Col, notification, Row } from 'antd';
+import { Col, notification, Row, Button } from 'antd';
 import OwnerInfo from '../../components/OwnerInfo/OwnerInfo';
 import MemberList from './components/MemberList/MemberList';
 import FileTabBar from './components/FileTabBar/FileTabBar';
@@ -88,7 +88,19 @@ const Home = (props: any) => {
 	const [searchResults, setSearchResults] = useState<any>([]);
 
 	const [commentOpen, setCommentOpen] = useState(false);
-
+	let initialPanes = [
+		{
+			title: 'PdfTron default',
+			content: 'Content of Tab 1',
+			key: '1'
+		},
+		{
+			title: 'Gmat Official Guide 2021 new shubham',
+			content: 'Content of Tab 2',
+			key: '2'
+		},
+		{ title: 'Gmat Official Guide 2019', content: 'Content of Tab 3', key: '3' }
+	];
 	const [editBoxAnnotation, setEditBoxAnnotation] = useState(null);
 	const [editBoxCurrentValue, setEditBoxCurrentValue] = useState(null);
 	const [updatedAnnotation, setUpdatedAnnotation] = useState<any>(null);
@@ -512,7 +524,7 @@ const Home = (props: any) => {
 
 					{/* File Tab bar start */}
 
-					<HeaderFileTab span={18}>
+					<HeaderFileTab span={16}>
 						<FileTabBar
 							initialPanes={tabPanes}
 							onTabChange={onTabChange}
@@ -521,6 +533,14 @@ const Home = (props: any) => {
 					</HeaderFileTab>
 
 					{/* File Tab bar over */}
+					<Col
+						span={2}
+						style={{
+							borderRight: '1px solid #ECF2F7',
+
+							height: '100%'
+						}}
+					></Col>
 
 					{/* Header top right Icon tab start */}
 
