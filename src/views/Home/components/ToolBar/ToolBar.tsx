@@ -51,6 +51,7 @@ interface IToolBarProps {
 	printPdf: any;
 	exportAnnotation: any;
 	openChatView: () => void;
+	updatedAnnotation: any;
 }
 
 const ToolBar = ({
@@ -69,6 +70,7 @@ const ToolBar = ({
 	printPdf,
 	exportAnnotation,
 	openChatView,
+	updatedAnnotation,
 }: IToolBarProps) => {
 	const [pageCount, setPageCount] = useState(1);
 	const [maxCount, setMaxCount] = useState(totalPageCount);
@@ -120,15 +122,14 @@ const ToolBar = ({
 	};
 
 	const addNewComment = () => {
-		const quads = documentViewer.getSelectedTextQuads(documentViewer.getCurrentPage());
-		if (quads && quads.length) {
+		if (updatedAnnotation && updatedAnnotation.length) {
 			openChatView()
 		} else {
 			notification.error({
 				message: "Please select text for add comment"
 			});
 		}
-		console.log("quads ----------->", quads);
+		console.log("quads ----------->", updatedAnnotation);
 	}
 
 	const handleSearchChange = (e: any) => {

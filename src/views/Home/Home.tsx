@@ -184,6 +184,9 @@ const Home = (props: any) => {
 			documentViewer.addEventListener('documentLoaded', async () => {
 				console.log("documentLoaded -------->");
 
+				const pageCount = documentViewer.getPageCount();
+				setMaxCount(pageCount);
+
 				documentViewer.addEventListener('textSelected', (quads, selectedText, pageNumber) => {
 					if (selectedText && quads.length) {
 						const highlight = new Annotations.TextHighlightAnnotation();
@@ -207,82 +210,78 @@ const Home = (props: any) => {
 			// });
 
 			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
-				console.log("action ----->", action);
+				console.log("action ----->", annotations, action);
 				if (action === 'add' && annotations[0].Subject === "Highlight") {
 					setUpdatedAnnotation(annotations[0]);
 				}
 			});
 
-			// Core.enableFullPDF();
-			// documentViewer.setOptions({ enableAnnotations: true });
+			Core.enableFullPDF();
+			documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(documentViewer);
 			setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
 			setAnnotations(Annotations);
-			// const LayoutMode = instance.UI.LayoutMode;
-			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
-
-			// annotationManager.setNoteContents(annotations, text);
+			const LayoutMode = instance.UI.LayoutMode;
+			instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
 			// https://lbdocapi.dev.brainvire.net/collab
 
 			// ws://lbdocapi.dev.brainvire.net/collab/subscribe
-			// const client = new CollabClient({
-			// 	instance,
-			// 	logLevel: CollabClient.LogLevels.DEBUG,
-			// 	filterLogsByTag: CollabClient.LogTags.AUTH,
-			// 	url: 'https://lbnotifapi.dev.brainvire.net',
-			// 	subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
-			// });
-			// let session = await client.getUserSession();
-			// console.log('session --->', session);
-			// if (!session) {
-			// 	const token = window.localStorage.getItem('token');
-			// 	// console.log("client --------->", client);
+			const client = new CollabClient({
+				instance,
+				logLevel: CollabClient.LogLevels.DEBUG,
+				filterLogsByTag: CollabClient.LogTags.AUTH,
+				url: 'https://lbnotifapi.dev.brainvire.net',
+				subscriptionUrl: 'wss://lbnotifapi.dev.brainvire.net/subscribe'
+			});
+			let session = await client.getUserSession();
+			console.log('session --->', session);
+			if (!session) {
+				const token = window.localStorage.getItem('token');
+				// console.log("client --------->", client);
 
-			// 	console.log('token ------>', token);
+				console.log('token ------>', token);
 
-			// 	session = await client.loginWithToken(token || '');
-			// 	console.log('new session ------->', session);
-			// 	// await client.setContext({ userId: session.id, createdBy: session.id });
-			// 	if (!session) {
-			// 		notification.error({
-			// 			message: 'Login is failed Please refresh page....'
-			// 		});
-			// 		return false;
-			// 	}
-			// 	await client.setCustomHeaders({
-			// 		authorization: token || ''
-			// 	});
-			// }
+				session = await client.loginWithToken(token || '');
+				console.log('new session ------->', session);
+				// await client.setContext({ userId: session.id, createdBy: session.id });
+				if (!session) {
+					notification.error({
+						message: 'Login is failed Please refresh page....'
+					});
+					return false;
+				}
+				await client.setCustomHeaders({
+					authorization: token || ''
+				});
+			}
 
-			// const doc = await session.getDocument(selectedDocumentInfo.id);
-			// console.log('doc ------->', doc);
-			// await doc.view(documentPath);
-			// const totalPageCount = documentViewer.getPageCount();
-			// console.log("totalPageCount -------->", totalPageCount);
-			// setMaxCount(totalPageCount);
+			const doc = await session.getDocument(selectedDocumentInfo.id);
+			await doc.view(documentPath);
+			const totalPageCount = documentViewer.getPageCount();
+			setMaxCount(totalPageCount);
 
-			// if (!doc.isAuthor) {
-			// 	const canJoin = await doc.canJoin();
-			// 	console.log('canJoin ---> ', canJoin);
-			// 	if (canJoin) doc.join();
-			// }
+			if (!doc.isAuthor) {
+				const canJoin = await doc.canJoin();
+				console.log('canJoin ---> ', canJoin);
+				if (canJoin) doc.join();
+			}
 
-			// console.log('isAuthor', doc.isAuthor);
-			// console.log('isMember', doc.isMember());
-			// // await doc.inviteUsers([responseLogin.id])
-			// client.EventManager.subscribe('annotationAdded', (annotation) => {
-			// 	console.log('annotation ---------->', annotation);
-			// 	setUpdatedAnnotation(updatedAnnotation);
-			// 	annotation.subscribe('onChange', (updatedAnnotation) => {
-			// 		console.log('annotation changed', updatedAnnotation);
-			// 	});
-			// });
+			console.log('isAuthor', doc.isAuthor);
+			console.log('isMember', doc.isMember());
+			// await doc.inviteUsers([responseLogin.id])
+			client.EventManager.subscribe('annotationAdded', (annotation) => {
+				console.log('annotation ---------->', annotation);
+				setUpdatedAnnotation(updatedAnnotation);
+				annotation.subscribe('onChange', (updatedAnnotation) => {
+					console.log('annotation changed', updatedAnnotation);
+				});
+			});
 
-			// client.EventManager.subscribe('annotationChanged', (annotation) => {
-			// 	console.log('annotation changed ---------->', annotation);
-			// });
+			client.EventManager.subscribe('annotationChanged', (annotation) => {
+				console.log('annotation changed ---------->', annotation);
+			});
 
 			// const style = instance.UI.iframeWindow.document.documentElement.style;
 			// style.setProperty(`--document-background-color`, 'white');
@@ -552,6 +551,7 @@ const Home = (props: any) => {
 								printPdf={printPdf}
 								exportAnnotation={exportAnnotation}
 								openChatView={openChatView}
+								updatedAnnotation={updatedAnnotation}
 							/>
 						</Row>
 						<ContentSection>
