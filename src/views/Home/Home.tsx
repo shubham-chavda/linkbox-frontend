@@ -185,9 +185,7 @@ const Home = (props: any) => {
 				console.log("documentLoaded -------->");
 
 				documentViewer.addEventListener('textSelected', (quads, selectedText, pageNumber) => {
-					console.log("quads, selectedText, pageNumber ---->", quads, selectedText, pageNumber);
 					if (selectedText && quads.length) {
-						// quads
 						const highlight = new Annotations.TextHighlightAnnotation();
 						highlight.PageNumber = pageNumber;
 						highlight.X = quads[0].x1;
@@ -195,35 +193,32 @@ const Home = (props: any) => {
 						highlight.Height = quads[0].x1 - quads[0].x2;
 						highlight.Width = quads[0].y1 - quads[0].y2;
 						highlight.StrokeColor = new Annotations.Color(122, 155, 120);
-						// highlight.Quads = [quads];
-						console.log("highlight --------->", highlight);
-
 						annotationManager.addAnnotation(highlight);
 						annotationManager.drawAnnotations(pageNumber);
-						// annotationManager.setNoteContents(quads[0], "new comment");	
 					}
 				});
-				const quads = documentViewer.getSelectedTextQuads(documentViewer.getCurrentPage());
-				console.log("quads ---------->", quads);
-
 			});
 
+			// annotationManager.addEventListener('annotationSelected', (annotations, action) => {
+			// 	console.log("annotationSelected ------->");
+			// 	if (annotations[0].Subject === 'Free Text' && action === 'selected') {
+			// 		annotationManager.updateAnnotation(annotations[0]);
+			// 	}
+			// });
+
 			annotationManager.addEventListener('annotationChanged', (annotations, action) => {
-				setUpdatedAnnotation(annotations);
-				console.log("annotations ----->", annotations);
 				console.log("action ----->", action);
-				if (action === 'add') {
-					console.log("inside add comment");
-					annotationManager.setNoteContents(annotations[0], "new comment");
+				if (action === 'add' && annotations[0].Subject === "Highlight") {
+					setUpdatedAnnotation(annotations[0]);
 				}
 			});
 
 			// Core.enableFullPDF();
 			// documentViewer.setOptions({ enableAnnotations: true });
 			setDocumentViewer(documentViewer);
-			// setDocumentInstance(instance);
+			setDocumentInstance(instance);
 			setAnnotationManager(annotationManager);
-			// setAnnotations(Annotations);
+			setAnnotations(Annotations);
 			// const LayoutMode = instance.UI.LayoutMode;
 			// instance.UI.setLayoutMode(LayoutMode.FacingContinuous);
 
@@ -447,9 +442,9 @@ const Home = (props: any) => {
 		documentInstance.UI.searchTextFull(searchPattern, searchOptions);
 	};
 	const getTabsEvent = () => {
-		console.log('🚀  getTabsEvent', getTabsEvent);
-		const tabs = documentInstance.UI.TabManager.getTabs();
-		console.log('🚀 ~ file: Home.tsx ~ line 434 ~ getTabsEvent ~ tabs', tabs);
+		// console.log('🚀  getTabsEvent');
+		// const tabs = documentInstance.UI.TabManager.getTabs();
+		// console.log('🚀 ~ file: Home.tsx ~ line 434 ~ getTabsEvent ~ tabs', tabs);
 	};
 	const addTabEvent = (DocUrlList: string) => {
 		console.log(

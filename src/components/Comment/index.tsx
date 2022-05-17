@@ -46,48 +46,71 @@ export default function CommentSection({
 	const [isReply, setIsReply] = useState(false);
 	const [isDelete, setIsDelete] = useState(false);
 
-	const [commentList, setCommetList] = useState<any>([]);
-	const [selectedNoteIds, setSelectedNoteIds] = useState({});
-
-
-	// useEffect(() => {
-	// 	const onAnnotationSelected = () => {
-	// 		const ids: any = {};
-
-	// 		annotationManager.getSelectedAnnotations().forEach((annot: any) => {
-	// 			console.log("annotationManager.getSelectedAnnotations ======>", annot);
-	// 			// onSendCommentEvent("cndjncjd")
-	// 			ids[annot.Id] = true;
-	// 		});
-	// 		if (isOpen) {
-	// 			setSelectedNoteIds(ids);
-	// 			// setScrollToSelectedAnnot(true);
-	// 		}
-	// 	};
-	// 	onAnnotationSelected();
-
-	// 	annotationManager.addEventListener('annotationSelected', onAnnotationSelected);
-	// 	return () => annotationManager.removeEventListener('annotationSelected', onAnnotationSelected);
-	// }, []);
+	const [commentList, setCommentList] = useState<any>([]);
 
 	useEffect(() => {
 		const measurementAnnotation = annotationManager.getAnnotationsList();
-		console.log("measurementAnnotation -------->", measurementAnnotation);
-		const NotesArray = _.filter(measurementAnnotation, { Subject: 'Note' });
-		console.log("NotesArray ---------->", NotesArray);
-		setCommetList(NotesArray || []);
+		const NotesArray = _.filter(measurementAnnotation, (obj: any) => {
+			if (obj.Qda) return true;
+			return false;
+		});
+		setCommentList(NotesArray || []);
 	}, [])
 
 	const onSendCommentEvent = (text: any) => {
-		console.log("onSendCommentEvent ==========>", text);
 		annotationManager.setNoteContents(updatedAnnotation[0], text);
 	}
 
-	const addComment = (inputText: string) => {
-		const quads = documentViewer.getSelectedTextQuads(documentViewer.getCurrentPage());
-		console.log("quads ----------->", quads);
-		annotationManager.setNoteContents(quads[0], inputText);
+	const addComment = async (inputText: string) => {
+		if (updatedAnnotation) {
+			if (isReply) {
+				createMentionReply(inputText)
+			} else {
+				await annotationManager.setNoteContents(updatedAnnotation, inputText);
+				setCommentList([...commentList, updatedAnnotation]);
+			}
+		}
 	}
+
+	const extractMentionDataFromStr = (str: any) => {
+		const markupRegex = /@\[(.*?)\]\((.*?)\)/g;
+		const ids = [];
+		let match;
+		let plainTextValue = str;
+		while ((match = markupRegex.exec(str)) !== null) {
+			const [wholeMatch, displayName, id] = match;
+			ids.push(id);
+			plainTextValue = plainTextValue.replace(
+				// keep the @ and only replace the remaining text
+				wholeMatch.slice(1),
+				displayName,
+			);
+		}
+		return { plainTextValue, ids };
+	}
+
+	const createMentionReply = (inputText: any) => {
+		const { plainTextValue, ids } = extractMentionDataFromStr(inputText);
+		// new MarkupAnnotation()
+		const replyAnnot = new annotations.StickyAnnotation();
+		replyAnnot['InReplyTo'] = updatedAnnotation['Id'];
+		replyAnnot['X'] = updatedAnnotation['X'];
+		replyAnnot['Y'] = updatedAnnotation['Y'];
+		replyAnnot['PageNumber'] = updatedAnnotation['PageNumber'];
+		replyAnnot['Author'] = annotationManager.getCurrentUser();
+		replyAnnot.setContents(plainTextValue || '');
+		replyAnnot.setCustomData('trn-mention', JSON.stringify({
+			contents: inputText,
+			ids,
+		}));
+		console.log("replyAnnot --------->", replyAnnot);
+
+		annotationManager.createAnnotationReply(replyAnnot, inputText);
+		// annotationManager.addAnnotations([replyAnnot]);
+		setCommentList([...commentList, replyAnnot])
+	}
+
+	console.log("setCommentList ============>", commentList);
 
 	return !isComment ? (
 		<div style={{ height: '93vh' }} className="flex items-center color-sl-gray">
@@ -103,36 +126,46 @@ export default function CommentSection({
 		</div>
 	) : (
 		<div
-			style={{ height: '93vh', overflowX: 'hidden' }}
 			className="hide-scrollbar"
+			style={{ height: '93vh', overflowX: 'hidden' }}
 		>
 			<DeleteModal isDelete={isDelete} setIsDelete={() => setIsDelete(false)} />
 			<MemberCount className="ml2 mb1">28 members</MemberCount>
-			<Comments
-				index={11}
-				setIsReply={() => setIsReply((prev) => !prev)}
-				isDelete={() => setIsDelete(true)}
-				onSendComment={onSendCommentEvent}
-			>
-				<div className="nested ml3">
-					{commentList && commentList.map((comment: any, index: number) => (
-						<Comments
-							key={index}
-							index={index}
-							className="nested"
-							isDelete={() => setIsDelete(true)}
-							onSendComment={onSendCommentEvent}
-							setIsReply={() => setIsReply((prev) => !prev)}
-						/>
-					))}
-					{isReply &&
-						<AddComment
-							addComment={addComment}
-							cancelReply={() => setIsReply(false)}
-						/>
-					}
-				</div>
-			</Comments>
+
+			<div className="nested ml3">
+				{commentList && commentList.map((comment: any, index: number) => {
+					const InReplyTo = comment.InReplyTo;
+					return (
+						<>
+							{!InReplyTo ?
+								<Comments
+									key={index}
+									index={index}
+									commentText={comment.Qda || "----"}
+									isDelete={() => setIsDelete(true)}
+									onSendComment={onSendCommentEvent}
+									setIsReply={() => setIsReply((prev) => !prev)}
+								/> :
+								<Comments
+									index={index}
+									className="nested"
+									isDelete={() => setIsDelete(true)}
+									onSendComment={onSendCommentEvent}
+									commentText={comment.Qda || "----"}
+									setIsReply={() => setIsReply((prev) => !prev)}
+								/>
+							}
+						</>
+					)
+				}
+				)}
+				{isReply &&
+					<AddComment
+						addComment={createMentionReply}
+						cancelReply={() => setIsReply(false)}
+					/>
+				}
+			</div>
 			{!commentList.length ?
 				<AddComment
 					addComment={addComment}
@@ -143,16 +176,17 @@ export default function CommentSection({
 	);
 }
 function Comments(props: any) {
-	const { isDelete, setIsReply, onSendComment } = props;
+	const { isDelete, setIsReply, onSendComment, commentText, index } = props;
 
 	const [isEdit, setIsEdit] = useState(-1);
-	const [inputValue, setInputValue] =
-		useState(`We supply a series of design principles, practical patterns
-	and high quality design resources (Sketch and Axure).`);
+	const [inputValue, setInputValue] = useState(commentText);
 	const [enableEmojiPicker, setEnableEmojiPicker] = useState(false);
 
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
+
+
+	console.log("index --------------->", index);
 
 	return (
 		<CommentContainer>
@@ -191,9 +225,7 @@ function Comments(props: any) {
 										<EmojiPickerComponent
 											enableEmojiPicker={enableEmojiPicker}
 											setEnableEmojiPicker={() => setEnableEmojiPicker(false)}
-											inputValue={(data: any) =>
-												setInputValue((prev) => prev + data)
-											}
+											inputValue={(data: any) => setInputValue((prev: any) => prev + data)}
 										>
 											<CommentInputDiv className="my1 flex item-center">
 												<InputBox
@@ -269,7 +301,10 @@ function Comments(props: any) {
 									<PostButton
 										shape="round"
 										className="font-12  ml1 px3"
-										onClick={() => onSendComment(inputValue)}
+										onClick={() => {
+											onSendComment(inputValue);
+											setIsEdit(-1);
+										}}
 									>
 										Post
 									</PostButton>

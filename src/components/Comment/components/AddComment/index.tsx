@@ -1,8 +1,9 @@
-import { Avatar, Button, Col, notification, Row } from 'antd';
 import React, { useState } from 'react';
+import { Avatar, Button, Col, notification, Row } from 'antd';
+
 import { PostButton } from '../../Comment.style';
-import CommentInputOptions from '../CommentInputOptions/CommentInputOptions';
 import { CommentInputDiv, InputBox } from './AddComment.style';
+import CommentInputOptions from '../CommentInputOptions/CommentInputOptions';
 
 import VoiceRecording from '../VoiceRecording';
 import UploadImage from '../../../UploadImage';
@@ -58,10 +59,10 @@ const AddComment: React.FC<IAddComment> = ({ cancelReply, addComment }) => {
 							<CommentInputDiv className="my1 flex item-center">
 								<InputBox
 									value={inputValue}
-									className="font-12 hide-scrollbar"
 									style={{ width: '100%' }}
-									onChange={(e) => setInputValue(e.target.value)}
 									placeholder="Write comment"
+									className="font-12 hide-scrollbar"
+									onChange={(e) => setInputValue(e.target.value)}
 								/>
 
 								<CommentInputOptions
