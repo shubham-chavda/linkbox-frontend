@@ -6,16 +6,17 @@ import { MainContainer, ModalDialog } from './DeleteModal.style';
 interface IDeleteModal {
 	isDelete: boolean;
 	setIsDelete: any;
+	deleteComment: () => void;
 }
 const DeleteModal: React.FC<IDeleteModal> = (props) => {
-	const { isDelete, setIsDelete } = props;
+	const { isDelete, setIsDelete, deleteComment } = props;
 
 	return (
 		<MainContainer style={{ display: isDelete ? 'block' : 'none' }}>
 			<ModalDialog className="p2 mt3">
 				<div>
 					<div className="center fluid font-13">
-						Are you sure you want to delete comment 17?
+						Are you sure you want to delete comment?
 					</div>
 					<div className="mt3 fluid ">
 						<Button
@@ -29,6 +30,7 @@ const DeleteModal: React.FC<IDeleteModal> = (props) => {
 						<ButtonFilled
 							className="ml1 font-13"
 							style={{ padding: '6px', width: '45%' }}
+							onClick={() => deleteComment()}
 						>
 							Delete
 						</ButtonFilled>

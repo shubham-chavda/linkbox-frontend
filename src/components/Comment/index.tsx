@@ -47,6 +47,7 @@ export default function CommentSection({
 	const [isDelete, setIsDelete] = useState(false);
 
 	const [commentList, setCommentList] = useState<any>([]);
+	const [selectedComment, setSelectedComment] = useState<any>({});
 
 	useEffect(() => {
 		const measurementAnnotation = annotationManager.getAnnotationsList();
@@ -57,8 +58,12 @@ export default function CommentSection({
 		setCommentList(NotesArray || []);
 	}, [])
 
-	const onSendCommentEvent = (text: any) => {
-		annotationManager.setNoteContents(updatedAnnotation[0], text);
+	const onSendCommentEvent = (text: any, editCommentAnnotation?: any) => {
+		if (editCommentAnnotation) {
+			annotationManager.setNoteContents(editCommentAnnotation, text);
+		} else {
+			annotationManager.setNoteContents(updatedAnnotation[0], text);
+		}
 	}
 
 	const addComment = async (inputText: string) => {
@@ -66,7 +71,7 @@ export default function CommentSection({
 			if (isReply) {
 				createMentionReply(inputText)
 			} else {
-				await annotationManager.setNoteContents(updatedAnnotation, inputText);
+				annotationManager.setNoteContents(updatedAnnotation, inputText);
 				setCommentList([...commentList, updatedAnnotation]);
 			}
 		}
@@ -103,14 +108,30 @@ export default function CommentSection({
 			contents: inputText,
 			ids,
 		}));
-		console.log("replyAnnot --------->", replyAnnot);
 
 		annotationManager.createAnnotationReply(replyAnnot, inputText);
 		// annotationManager.addAnnotations([replyAnnot]);
 		setCommentList([...commentList, replyAnnot])
 	}
 
-	console.log("setCommentList ============>", commentList);
+	const editComment = (selectedComment: any, newInputText: any) => {
+		// selectedComment.setContents('Redacted');
+		annotationManager.setNoteContents(selectedComment, newInputText);
+		annotationManager.updateAnnotation(selectedComment);
+	}
+
+	const openDeleteConfirmation = (selectedComment: any) => {
+		setIsDelete(true);
+		setSelectedComment(selectedComment);
+	}
+
+	const deleteComment = () => {
+		if (selectedComment.Id) {
+			annotationManager.deleteAnnotation(selectedComment);
+			const newCommentList = _.remove(commentList, (obj: any) => obj.ID === selectedComment.Id);
+			setCommentList(newCommentList);
+		}
+	}
 
 	return !isComment ? (
 		<div style={{ height: '93vh' }} className="flex items-center color-sl-gray">
@@ -129,7 +150,11 @@ export default function CommentSection({
 			className="hide-scrollbar"
 			style={{ height: '93vh', overflowX: 'hidden' }}
 		>
-			<DeleteModal isDelete={isDelete} setIsDelete={() => setIsDelete(false)} />
+			<DeleteModal
+				isDelete={isDelete}
+				deleteComment={deleteComment}
+				setIsDelete={() => setIsDelete(false)}
+			/>
 			<MemberCount className="ml2 mb1">28 members</MemberCount>
 
 			<div className="nested ml3">
@@ -139,17 +164,19 @@ export default function CommentSection({
 						<>
 							{!InReplyTo ?
 								<Comments
-									key={index}
-									index={index}
+									key={comment.Id}
+									commentObj={comment}
+									index={comment.Id}
 									commentText={comment.Qda || "----"}
-									isDelete={() => setIsDelete(true)}
+									isDelete={() => openDeleteConfirmation(comment)}
 									onSendComment={onSendCommentEvent}
 									setIsReply={() => setIsReply((prev) => !prev)}
 								/> :
 								<Comments
-									index={index}
+									index={comment.Id}
 									className="nested"
-									isDelete={() => setIsDelete(true)}
+									commentObj={comment}
+									isDelete={() => openDeleteConfirmation(comment)}
 									onSendComment={onSendCommentEvent}
 									commentText={comment.Qda || "----"}
 									setIsReply={() => setIsReply((prev) => !prev)}
@@ -176,7 +203,14 @@ export default function CommentSection({
 	);
 }
 function Comments(props: any) {
-	const { isDelete, setIsReply, onSendComment, commentText, index } = props;
+	const {
+		isDelete,
+		setIsReply,
+		onSendComment,
+		commentText,
+		index,
+		commentObj,
+	} = props;
 
 	const [isEdit, setIsEdit] = useState(-1);
 	const [inputValue, setInputValue] = useState(commentText);
@@ -185,27 +219,20 @@ function Comments(props: any) {
 	const [enableRecording, setEnableRecording] = useState(false);
 	const [enableUploadImage, setEnableUploadImage] = React.useState(false);
 
-
-	console.log("index --------------->", index);
-
 	return (
 		<CommentContainer>
 			<div className={`mb2 ${props.className}`} style={{ paddingLeft: '10px' }}>
 				<Row>
 					<Col span={3}>
-						<Avatar
-							style={{ backgroundColor: '#25CA69' }}
-							// src="https://joeschmoe.io/api/v1/random"
-							alt="Heisenberg Martin"
-						>
+						<Avatar style={{ backgroundColor: '#25CA69' }}>
 							{nameInitials('Heisenberg Martin')}
 						</Avatar>
 					</Col>
 					<Col span={20} className="flex">
 						<Row className=" fluid flex  items-center">
 							<div
-								style={{ width: '75%', height: '35px' }}
 								className="flex items-center"
+								style={{ width: '75%', height: '35px' }}
 							>
 								<div className="truncate">Heisenberg Martin</div>
 							</div>
@@ -213,8 +240,13 @@ function Comments(props: any) {
 								style={{ flex: 1 }}
 								className="flex justify-evenly items-center"
 							>
-								<DeleteIcon onClick={isDelete} className="icon15" />
-								<EditIcon onClick={() => setIsEdit(props.index)} />
+								<DeleteIcon
+									onClick={isDelete}
+									className="icon15"
+								/>
+								<EditIcon
+									onClick={() => setIsEdit(props.index)}
+								/>
 							</div>
 
 							<Col>
@@ -234,6 +266,7 @@ function Comments(props: any) {
 													style={{ width: '100%' }}
 													value={inputValue}
 													placeholder="Write comment"
+													onChange={(e) => setInputValue(e.target.value)}
 												/>
 
 												<CommentInputOptions
@@ -302,7 +335,11 @@ function Comments(props: any) {
 										shape="round"
 										className="font-12  ml1 px3"
 										onClick={() => {
-											onSendComment(inputValue);
+											if (index === isEdit) {
+												onSendComment(inputValue, commentObj);
+											} else {
+												onSendComment(inputValue);
+											}
 											setIsEdit(-1);
 										}}
 									>
